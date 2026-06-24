@@ -74,8 +74,8 @@ const HOSTS = [
   { name: "Tushar Liberhan", role: "India Head · NYU Graduate",  webinar: "India",     initials: "TL", photo: "https://addededucation-assets.s3.us-east-1.amazonaws.com/hosts/tushar.jpg",  bio: "A former top-25 ranked junior tennis player and India Grand Slam representative, Tushar holds a Master's from New York University. He has counselled hundreds of students and athletes across Asia and brings a uniquely grounded perspective to the admissions process." },
   { name: "Shreya Kabir",    role: "Senior Lead Counsellor",     webinar: "India",     initials: "SK", photo: "https://addededucation-assets.s3.us-east-1.amazonaws.com/hosts/shreya.jpg",  bio: "Shreya is an accomplished international admissions consultant with a track record of guiding students to Stanford, Northwestern, and Oxbridge, across both academic and athletic profiles. She draws on a holistic background in commerce, philosophy, and psychology." },
   { name: "Ankan Barman",    role: "Lead Counsellor",            webinar: "India",     initials: "AB", photo: "https://addededucation-assets.s3.us-east-1.amazonaws.com/hosts/ankan.jpg",   bio: "Ankan has over three years of experience as an academic counsellor, supporting students in gaining admission to Stanford, Cornell, UPenn, Carnegie Mellon, NYU, Georgia Tech, Purdue, and UIUC. His background in Economics and Development Studies gives him a rigorous analytical edge." },
-  { name: "Ryan Leung",      role: "Senior Principal Consultant",webinar: "Hong Kong", initials: "RL", photo: "https://addededucation-assets.s3.us-east-1.amazonaws.com/hosts/ryan.jpg",    bio: "Ryan began his career as an admissions representative at Fay School in Massachusetts. Over the past decade he has placed students into Harvard, Yale, Stanford, Duke, and top boarding schools including Andover and Exeter. Grew up in Hong Kong and Los Angeles; fluent in English, Cantonese, and Mandarin." },
-  { name: "William Ho",      role: "Client Relationship Manager",webinar: "Hong Kong", initials: "WH", photo: "https://addededucation-assets.s3.us-east-1.amazonaws.com/hosts/william.jpg", bio: "A McGill University graduate and IB diploma holder, William has spent 13 years at the intersection of families, schools, and institutions in Hong Kong. He specialises in helping families understand the difference between local and international curricula — and bridge the gap." },
+  { name: "Ryan Leung",      role: "Senior Principal Consultant", webinar: "Hong Kong", initials: "RL", photo: "https://addededucation-assets.s3.us-east-1.amazonaws.com/hosts/ryan.jpg",    bio: "Ryan began his career as an admissions representative at Fay School in Massachusetts. Over the past decade he has placed students into Harvard, Yale, Stanford, Duke, and top boarding schools including Andover and Exeter. Grew up in Hong Kong and Los Angeles; fluent in English, Cantonese, and Mandarin." },
+  { name: "William Ho",      role: "Client Relationship Manager", webinar: "Hong Kong", initials: "WH", photo: "https://addededucation-assets.s3.us-east-1.amazonaws.com/hosts/william.jpg", bio: "A McGill University graduate and IB diploma holder, William has spent 13 years at the intersection of families, schools, and institutions in Hong Kong. He specialises in helping families understand the difference between local and international curricula — and bridge the gap." },
   { name: "Ria Birowo",      role: "Senior Lead Counsellor",     webinar: "Singapore", initials: "RB", photo: "https://addededucation-assets.s3.us-east-1.amazonaws.com/hosts/ria.jpg",    bio: "A University of Chicago graduate who grew up in the US, Ria combines firsthand knowledge of the American education system with over a decade of experience in international admissions. As a former admissions reader at UChicago, she has seen how these decisions get made from the inside." },
   { name: "Aldy Ichwan",     role: "Relationship Manager",       webinar: "Singapore", initials: "AI", photo: "https://addededucation-assets.s3.us-east-1.amazonaws.com/hosts/aldy.jpg",   bio: "A Universitas Indonesia engineering graduate and active member of AE's research team, Aldy works closely with families across Southeast Asia. With a background as a student-athlete, he brings a grounded, strategic perspective to helping students aim higher." },
 ]
@@ -110,8 +110,8 @@ function Label({ children, light = false }) {
   )
 }
 
-/* ── Hero Card ── */
-function HeroCard({ w }) {
+/* ── Webinar Card ── */
+function WebinarCard({ w }) {
   const [hov, setHov] = useState(false)
   const gradients = {
     uk: "linear-gradient(150deg, #1c2e4a 0%, #2d1a1a 100%)",
@@ -164,7 +164,7 @@ function HostCard({ h }) {
     <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
       style={{ transition: "transform 0.5s cubic-bezier(.16,1,.3,1)", transform: hov ? "translateY(-4px)" : "translateY(0)" }}
     >
-      <div style={{ width: "100%", aspectRatio: "1/1", borderRadius: 14, overflow: "hidden", marginBottom: 18, position: "relative", background: `linear-gradient(145deg, ${C.maroon} 0%, ${C.accentDeep} 50%, ${C.maroonSoft} 100%)`, boxShadow: hov ? "0 20px 44px rgba(107,24,24,0.18)" : "0 6px 20px rgba(107,24,24,0.08)", transition: "box-shadow 0.5s cubic-bezier(.16,1,.3,1)" }}>
+      <div style={{ width: "100%", aspectRatio: "4/5", borderRadius: 12, overflow: "hidden", marginBottom: 16, position: "relative", background: `linear-gradient(145deg, ${C.maroon} 0%, ${C.accentDeep} 50%, ${C.maroonSoft} 100%)`, boxShadow: hov ? "0 12px 32px rgba(107,24,24,0.18)" : "0 4px 14px rgba(107,24,24,0.08)", transition: "box-shadow 0.5s cubic-bezier(.16,1,.3,1)" }}>
         {imgOk
           ? <img src={h.photo} alt={h.name} onError={() => setImgOk(false)} style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top center", transition: "transform 0.5s cubic-bezier(.16,1,.3,1)", transform: hov ? "scale(1.03)" : "scale(1)" }} />
           : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -208,7 +208,7 @@ function HostSection() {
 
   return (
     <section style={{ padding: "88px 0 80px", background: C.creamSoft }}>
-      <div style={{ maxWidth: 1120, margin: "0 auto", padding: "0 32px" }}>
+      <div className="ev-wrap">
         <Reveal>
           <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 16, flexWrap: "wrap", gap: 16 }}>
             <div>
@@ -228,17 +228,12 @@ function HostSection() {
             </div>
           </div>
         </Reveal>
-
-        {/* Progress bar */}
         <div style={{ width: "100%", height: 2, background: "rgba(0,0,0,0.06)", borderRadius: 1, marginBottom: 36 }}>
           <div style={{ height: "100%", borderRadius: 1, background: C.accent, width: `${((page + 1) / total) * 100}%`, transition: "width 0.5s cubic-bezier(.16,1,.3,1)" }} />
         </div>
-
         <div style={{ display: "grid", gridTemplateColumns: `repeat(${perPage}, 1fr)`, gap: 32 }}>
           {visible.map((h, i) => <HostCard key={`${page}-${i}`} h={h} />)}
         </div>
-
-        {/* Dots */}
         <div style={{ display: "flex", gap: 6, justifyContent: "center", marginTop: 36 }}>
           {Array.from({ length: total }).map((_, i) => (
             <div key={i} onClick={() => setPage(i)} style={{ width: i === page ? 24 : 8, height: 8, borderRadius: 4, background: i === page ? C.accent : "rgba(0,0,0,0.1)", cursor: "pointer", transition: "all 0.35s cubic-bezier(.16,1,.3,1)" }} />
@@ -255,42 +250,66 @@ export default function EventsPage() {
 
   return (
     <div style={{ background: C.cream, overflowX: "hidden" }}>
+      <style>{CSS}</style>
       <Navbar />
 
-      {/* ── 1. HERO ── */}
-      <section style={{ background: C.ink, padding: "120px 0 72px", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", top: -120, right: -120, width: 500, height: 500, borderRadius: "50%", background: `radial-gradient(circle, ${C.maroon}18 0%, transparent 65%)`, pointerEvents: "none" }} />
-        <div style={{ maxWidth: 1120, margin: "0 auto", padding: "0 32px", position: "relative", zIndex: 1 }}>
-          <Reveal><Label light>Upcoming Events</Label></Reveal>
+      {/* ══ 1. HERO — full-bleed image, text only ══ */}
+      <section className="ev-hero">
+        <div className="ev-hero-bg" />
+        <div className="ev-hero-overlay" />
+        <div className="ev-hero-grid" />
+
+        <div className="ev-wrap ev-hero-inner">
+          <Reveal>
+            <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 10, fontWeight: 600, color: C.accent, textTransform: "uppercase", letterSpacing: 2.5, background: "rgba(200,53,75,0.12)", border: "1px solid rgba(200,53,75,0.25)", borderRadius: 6, padding: "6px 14px", marginBottom: 28, display: "inline-block" }}>
+              Upcoming Events
+            </div>
+          </Reveal>
           <Reveal delay={50}>
-            <h1 style={{ fontFamily: "'Fraunces',serif", fontSize: "clamp(36px,5.5vw,62px)", fontWeight: 400, color: "#fff", lineHeight: 1.08, maxWidth: 600, marginBottom: 16 }}>
-              Free webinars. <em style={{ fontStyle: "italic", color: C.accentRose }}>Real answers.</em>
+            <h1 style={{ fontFamily: "'Fraunces',serif", fontSize: "clamp(36px,4.5vw,58px)", fontWeight: 400, color: "#fff", lineHeight: 1.05, maxWidth: 720, marginBottom: 20, letterSpacing: "-0.02em" }}>
+              Free webinars.{" "}
+              <em style={{ fontStyle: "italic", color: C.accent }}>Real answers.</em>
             </h1>
           </Reveal>
-          <Reveal delay={80}>
-            <p style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 16, color: C.stoneLight, lineHeight: 1.75, maxWidth: 460, marginBottom: 56 }}>
+          <Reveal delay={90}>
+            <p style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 15, color: "rgba(255,255,255,0.6)", lineHeight: 1.7, maxWidth: 480, marginBottom: 0 }}>
               Live sessions with former admissions officers from Cornell, UChicago and more — for families across Asia.
             </p>
           </Reveal>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 20 }}>
+        </div>
+      </section>
+
+      {/* ══ Webinar Cards Section ══ */}
+      <section style={{ background: C.ink, padding: "64px 0 80px" }}>
+        <div className="ev-wrap">
+          <Reveal>
+            <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 11, fontWeight: 500, color: C.accentRose, textTransform: "uppercase", letterSpacing: 2.5, marginBottom: 32 }}>
+              Choose your session
+            </div>
+          </Reveal>
+          <div className="ev-cards-grid">
             {WEBINARS.map((w, i) => (
-              <Reveal key={w.id} delay={120 + i * 70}><HeroCard w={w} /></Reveal>
+              <Reveal key={w.id} delay={i * 70}>
+                <WebinarCard w={w} />
+              </Reveal>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── Banner ── */}
+      {/* ══ Banner ══ */}
       <section style={{ background: C.creamWarm, borderBottom: `1px solid ${C.border}` }}>
-        <div style={{ maxWidth: 1120, margin: "0 auto", padding: "18px 32px", display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-          <span style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 14, fontWeight: 600, color: C.ink }}>All sessions are free to attend.</span>
-          <span style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 13, color: C.stone }}>Live online · Former admissions officers from Cornell, UChicago and more.</span>
+        <div className="ev-wrap" style={{ padding: "18px clamp(24px,6vw,80px)" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+            <span style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 14, fontWeight: 600, color: C.ink }}>All sessions are free to attend.</span>
+            <span style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 13, color: C.stone }}>Live online · Former admissions officers from Cornell, UChicago and more.</span>
+          </div>
         </div>
       </section>
 
-      {/* ── 2. WHAT YOU'LL LEARN ── */}
+      {/* ══ 2. WHAT YOU'LL LEARN ══ */}
       <section style={{ padding: "88px 0 80px", background: C.cream }}>
-        <div style={{ maxWidth: 1120, margin: "0 auto", padding: "0 32px" }}>
+        <div className="ev-wrap">
           <Reveal>
             <Label>What You'll Learn</Label>
             <h2 style={{ fontFamily: "'Fraunces',serif", fontSize: "clamp(26px,3.8vw,40px)", fontWeight: 400, color: C.ink, lineHeight: 1.15, marginBottom: 44 }}>
@@ -335,13 +354,13 @@ export default function EventsPage() {
         </div>
       </section>
 
-      {/* ── 3. HOSTS ── */}
+      {/* ══ 3. HOSTS ══ */}
       <HostSection />
 
-      {/* ── 4. BOTTOM CTA ── */}
+      {/* ══ 4. BOTTOM CTA ══ */}
       <section style={{ background: C.ink, padding: "80px 0", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", bottom: -80, right: -80, width: 320, height: 320, borderRadius: "50%", background: `radial-gradient(circle, ${C.maroon}18 0%, transparent 65%)`, pointerEvents: "none" }} />
-        <div style={{ maxWidth: 1120, margin: "0 auto", padding: "0 32px", position: "relative", zIndex: 1, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 56, alignItems: "center" }}>
+        <div className="ev-wrap" style={{ position: "relative", zIndex: 1, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 56, alignItems: "center" }}>
           <Reveal>
             <Label light>About AddedEducation</Label>
             <h2 style={{ fontFamily: "'Fraunces',serif", fontSize: "clamp(24px,3.5vw,34px)", fontWeight: 400, color: "#fff", lineHeight: 1.2, marginBottom: 16 }}>
@@ -375,3 +394,67 @@ export default function EventsPage() {
     </div>
   )
 }
+
+const CSS = `
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,400;1,9..144,500&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/* ── SHARED WRAPPER ── */
+.ev-wrap {
+  width: 100%;
+  padding: 0 clamp(24px, 6vw, 80px);
+}
+
+/* ── HERO ── */
+.ev-hero {
+  position: relative;
+  overflow: hidden;
+  background: #0E0E0E;
+  padding-bottom: 96px;
+}
+.ev-hero-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url('https://addededucation-assets.s3.us-east-1.amazonaws.com/images/vRwqcjkjJJvZusEeq6lojyQAW3s.png');
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+}
+.ev-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(14,14,14,0.5) 0%,
+    rgba(14,14,14,0.65) 40%,
+    rgba(14,14,14,0.92) 75%,
+    rgba(14,14,14,1) 100%
+  );
+}
+.ev-hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+  background-size: 80px 80px;
+  pointer-events: none;
+  mask-image: linear-gradient(to bottom, transparent 0%, black 25%, black 75%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 25%, black 75%, transparent 100%);
+}
+.ev-hero-inner {
+  position: relative;
+  z-index: 2;
+  padding-top: 140px;
+  padding-bottom: 0;
+}
+.ev-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 1100px) { .ev-cards-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px) {
+  .ev-cards-grid { grid-template-columns: 1fr; }
+  .ev-hero-inner { padding-top: 100px; padding-bottom: 60px; }
+}
+`

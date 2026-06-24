@@ -188,7 +188,7 @@ export default function ContactSection({
         .ae-inp:focus, .ae-sel:focus { border-color: rgba(255,255,255,0.3) !important; }
       `}</style>
 
-      <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
+      <div className="w-full px-6 lg:px-20">
         <div className="grid lg:grid-cols-2 gap-12 items-stretch">
 
           {/* Left - copy + form */}

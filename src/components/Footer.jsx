@@ -14,7 +14,7 @@ const SOCIALS = [
 export default function Footer() {
   return (
     <footer className="w-full bg-ink border-t" style={{ borderColor: "rgba(255,255,255,0.07)" }}>
-      <div className="max-w-[1400px] mx-auto px-6 lg:px-12 py-16 lg:py-20">
+      <div className="w-full px-6 lg:px-20 py-16 lg:py-20">
         {/* Top row */}
         <div className="grid grid-cols-2 lg:grid-cols-5 gap-10 mb-14">
           {/* Brand */}
@@ -22,8 +22,7 @@ export default function Footer() {
             <img
               src="https://addededucation-assets.s3.us-east-1.amazonaws.com/images/Horizontal+-+Maroon.png"
               alt="AddedEducation"
-              className="h-7 object-contain mb-5"
-              style={{ filter: "brightness(0) invert(1)" }}
+              className="h-9 object-contain mb-5"
             />
             <p className="font-inter text-stone-light leading-relaxed mb-5" style={{ fontSize: 13, fontWeight: 350 }}>
               Premium university admissions guidance for families worldwide.

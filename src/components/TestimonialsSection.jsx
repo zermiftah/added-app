@@ -1,3 +1,4 @@
+import { Reveal } from "../hooks/useReveal"
 import { useState, useEffect, useRef, useCallback } from "react"
 
 // ─── Edit testimonials + photo URL di sini ─────────────────────────────────
@@ -140,7 +141,7 @@ export default function TestimonialsSection() {
 
   return (
     <section style={{ background: "#0E0E0E", width: "100%", padding: "80px 0 96px" }}>
-      <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 56px" }}>
+      <div style={{ width: "100%", padding: "0 clamp(24px,6vw,80px)" }}>
 
         {/* Header */}
         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 48 }}>

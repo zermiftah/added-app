@@ -1,3 +1,4 @@
+import { Reveal } from "../hooks/useReveal"
 import { useState, useEffect } from "react"
 
 const FEATURES = [

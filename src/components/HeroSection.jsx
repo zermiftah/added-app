@@ -84,26 +84,26 @@ export default function HeroSection() {
         }}
       />
 
-      <div className="relative z-10 max-w-[1400px] mx-auto w-full px-6 lg:px-12 pb-20 lg:pb-28 pt-32">
+      <div className="relative z-10 w-full pb-20 lg:pb-28 pt-32" style={{ paddingLeft: "clamp(24px, 15vw, 220px)", paddingRight: "clamp(24px, 6vw, 80px)" }}>
         <div className="mb-6">
           <span style={{
             fontFamily: "'JetBrains Mono', monospace",
-            fontSize: 10,
+            fontSize: 9,
             fontWeight: 500,
             letterSpacing: "0.22em",
             textTransform: "uppercase",
             color: "rgba(255,255,255,0.7)",
             border: "1px solid rgba(255,255,255,0.22)",
             borderRadius: 6,
-            padding: "8px 16px",
+            padding: "6px 14px",
           }}>
             Premium University Admission Services
           </span>
         </div>
 
         <h1
-          className="fraunces-display text-white mb-8"
-          style={{ fontSize: "clamp(48px, 7vw, 96px)", lineHeight: 1.0, letterSpacing: "-0.02em" }}
+          className="fraunces-display text-white mb-6"
+          style={{ fontSize: "clamp(36px, 4.5vw, 58px)", lineHeight: 1.05, letterSpacing: "-0.02em", maxWidth: 600 }}
         >
           Your Child Has One Shot
           <br />
@@ -113,14 +113,14 @@ export default function HeroSection() {
         </h1>
 
         <p
-          className="text-white/70 mb-10 max-w-md"
-          style={{ fontFamily: "'Inter', sans-serif", fontSize: 17, fontWeight: 350, lineHeight: 1.55 }}
+          className="text-white/70 mb-10"
+          style={{ fontFamily: "'Inter', sans-serif", fontSize: 15, fontWeight: 350, lineHeight: 1.7, maxWidth: 420 }}
         >
           We partner with families to build powerful applications,
           placing 93% of our students in a top-3 target school.
         </p>
 
-        <HeroRollButton label="Book a free 30-minute call" href="#contact" />
+        <HeroRollButton label="Book a free 30-minute call" href="/contact" />
       </div>
     </section>
   )
