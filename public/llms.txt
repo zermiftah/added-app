@@ -1,0 +1,21 @@
+# AddedEducation
+
+AddedEducation is a premium university admissions consultancy helping high-achieving students gain admission to top universities worldwide across 12+ countries.
+
+## Services
+
+- [Full Service Admissions](https://zmiftah.tech/programs/admissions) - End-to-end university guidance from first draft to acceptance letter
+- [Athletic Counseling](https://zmiftah.tech/programs/athletic) - University admissions counseling for student-athletes
+- [AddedArt](https://zmiftah.tech/programs/arts) - Creative arts division for portfolio and arts school applications
+- [AddedTutoring](https://zmiftah.tech/programs/tutoring) - Curriculum tutoring for MYP, IB, IGCSE, AS, A-Level, AP
+- [AddedNova Research](https://zmiftah.tech/programs/research) - University-level research mentorship program
+
+## About
+
+- [About Us](https://zmiftah.tech/about) - Our story, mission, and team
+- [Events](https://zmiftah.tech/events) - Upcoming webinars and events
+- [Resources](https://zmiftah.tech/resources) - Articles and insights on university admissions
+
+## Contact
+
+- [Get In Touch](https://zmiftah.tech/get-in-touch) - Book a free 30-minute consultation

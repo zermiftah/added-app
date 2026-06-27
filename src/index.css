@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500;1,9..144,700&family=Inter:wght@300;350;400;450;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap');
+/* @import moved to index.html async */
 
 @tailwind base;
 @tailwind components;
@@ -17,27 +17,23 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Fraunces display — optical size 144 for large hero, 72 for headings */
 .fraunces-display {
   font-family: 'Fraunces', serif;
   font-optical-sizing: auto;
   font-variation-settings: 'opsz' 144;
   font-weight: 400;
 }
-
 .fraunces-display em {
   font-style: italic;
   font-weight: 400;
   font-variation-settings: 'opsz' 144;
 }
-
 .fraunces-heading {
   font-family: 'Fraunces', serif;
   font-optical-sizing: auto;
   font-variation-settings: 'opsz' 72;
   font-weight: 400;
 }
-
 .fraunces-heading em {
   font-style: italic;
   font-weight: 400;
@@ -47,4 +43,14 @@ body {
 @layer utilities {
   .font-350 { font-weight: 350; }
   .font-450 { font-weight: 450; }
+}
+
+@media (max-width: 768px) {
+  [data-carousel] { overflow-x: auto; }
+  .cd-sidebar, .rd-sidebar { position: static !important; top: auto !important; }
+  .ab-inp, .git-inp, .re-inp, .ca-input, .te-inp { font-size: 16px !important; }
+  [style*="flex-direction: row"] { flex-wrap: wrap; }
+}
+@media (max-width: 480px) {
+  .ca-grid { grid-template-columns: 1fr !important; }
 }

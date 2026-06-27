@@ -465,14 +465,20 @@ export default function ContactSection({
               className="w-full h-full rounded-2xl overflow-hidden relative"
               style={{ background: "#E8E4DC", minHeight: 600 }}
             >
-              {/* Placeholder */}
-              <div
-                className="absolute inset-0"
+              <img
+                src="https://addededucation-assets.s3.us-east-1.amazonaws.com/images/contact+us.png"
+                alt=""
+                loading="lazy"
+                decoding="async"
+                aria-hidden="true"
                 style={{
-                  backgroundImage: "url('https://addededucation-assets.s3.us-east-1.amazonaws.com/images/contact+us.png')",
-                  backgroundSize: "cover",
-                  backgroundPosition: "center top",
-                  backgroundRepeat: "no-repeat",
+                  position: "absolute",
+                  inset: 0,
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  objectPosition: "center top",
+                  pointerEvents: "none",
                 }}
               />
             </div>

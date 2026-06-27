@@ -23,7 +23,9 @@ function LogoItem({ name, url }) {
       <img
         src={url}
         alt={name}
-        style={{ height: 28, objectFit: "contain", display: "block" }}
+        width={112} height={28} style={{ height: 28, width: "auto", maxWidth: 112, objectFit: "contain", display: "block" }}
+        loading="lazy"
+        decoding="async"
         onError={(e) => {
           e.target.style.display = "none"
           e.target.nextSibling.style.display = "block"

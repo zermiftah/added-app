@@ -68,13 +68,20 @@ export default function HeroSection() {
       className="relative w-full min-h-screen flex flex-col justify-end overflow-hidden"
       style={{ background: "#0E0E0E" }}
     >
-      <div
-        className="absolute inset-0"
+      <img
+        src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567334679_vRwqcjkjJJvZusEeq6lojyQAW3s.webp"
+        alt=""
+        fetchpriority="high"
+        decoding="async"
+        aria-hidden="true"
         style={{
-          backgroundImage: "url('https://addededucation-assets.s3.us-east-1.amazonaws.com/images/vRwqcjkjJJvZusEeq6lojyQAW3s.png')",
-          backgroundSize: "cover",
-          backgroundPosition: "center top",
-          backgroundRepeat: "no-repeat",
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          objectPosition: "center top",
+          pointerEvents: "none",
         }}
       />
       <div
@@ -84,7 +91,7 @@ export default function HeroSection() {
         }}
       />
 
-      <div className="relative z-10 w-full pb-20 lg:pb-28 pt-32" style={{ paddingLeft: "clamp(24px, 15vw, 220px)", paddingRight: "clamp(24px, 6vw, 80px)" }}>
+      <div className="relative z-10 w-full pb-20 lg:pb-28 pt-32" style={{ paddingLeft: "clamp(24px, 8vw, 120px)", paddingRight: "clamp(24px, 6vw, 80px)" }}>
         <div className="mb-6">
           <span style={{
             fontFamily: "'JetBrains Mono', monospace",

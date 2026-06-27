@@ -22,6 +22,7 @@ export default function Footer() {
             <img
               src="https://addededucation-assets.s3.us-east-1.amazonaws.com/images/Horizontal+-+Maroon.png"
               alt="AddedEducation"
+              width={180} height={36}
               className="h-9 object-contain mb-5"
             />
             <p className="font-inter text-stone-light leading-relaxed mb-5" style={{ fontSize: 13, fontWeight: 350 }}>

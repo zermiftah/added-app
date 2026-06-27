@@ -61,8 +61,8 @@ export default function WhySection() {
 
   return (
     <section style={{ background: "#0E0E0E", width: "100%", padding: "80px 0 96px" }}>
-      <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 56px" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "start" }}>
+      <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 clamp(24px,6vw,80px)" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "clamp(32px, 6vw, 80px)", alignItems: "start" }}>
 
           {/* ── LEFT ── */}
           <div>
@@ -149,18 +149,27 @@ export default function WhySection() {
 
           {/* ── RIGHT — animated image ── */}
           <div style={{ position: "relative", borderRadius: 20, overflow: "hidden", aspectRatio: "4/5" }}>
-            {/* Image crossfade */}
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                backgroundImage: `url('${current.image}')`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                opacity: animating ? 0 : 1,
-                transition: "opacity 0.3s ease",
-              }}
-            />
+            {/* Image crossfade — render all, crossfade via opacity */}
+            {FEATURES.map((f, i) => (
+              <img
+                key={f.id}
+                src={f.image}
+                alt={f.cardTitle}
+                loading="lazy"
+                decoding="async"
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  objectPosition: "center",
+                  opacity: i === active && !animating ? 1 : 0,
+                  transition: "opacity 0.3s ease",
+                  pointerEvents: "none",
+                }}
+              />
+            ))}
 
             {/* Dark overlay bottom */}
             <div style={{

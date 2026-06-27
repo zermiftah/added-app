@@ -32,7 +32,7 @@ function TestimonialCard({ t }) {
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 16, flexShrink: 0 }}>
         <div>
           <p style={{ fontFamily: "'Inter',sans-serif", fontSize: 18, fontWeight: 600, color: "#fff", marginBottom: 4 }}>{t.name}</p>
-          <p style={{ fontFamily: "'Inter',sans-serif", fontSize: 13, color: "#6B6863" }}>{t.school}</p>
+          <p style={{ fontFamily: "'Inter',sans-serif", fontSize: 13, color: "#A6A39E" }}>{t.school}</p>
         </div>
         <div style={{ width: 72, height: 72, borderRadius: 10, overflow: "hidden", flexShrink: 0, background: "#2a2a2a", marginLeft: 12 }}>
           {imgOk
@@ -73,10 +73,22 @@ export default function TestimonialsSection() {
 
   const [dotActive, setDotActive] = useState(0)
 
-  // Card width computed from wrapper
-  const getCardWidth = useCallback(() => {
-    if (!wrapRef.current) return 0
-    return (wrapRef.current.offsetWidth - GAP * (VISIBLE - 1)) / VISIBLE
+  // Cache card width via ResizeObserver to avoid forced reflow
+  const cardWRef = useRef(0)
+
+  // Card width computed from cached ref
+  const getCardWidth = useCallback(() => cardWRef.current, [])
+
+  useEffect(() => {
+    if (!wrapRef.current) return
+    const update = () => {
+      if (!wrapRef.current) return
+      cardWRef.current = (wrapRef.current.offsetWidth - GAP * (VISIBLE - 1)) / VISIBLE
+    }
+    update()
+    const ro = new ResizeObserver(update)
+    ro.observe(wrapRef.current)
+    return () => ro.disconnect()
   }, [])
 
   // Jump to index instantly (no transition) — for infinite reset

@@ -2,20 +2,20 @@ import { useState, useEffect, useRef } from "react"
 import { Link, useLocation } from "react-router-dom"
 
 const PROGRAMS = [
-  { label: "Full-Service Admissions Counseling", href: "/programs/admissions" },
-  { label: "Athletic Recruitment Counseling",    href: "/programs/athletic" },
-  { label: "Research Program",                   href: "/programs/research" },
-  { label: "Tutoring Support",                   href: "/programs/tutoring" },
-  { label: "AddedArts",                          href: "/programs/arts" },
+  { label: "AddedEducation", href: "/programs/admissions" },
+  { label: "AddedSport", href: "/programs/athletic" },
+  { label: "AddedArt", href: "/programs/arts" },
+  { label: "AddedTutoring", href: "/programs/tutoring" },
+  { label: "AddedNova Research Program", href: "/programs/research" },
 ]
 
 const NAV_LINKS = [
   { label: "Our Programs", href: "/programs", hasDropdown: true },
-  { label: "Events",       href: "/events" },
-  { label: "Careers",      href: "/careers" },
-  { label: "Resources",    href: "/resources" },
-  { label: "About Us",     href: "/about" },
-  { label: "Your Team",    href: "/team" },
+  { label: "Events", href: "/events" },
+  { label: "Careers", href: "/careers" },
+  { label: "Resources", href: "/resources" },
+  { label: "About Us", href: "/about" },
+  { label: "Your Team", href: "/team" },
 ]
 
 /* ── Roll button ── */
@@ -112,7 +112,7 @@ function ProgramsDropdown({ isActive }) {
         <svg width="10" height="6" viewBox="0 0 10 6" fill="none"
           style={{ transition: "transform 0.5s cubic-bezier(0.34,1.56,0.64,1)", transform: open ? "rotate(180deg)" : "rotate(0deg)", flexShrink: 0 }}
         >
-          <path d="M1 1l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M1 1l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
         {/* Underline */}
         <span style={{
@@ -189,7 +189,7 @@ export default function Navbar() {
       <nav className="w-full px-6 lg:px-20 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex-shrink-0">
-          <img src="https://addededucation-assets.s3.us-east-1.amazonaws.com/images/Horizontal+-+Maroon.png" alt="AddedEducation" className="h-9 object-contain" style={scrolled ? {} : { filter: "brightness(0) invert(1)" }} />
+          <img src="https://addededucation-assets.s3.us-east-1.amazonaws.com/images/Horizontal+-+Maroon.png" alt="AddedEducation" width={180} height={36} className="h-9 object-contain" style={scrolled ? {} : { filter: "brightness(0) invert(1)" }} />
         </Link>
 
         {/* Desktop links */}
@@ -210,7 +210,7 @@ export default function Navbar() {
         </div>
 
         {/* Mobile hamburger */}
-        <button className="lg:hidden flex flex-col gap-1.5 p-2" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu">
+        <button className="lg:hidden flex flex-col gap-1.5 p-2" onClick={() => setMenuOpen(!menuOpen)} aria-label={menuOpen ? "Close menu" : "Open menu"}>
           <span className="block w-5 h-0.5 bg-white transition-all" style={{ transform: menuOpen ? "rotate(45deg) translate(3px, 3px)" : "" }} />
           <span className="block w-5 h-0.5 bg-white transition-all" style={{ opacity: menuOpen ? 0 : 1 }} />
           <span className="block w-5 h-0.5 bg-white transition-all" style={{ transform: menuOpen ? "rotate(-45deg) translate(3px, -3px)" : "" }} />
@@ -227,7 +227,7 @@ export default function Navbar() {
               Our Programs
               <svg width="10" height="6" viewBox="0 0 10 6" fill="none"
                 style={{ transition: "transform 0.25s ease", transform: mobileProgOpen ? "rotate(180deg)" : "rotate(0deg)" }}>
-                <path d="M1 1l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M1 1l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </button>
             {mobileProgOpen && (
