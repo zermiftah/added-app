@@ -8,6 +8,8 @@ const NAV_ITEMS = [
   { key: "articles",   label: "Resource Articles", icon: "📝", group: "Resources" },
   { key: "authors",    label: "Resource Authors",  icon: "✍️",  group: "Resources" },
   { key: "assets",     label: "Media Library",     icon: "🖼", group: "Media" },
+  { key: "team",       label: "Team",              icon: "👤", group: "Media" },
+  { key: "webinars",   label: "Landing Pages",     icon: "🎯", group: "Media" },
 ]
 
 export default function AdminLayout({ children }) {
@@ -29,6 +31,7 @@ export default function AdminLayout({ children }) {
             </div>
           )}
           <button
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
             onClick={() => setCollapsed(v => !v)}
             className="flex-shrink-0 w-7 h-7 rounded-md bg-white/5 border border-white/10 text-white/40 hover:bg-white/10 hover:text-white transition-all flex items-center justify-center text-[10px]"
           >
@@ -59,6 +62,7 @@ export default function AdminLayout({ children }) {
         {/* Logout */}
         <div className="p-2 border-t border-white/5">
           <button
+            aria-label="Logout"
             onClick={signOut}
             title={collapsed ? "Logout" : undefined}
             className="flex items-center gap-2.5 w-full px-2.5 py-2 rounded-lg text-white/30 hover:bg-red-500/10 hover:text-red-400 transition-all font-dm text-[13px] font-medium"
@@ -89,6 +93,7 @@ export default function AdminLayout({ children }) {
 function NavItem({ item, active, collapsed, onClick }) {
   return (
     <button
+      aria-label={item.label}
       onClick={onClick}
       title={collapsed ? item.label : undefined}
       className={`flex items-center gap-2.5 w-full px-2.5 py-2 rounded-lg border-none font-dm text-[13px] font-medium transition-all text-left ${active ? "bg-accent/15 text-white" : "text-white/40 hover:bg-white/5 hover:text-white/80"}`}

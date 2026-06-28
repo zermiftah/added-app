@@ -150,7 +150,11 @@ function AccordionItem({ item, isOpen, onToggle }) {
    TESTIMONIALS CAROUSEL — 4 visible
 ───────────────────────────────────────── */
 const GAP    = 16
-const VISIBLE = 4
+function getVisibleCount(w) {
+  if (w < 640) return 1
+  if (w < 1024) return 2
+  return 3
+}
 const CARD_H  = 230
 
 function TestimonialCard({ t }) {
@@ -188,12 +192,20 @@ function TestimonialCard({ t }) {
 
 function TestimonialsCarousel() {
   const N = TESTIMONIALS.length
+  const [visible, setVisible] = useState(() =>
+    typeof window !== "undefined" ? getVisibleCount(window.innerWidth) : 3
+  )
+  useEffect(() => {
+    const onResize = () => setVisible(getVisibleCount(window.innerWidth))
+    window.addEventListener("resize", onResize, { passive: true })
+    return () => window.removeEventListener("resize", onResize)
+  }, [])
   const items = [
-    ...TESTIMONIALS.slice(N - VISIBLE),
+    ...TESTIMONIALS.slice(N - visible),
     ...TESTIMONIALS,
-    ...TESTIMONIALS.slice(0, VISIBLE),
+    ...TESTIMONIALS.slice(0, visible),
   ]
-  const OFFSET = VISIBLE
+  const OFFSET = visible
 
   const wrapRef  = useRef(null)
   const trackRef = useRef(null)
@@ -240,15 +252,18 @@ function TestimonialsCarousel() {
   useEffect(() => {
     const update = () => {
       if (!wrapRef.current) return
-      cardWRef.current = (wrapRef.current.offsetWidth - GAP * (VISIBLE - 1)) / VISIBLE
-      setCardW(cardWRef.current)
+      const w = wrapRef.current.getBoundingClientRect().width || wrapRef.current.offsetWidth
+      if (w > 0) {
+        cardWRef.current = (w - GAP * (visible - 1)) / visible
+        setCardW(cardWRef.current)
+      }
       jump(OFFSET)
     }
     const ro = new ResizeObserver(update)
     if (wrapRef.current) ro.observe(wrapRef.current)
     requestAnimationFrame(() => { update(); resetTimer() })
     return () => { ro.disconnect(); clearInterval(timerRef.current) }
-  }, [])
+  }, [visible])
 
   const handlePrev = () => { move(-1); resetTimer() }
   const handleNext = () => { move(1);  resetTimer() }
@@ -304,17 +319,6 @@ function TestimonialsCarousel() {
           </div>
         </div>
 
-        {/* Dots */}
-        <div style={{ display: "flex", gap: 8, justifyContent: "center", marginTop: 28 }}>
-          {TESTIMONIALS.map((_, i) => (
-            <button key={i} onClick={() => handleDot(i)} aria-label={`Go to slide ${i + 1}`} style={{
-              width: i === dot ? 24 : 8, height: 8, borderRadius: 999, border: "none",
-              background: i === dot ? C.accent : "rgba(255,255,255,0.2)",
-              cursor: "pointer", padding: 0, transition: "all 0.3s",
-              minWidth: 24, minHeight: 24, display: "inline-flex", alignItems: "center", justifyContent: "center",
-            }} />
-          ))}
-        </div>
       </div>
     </section>
   )
@@ -336,7 +340,7 @@ export default function FullServicePage() {
         <div style={{ position: "absolute", inset: 0, zIndex: 1, background: "linear-gradient(to bottom, rgba(14,14,14,0.35) 0%, rgba(14,14,14,0.70) 100%)" }} />
         <div style={{ position: "absolute", inset: 0, zIndex: 0, background: "linear-gradient(135deg,#1a1a1a 0%,#2a2a2a 100%)" }} />
         <img
-          src="https://addededucation-assets.s3.us-east-1.amazonaws.com/images/Admission+Page/admission+hero.png"
+          src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567182758_admission_hero.webp"
           alt=""
           onError={e => e.currentTarget.style.display = "none"}
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0 }}
@@ -387,7 +391,7 @@ export default function FullServicePage() {
           {/* left image */}
           <div style={{ borderRadius: 14, overflow: "hidden", aspectRatio: "4/3", background: "#2a2a2a" }}>
             <img
-              src="https://addededucation-assets.s3.us-east-1.amazonaws.com/images/Admission+Page/start+to+finish.jpg"
+              src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567182686_start_to_finish.webp"
               alt=""
               onError={e => e.currentTarget.style.display = "none"}
               style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
@@ -415,12 +419,22 @@ export default function FullServicePage() {
           <em style={{ fontStyle: "italic", color: C.accent }}>consultation</em>?
         </h2>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 24, maxWidth: 1100, margin: "0 auto", alignItems: "center" }}>
+        <style>{`
+          .fs-expect-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; max-width: 1100px; margin: 0 auto; align-items: center; }
+          .fs-expect-center { padding: 0 32px; }
+          @media (max-width: 768px) {
+            .fs-expect-grid { grid-template-columns: 1fr; gap: 32px; }
+            .fs-expect-center { padding: 0; order: -1; }
+            .fs-expect-photos { flex-direction: row !important; }
+            .fs-expect-photos > div { flex: 1; }
+          }
+        `}</style>
+        <div className="fs-expect-grid">
           {/* left photos */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-            {["8GcnRiF6LGYAU0IkaeGqyUADA5I", "KdJz5db0hdxbuIYLtIg8ZRngU"].map(img => (
+          <div className="fs-expect-photos" style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            {["asset_1782567182705_8GcnRiF6LGYAU0IkaeGqyUADA5I", "asset_1782567178181_KdJz5db0hdxbuIYLtIg8ZRngU"].map(img => (
               <div key={img} style={{ borderRadius: 12, overflow: "hidden", aspectRatio: "4/3", background: C.creamWarm }}>
-                <img src={`https://addededucation-assets.s3.us-east-1.amazonaws.com/images/Admission+Page/${img}.jpg`} alt=""
+                <img src={`https://zmiftah.tech/addedapi/uploads/addededucation-assets/${img}.webp`} alt=""
                   style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
                   onError={e => e.currentTarget.style.display = "none"} />
               </div>
@@ -428,7 +442,7 @@ export default function FullServicePage() {
           </div>
 
           {/* center bullets */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 28, padding: "0 32px", textAlign: "center" }}>
+          <div className="fs-expect-center" style={{ display: "flex", flexDirection: "column", gap: 28, textAlign: "center" }}>
             {CONSULT_ITEMS.map((item, i) => (
               <div key={i}>
                 <h3 style={{ fontFamily: "'Inter',sans-serif", fontWeight: 600, fontSize: 15, color: C.ink, margin: "0 0 5px" }}>{item.title}</h3>
@@ -438,10 +452,10 @@ export default function FullServicePage() {
           </div>
 
           {/* right photos */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-            {["o9I3FbRMuRHkRnxplajjITeTi9M", "XE8FD73R78mEBCOY1PqW438OSQ"].map(img => (
+          <div className="fs-expect-photos" style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            {["https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567178765_o9I3FbRMuRHkRnxplajjITeTi9M.webp", "https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567179090_XE8FD73R78mEBCOY1PqW438OSQ.webp"].map(img => (
               <div key={img} style={{ borderRadius: 12, overflow: "hidden", aspectRatio: "4/3", background: C.creamWarm }}>
-                <img src={`https://addededucation-assets.s3.us-east-1.amazonaws.com/images/Admission+Page/${img}.jpg`} alt=""
+                <img src={`${img}`} alt=""
                   style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
                   onError={e => e.currentTarget.style.display = "none"} />
               </div>
@@ -451,10 +465,20 @@ export default function FullServicePage() {
       </section>
 
       {/* ══ 5. WHAT WE DO — dark card with accordion + image ══ */}
-      <section style={{ background: C.cream, padding: `0 ${px} 72px` }}>
+      <style>{`
+        .fs-whatwedo-section { background: ${C.cream}; padding: 0 ${px} 72px; }
+        .fs-whatwedo-card { background: ${C.ink}; border-radius: 20px; overflow: hidden; padding: 56px; }
+        .fs-whatwedo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+        @media (max-width: 768px) {
+          .fs-whatwedo-section { padding: 0 0 56px; }
+          .fs-whatwedo-card { border-radius: 0; padding: 48px 24px; }
+          .fs-whatwedo-grid { grid-template-columns: 1fr; gap: 32px; }
+        }
+      `}</style>
+      <section className="fs-whatwedo-section">
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
-          <div style={{ background: C.ink, borderRadius: 20, overflow: "hidden", padding: "56px" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 56, alignItems: "center" }}>
+          <div className="fs-whatwedo-card">
+            <div className="fs-whatwedo-grid">
 
               {/* Left: heading + accordion */}
               <div>
@@ -482,7 +506,7 @@ export default function FullServicePage() {
               {/* Right: image */}
               <div style={{ borderRadius: 14, overflow: "hidden", aspectRatio: "3/4", background: "#2a2a2a" }}>
                 <img
-                  src="https://addededucation-assets.s3.us-east-1.amazonaws.com/images/Admission+Page/your+child.jpeg"
+                  src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567177114_your_child.webp"
                   alt=""
                   onError={e => e.currentTarget.style.display = "none"}
                   style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}

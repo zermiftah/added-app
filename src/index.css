@@ -54,3 +54,28 @@ body {
 @media (max-width: 480px) {
   .ca-grid { grid-template-columns: 1fr !important; }
 }
+/* Metric-matched fallback to minimize layout shift on Fraunces swap */
+@font-face {
+  font-family: 'Fraunces-fallback';
+  src: local('Georgia'), local('Times New Roman');
+  size-adjust: 105%;
+  ascent-override: 90%;
+  descent-override: 22%;
+  line-gap-override: 0%;
+}
+
+/* Containment: font-swap reflows scoped to element only, not whole page */
+.fraunces-display, .fraunces-heading {
+  contain: layout style;
+}
+
+
+/* ── Global mobile overflow fix ── */
+@media (max-width: 640px) {
+  /* Prevent any section from overflowing viewport */
+  section, .section { overflow-x: hidden; }
+  /* Reduce excessive padding on mobile */
+  [style*="padding: 80px 0"] { padding: 56px 0 !important; }
+  /* Navbar mobile: ensure no overflow */
+  nav { overflow: visible; }
+}

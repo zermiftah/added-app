@@ -50,6 +50,7 @@ export default function Modal({
                 </div>
                 {onClose && (
                   <button
+                    aria-label="Close"
                     onClick={onClose}
                     className="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-900 transition-all text-sm flex-shrink-0"
                   >

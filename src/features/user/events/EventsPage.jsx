@@ -317,7 +317,7 @@ export default function EventsPage() {
             </h2>
           </Reveal>
           <Reveal delay={50}>
-            <div style={{ display: "grid", gridTemplateColumns: "260px 1fr", gap: 56, alignItems: "start" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 56, alignItems: "start" }}>
               {/* Tabs */}
               <div style={{ borderRight: `1px solid ${C.border}` }}>
                 {WEBINARS.map((w, i) => {
@@ -360,7 +360,7 @@ export default function EventsPage() {
       {/* ══ 4. BOTTOM CTA ══ */}
       <section style={{ background: C.ink, padding: "80px 0", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", bottom: -80, right: -80, width: 320, height: 320, borderRadius: "50%", background: `radial-gradient(circle, ${C.maroon}18 0%, transparent 65%)`, pointerEvents: "none" }} />
-        <div className="ev-wrap" style={{ position: "relative", zIndex: 1, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 56, alignItems: "center" }}>
+        <div className="ev-wrap" style={{ position: "relative", zIndex: 1, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 56, alignItems: "center" }}>
           <Reveal>
             <Label light>About AddedEducation</Label>
             <h2 style={{ fontFamily: "'Fraunces',serif", fontSize: "clamp(24px,3.5vw,34px)", fontWeight: 400, color: "#fff", lineHeight: 1.2, marginBottom: 16 }}>
@@ -414,7 +414,7 @@ const CSS = `
 .ev-hero-bg {
   position: absolute;
   inset: 0;
-  background-image: url('https://addededucation-assets.s3.us-east-1.amazonaws.com/images/vRwqcjkjJJvZusEeq6lojyQAW3s.png');
+  background-image: url('https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567334679_vRwqcjkjJJvZusEeq6lojyQAW3s.webp');
   background-size: cover;
   background-position: center top;
   background-repeat: no-repeat;

@@ -1,32 +1,33 @@
 import { Reveal } from "../hooks/useReveal"
 import { useState, useEffect } from "react"
+import ResponsiveImg from "../ui/ResponsiveImg/ResponsiveImg"
 
 const FEATURES = [
   {
     id: 0,
     title: "Your own crew of experts",
-    image: "https://addededucation-assets.s3.us-east-1.amazonaws.com/images/your+own.jpg",
+    image: "https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782568643908_kgcCsv3JPReuxnmCCKHVESifPQM.webp",
     cardTitle: "YOUR CREW OF EXPERTS",
     cardBody: "One lead counselor stays with your child the whole way, backed by essay specialists and subject experts.",
   },
   {
     id: 1,
     title: "Flexible scheduling",
-    image: "https://addededucation-assets.s3.us-east-1.amazonaws.com/images/flexible.png",
+    image: "https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782568644101_MZVtALL1nWfIcflZWZFRcW3lU4g.webp",
     cardTitle: "FLEXIBLITY 'ROUND THE CLOCK",
     cardBody: "Google Meet, WhatsApp, phone call: reach us any time. We move at your pace.",
   },
   {
     id: 2,
     title: "Counselors your child will actually talk to",
-    image: "https://addededucation-assets.s3.us-east-1.amazonaws.com/images/counselor.jpg",
+    image: "https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782568641649_cL5jVHloWAtTsia9B71M73k.webp",
     cardTitle: "IT DOESN'T MATTER IF YOU LIKE THEM",
     cardBody: "It matters if your child does. We match based on personality and interests. Not a fit? We have 70+ to choose from.",
   },
   {
     id: 3,
     title: "Access local & global opportunities",
-    image: "https://addededucation-assets.s3.us-east-1.amazonaws.com/images/access.jpeg",
+    image: "https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567178765_o9I3FbRMuRHkRnxplajjITeTi9M.webp",
     cardTitle: "EXCLUSIVE OPPORTUNITIES",
     cardBody: "Former admissions officers, research programs, and community service: these are real opportunities you won't find on Google.",
   },
@@ -151,7 +152,7 @@ export default function WhySection() {
           <div style={{ position: "relative", borderRadius: 20, overflow: "hidden", aspectRatio: "4/5" }}>
             {/* Image crossfade — render all, crossfade via opacity */}
             {FEATURES.map((f, i) => (
-              <img
+              <ResponsiveImg
                 key={f.id}
                 src={f.image}
                 alt={f.cardTitle}

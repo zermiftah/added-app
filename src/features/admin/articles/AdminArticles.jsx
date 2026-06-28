@@ -177,7 +177,7 @@ export default function AdminArticles() {
             {thumbPreview ? (
               <div className="relative inline-block">
                 <img src={thumbPreview} alt="" className="w-full max-h-48 object-cover rounded-lg" />
-                <button onClick={() => { setThumbFile(null); setThumbPreview(null) }}
+                <button aria-label="Remove thumbnail" onClick={() => { setThumbFile(null); setThumbPreview(null) }}
                   className="absolute top-2 right-2 w-7 h-7 rounded-lg bg-black/60 text-white text-xs flex items-center justify-center hover:bg-red-600 transition-all">✕</button>
               </div>
             ) : (

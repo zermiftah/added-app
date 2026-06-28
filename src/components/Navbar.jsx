@@ -189,7 +189,7 @@ export default function Navbar() {
       <nav className="w-full px-6 lg:px-20 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex-shrink-0">
-          <img src="https://addededucation-assets.s3.us-east-1.amazonaws.com/images/Horizontal+-+Maroon.png" alt="AddedEducation" width={180} height={36} className="h-9 object-contain" style={scrolled ? {} : { filter: "brightness(0) invert(1)" }} />
+          <img src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782570954773_Horizontal___Maroon.webp" alt="AddedEducation" width={180} height={36} className="h-9 object-contain" style={scrolled ? {} : { filter: "brightness(0) invert(1)" }} />
         </Link>
 
         {/* Desktop links */}
@@ -222,7 +222,7 @@ export default function Navbar() {
         <div className="lg:hidden bg-ink border-t border-white/10 px-6 py-6 flex flex-col gap-4">
           {/* Our Programs accordion on mobile */}
           <div>
-            <button onClick={() => setMobileProgOpen(o => !o)}
+            <button aria-label="Toggle programs menu" onClick={() => setMobileProgOpen(o => !o)}
               style={{ display: "flex", alignItems: "center", gap: 6, fontFamily: "'Inter',sans-serif", fontSize: 14, fontWeight: 500, color: "rgba(255,255,255,0.8)", background: "none", border: "none", cursor: "pointer", padding: 0 }}>
               Our Programs
               <svg width="10" height="6" viewBox="0 0 10 6" fill="none"

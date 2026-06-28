@@ -188,7 +188,7 @@ export default function AdminJobs() {
                   className="flex-1 border border-gray-200 rounded-lg px-3.5 py-2.5 text-sm outline-none focus:border-gray-900 transition-all appearance-auto">
                   {depts.map(d => <option key={d.id} value={d.name}>{d.name}</option>)}
                 </select>
-                <button onClick={() => setShowDeptPanel(true)} className="w-10 h-10 flex items-center justify-center border border-gray-200 rounded-lg text-gray-500 hover:border-gray-900 hover:text-gray-900 transition-all text-lg flex-shrink-0">+</button>
+                <button aria-label="Add department" onClick={() => setShowDeptPanel(true)} className="w-10 h-10 flex items-center justify-center border border-gray-200 rounded-lg text-gray-500 hover:border-gray-900 hover:text-gray-900 transition-all text-lg flex-shrink-0">+</button>
               </div>
             </div>
             <Select label="Employment Type" required value={form.type} onChange={e => setF("type", e.target.value)}>

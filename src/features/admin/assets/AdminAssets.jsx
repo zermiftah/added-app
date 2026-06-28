@@ -75,6 +75,7 @@ export default function AdminAssets() {
           </p>
         </div>
         <button
+          aria-label="Upload asset"
           onClick={() => fileRef.current?.click()}
           disabled={uploadAsset.isPending}
           className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#0E0E0E] text-white text-[13px] font-semibold hover:bg-gray-800 disabled:opacity-50 transition"
@@ -198,6 +199,7 @@ export default function AdminAssets() {
             </p>
             <div className="flex gap-2 justify-end">
               <button
+                aria-label="Cancel delete"
                 onClick={() => setDeleteConfirm(null)}
                 className="px-4 py-2 rounded-lg border border-gray-200 text-[13px] text-gray-600 hover:bg-gray-50"
               >
@@ -262,6 +264,7 @@ function AssetCard({ asset, copied, onCopy, onPreview, onDelete }) {
         </p>
         <div className="flex items-center gap-1">
           <button
+            aria-label="Copy URL"
             onClick={onCopy}
             title="Copy URL"
             className={`flex-1 py-1 rounded text-[10px] font-semibold transition ${
@@ -273,6 +276,7 @@ function AssetCard({ asset, copied, onCopy, onPreview, onDelete }) {
             {copied ? "✓ Copied" : "Copy URL"}
           </button>
           <button
+            aria-label="Delete asset"
             onClick={onDelete}
             title="Delete"
             className="w-6 h-6 rounded bg-gray-100 text-gray-400 hover:bg-red-50 hover:text-red-500 transition text-[11px] flex items-center justify-center"
@@ -300,7 +304,7 @@ function Modal({ onClose, title, children }) {
       >
         <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
           <h2 className="text-[14px] font-bold text-gray-900 truncate pr-4">{title}</h2>
-          <button onClick={onClose} className="w-7 h-7 rounded-lg bg-gray-100 text-gray-500 hover:bg-gray-200 flex items-center justify-center text-[12px]">✕</button>
+          <button aria-label="Close" onClick={onClose} className="w-7 h-7 rounded-lg bg-gray-100 text-gray-500 hover:bg-gray-200 flex items-center justify-center text-[12px]">✕</button>
         </div>
         <div className="p-5">{children}</div>
       </motion.div>

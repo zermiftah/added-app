@@ -11,7 +11,7 @@ const C = {
 }
 
 /* ── Countries ── */
-const COUNTRIES = [
+const COUNTRIES = [ 
   { iso: "AF", name: "Afghanistan", dial: "+93" },
   { iso: "AL", name: "Albania", dial: "+355" },
   { iso: "DZ", name: "Algeria", dial: "+213" },
@@ -215,7 +215,7 @@ function ContactForm() {
       <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
 
         {/* Row 1: First + Last */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 12 }}>
           <div>
             <label style={lbl}>First Name*</label>
             <input type="text" placeholder="Jane" value={form.firstname}
@@ -350,7 +350,7 @@ export default function AboutPage() {
         <div style={{ position: "absolute", inset: 0, zIndex: 1, background: "linear-gradient(to bottom, rgba(14,14,14,0.30) 0%, rgba(14,14,14,0.65) 100%)" }} />
         <div style={{ position: "absolute", inset: 0, zIndex: 0, background: "linear-gradient(135deg,#1a1a1a 0%,#2a2a2a 100%)" }} />
         <img
-          src="https://addededucation-assets.s3.us-east-1.amazonaws.com/images/About+Us+Page/hero.jpg"
+          src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567186493_hero.webp"
           alt=""
           onError={e => e.currentTarget.style.display = "none"}
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top", zIndex: 0 }}
@@ -426,7 +426,7 @@ export default function AboutPage() {
               </p>
               <div style={{ borderRadius: 14, overflow: "hidden", aspectRatio: "4/3", background: "#2a2a2a" }}>
                 <img
-                  src="https://addededucation-assets.s3.us-east-1.amazonaws.com/images/About+Us+Page/beyond.jpg"
+                  src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567184030_beyond.webp"
                   alt=""
                   onError={e => e.currentTarget.style.display = "none"}
                   style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
@@ -485,7 +485,7 @@ export default function AboutPage() {
           {/* Right: image */}
           <div style={{ borderRadius: 16, overflow: "hidden", aspectRatio: "3/4", background: C.creamWarm, position: "sticky", top: 80 }}>
             <img
-              src="https://addededucation-assets.s3.us-east-1.amazonaws.com/images/About+Us+Page/form.jpg"
+              src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567184062_form.webp"
               alt=""
               onError={e => e.currentTarget.style.display = "none"}
               style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}

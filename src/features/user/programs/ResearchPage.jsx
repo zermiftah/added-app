@@ -327,7 +327,7 @@ function EnquiryForm() {
       `}</style>
       <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
         {/* Row 1: First + Last Name */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 14 }}>
           <div>
             <label style={lbl}>First Name *</label>
             <input type="text" placeholder="Jane" value={form.firstname}
@@ -344,7 +344,7 @@ function EnquiryForm() {
         </div>
 
         {/* Row 2: Country + Phone */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 14 }}>
           <div>
             <label style={lbl}>Country *</label>
             <select aria-label="Country of residence" value={form.countryIso} onChange={e => set("countryIso", e.target.value)}
@@ -466,7 +466,7 @@ export default function ResearchPage() {
         <div style={{ position: "absolute", inset: 0, zIndex: 0, background: "linear-gradient(135deg, #1a1a1a 0%, #2d1a1e 100%)" }} />
         {/* image — zIndex: 0 (sama dengan fallback, render belakangan jadi di atas) */}
         <img
-          src="https://addededucation-assets.s3.us-east-1.amazonaws.com/images/Research+Page/Research+Hero.jpg"
+          src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567170562_Research_Hero.webp"
           alt=""
           onError={e => e.currentTarget.style.display = "none"}
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0 }}
@@ -528,7 +528,7 @@ export default function ResearchPage() {
           {/* Left: image */}
           <div style={{ borderRadius: 16, overflow: "hidden", aspectRatio: "4/3", background: "#1a1a1a" }}>
             <img
-              src="https://addededucation-assets.s3.us-east-1.amazonaws.com/images/Research+Page/Stand+Out.jpg"
+              src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567170150_Stand_Out.webp"
               alt="Library"
               style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
               onError={e => { e.currentTarget.parentElement.style.background = "linear-gradient(135deg,#1a1a1a,#2d1a1e)" }}
@@ -564,7 +564,7 @@ export default function ResearchPage() {
           <div style={{ position: "relative" }}>
             <div style={{ borderRadius: 14, overflow: "hidden", aspectRatio: "3/4", background: C.creamWarm }}>
               <img
-                src="https://addededucation-assets.s3.us-east-1.amazonaws.com/images/Research+Page/aqQAEBeYi3Kvp6OTolc2dhkyME.jpg"
+                src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567169027_aqQAEBeYi3Kvp6OTolc2dhkyME.webp"
                 alt=""
                 style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
                 onError={e => e.currentTarget.parentElement.style.background = C.creamWarm}
@@ -584,7 +584,7 @@ export default function ResearchPage() {
             </div>
             <div style={{ borderRadius: 14, overflow: "hidden", aspectRatio: "3/4", width: 180, background: C.creamWarm, flexShrink: 0 }}>
               <img
-                src="https://addededucation-assets.s3.us-east-1.amazonaws.com/images/Research+Page/xia0TiExGYvXDNfk530P81TImiE.jpg"
+                src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567169225_xia0TiExGYvXDNfk530P81TImiE.webp"
                 alt=""
                 style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
                 onError={e => e.currentTarget.parentElement.style.background = C.creamWarm}
@@ -603,7 +603,7 @@ export default function ResearchPage() {
           {/* mentor photo */}
           <div style={{ width: 260, height: 320, borderRadius: 14, overflow: "hidden", background: C.creamWarm, flexShrink: 0 }}>
             <img
-              src="https://addededucation-assets.s3.us-east-1.amazonaws.com/images/Research+Page/Mentor.png"
+              src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567168663_Mentor.webp"
               alt="Dr. Mritunjay Sharma"
               style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
               onError={e => {

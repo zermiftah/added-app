@@ -266,8 +266,10 @@ export default function ContactSection({
 
                   {/* Country */}
                   <div>
-                    <label style={labelStyle}>Country *</label>
+                    <label htmlFor="cs-country" style={labelStyle}>Country *</label>
                     <select
+                      id="cs-country"
+                      aria-label="Country"
                       value={form.countryIso}
                       onChange={e => set("countryIso", e.target.value)}
                       className="ae-sel"
@@ -466,7 +468,7 @@ export default function ContactSection({
               style={{ background: "#E8E4DC", minHeight: 600 }}
             >
               <img
-                src="https://addededucation-assets.s3.us-east-1.amazonaws.com/images/contact+us.png"
+                src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782568975008_hWfYRPyqK5zWooV419AVB4Oxw.webp"
                 alt=""
                 loading="lazy"
                 decoding="async"

@@ -247,7 +247,7 @@ export default function TutoringPage() {
 .tp-cmp-row td:last-child{border-radius:0 8px 8px 0;text-align:center;}
 .tp-test-card{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:28px 24px;display:flex;flex-direction:column;transition:background 0.3s ease;}
 .tp-test-card.active{background:rgba(255,255,255,0.09);border-color:rgba(255,255,255,0.14);}
-.tp-test-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.2);border:none;cursor:pointer;padding:0;transition:all 0.3s ease;}
+.tp-test-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.2);border:none;cursor:pointer;padding:8px 0;margin:-8px 0;box-sizing:content-box;transition:all 0.3s ease;}
 .tp-test-dot.on{background:${C.accent};transform:scale(1.3);}
 .tp-test-arrow{width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,0.2);background:transparent;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.3s ease;}
 .tp-test-arrow:hover{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.4);}
@@ -263,7 +263,9 @@ export default function TutoringPage() {
   .tp-why-grid,.tp-why-grid-bottom{grid-template-columns:1fr 1fr;}
   .tp-steps-wrap{grid-template-columns:repeat(3,1fr)!important;gap:36px 0!important;}
   .tp-offers-grid{grid-template-columns:1fr!important;}
-  .tp-faq-layout{grid-template-columns:1fr!important;}
+  .tp-faq-layout{grid-template-columns:1fr!important;gap:32px!important;}
+  .tp-faq-img{aspect-ratio:16/10!important;min-height:auto!important;}
+  .tp-faq-section{padding:64px 0!important;}
   .tp-form-section{grid-template-columns:1fr!important;}
   .tp-test-cards{grid-template-columns:1fr!important;}
 }
@@ -281,7 +283,7 @@ export default function TutoringPage() {
       <section style={{ position: "relative", minHeight: 540, display: "flex", alignItems: "flex-end", overflow: "hidden", background: C.ink }}>
         <div style={{ position: "absolute", inset: 0, zIndex: 0, background: `linear-gradient(135deg, ${C.inkSoft} 0%, #1a1a1a 60%, ${C.maroon}30 100%)` }} />
         <img
-          src="https://addededucation-assets.s3.us-east-1.amazonaws.com/images/Tutoring+Page/hero+tutoring.jpg"
+          src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567169326_hero_tutoring.webp"
           alt=""
           onError={e => e.currentTarget.style.display = "none"}
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0 }}
@@ -306,7 +308,7 @@ export default function TutoringPage() {
       <section style={{ background: C.ink, padding: "72px clamp(24px,7vw,112px)", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 48, alignItems: "center" }}>
         <FadeIn>
           <div style={{ borderRadius: 14, overflow: "hidden", aspectRatio: "4/3", background: "#1a1a1a", position: "relative" }}>
-            <img src="https://addededucation-assets.s3.us-east-1.amazonaws.com/images/Tutoring+Page/added+tutoring.jpg" alt="" onError={e => e.currentTarget.style.display="none"} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", position: "absolute", inset: 0 }} />
+            <img src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567151111_added_tutoring.webp" alt="" onError={e => e.currentTarget.style.display="none"} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", position: "absolute", inset: 0 }} />
           </div>
         </FadeIn>
         <FadeIn delay={80}>
@@ -319,7 +321,7 @@ export default function TutoringPage() {
       {/* ══ 3. WHY PARENTS ══ */}
       <section style={{ background: C.cream }}>
         <div style={{ padding: "80px clamp(24px,7vw,112px) 72px" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: 48, alignItems: "end", marginBottom: 48 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 48, alignItems: "end", marginBottom: 48 }}>
             <FadeIn>
               <h2 style={{ fontFamily: "'Fraunces',serif", fontSize: "clamp(32px,4vw,48px)", fontWeight: 300, color: C.ink, lineHeight: 1.1, letterSpacing: "-0.02em" }}>
                 Why parents & students<br />work with <em style={{ fontStyle: "italic", fontWeight: 400, color: C.accent }}>AE tutors.</em>
@@ -327,7 +329,7 @@ export default function TutoringPage() {
             </FadeIn>
             <FadeIn delay={80}>
               <div style={{ borderRadius: 14, overflow: "hidden", height: 180, background: C.creamWarm, position: "relative" }}>
-                <img src="https://addededucation-assets.s3.us-east-1.amazonaws.com/images/Tutoring+Page/bvXo38Kc5Z51K98t6ZrpGeVOpg.png" alt="" onError={e => e.currentTarget.style.display="none"} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", position: "absolute", inset: 0 }} />
+                <img src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567168736_bvXo38Kc5Z51K98t6ZrpGeVOpg.webp" alt="" onError={e => e.currentTarget.style.display="none"} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", position: "absolute", inset: 0 }} />
               </div>
             </FadeIn>
           </div>
@@ -353,7 +355,7 @@ export default function TutoringPage() {
               ))}
               {/* image cell */}
                <div style={{ background: C.ink, overflow: "hidden", position: "relative", minHeight: 180 }}>
-                <img src="https://addededucation-assets.s3.us-east-1.amazonaws.com/images/Tutoring+Page/LclcFm8NLFa9DMy3nwiUQO4uTWg.png" alt="" onError={e => e.currentTarget.style.display="none"} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", position: "absolute", inset: 0 }} />
+                <img src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567168548_LclcFm8NLFa9DMy3nwiUQO4uTWg.webp" alt="" onError={e => e.currentTarget.style.display="none"} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", position: "absolute", inset: 0 }} />
               </div>
             </div>
           </FadeIn>
@@ -363,7 +365,7 @@ export default function TutoringPage() {
       {/* ══ 4. COMPARISON ══ */}
       <section style={{ position: "relative", padding: "96px clamp(24px,7vw,112px)", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, zIndex: 0, background: C.ink }} />
-        <img src="https://addededucation-assets.s3.us-east-1.amazonaws.com/images/Tutoring+Page/hero+tutoring.jpg" alt="" onError={e => e.currentTarget.style.display="none"} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0, opacity: 0.18 }} />
+        <img src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567186877_tutoring_FAQ.webp" alt="" onError={e => e.currentTarget.style.display="none"} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0, opacity: 0.18 }} />
         <div style={{ position: "absolute", inset: 0, zIndex: 1, background: "rgba(14,14,14,0.7)" }} />
         <div style={{ position: "relative", zIndex: 2, maxWidth: 1280, margin: "0 auto" }}>
         <FadeIn>
@@ -397,9 +399,15 @@ export default function TutoringPage() {
             <div style={{ display: "inline-flex", alignItems: "center", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 999, padding: "6px 14px", fontFamily: "'JetBrains Mono',monospace", fontSize: 10, fontWeight: 600, letterSpacing: 1.5, textTransform: "uppercase", color: "rgba(255,255,255,0.5)" }}>Testimonials</div>
           </FadeIn>
           <FadeIn delay={60}>
-            <h2 style={{ fontFamily: "'Fraunces',serif", fontSize: "clamp(28px,3.5vw,44px)", fontWeight: 400, color: "#fff", lineHeight: 1.15, textAlign: "right" }}>
-              Hear it from students <em style={{ fontStyle: "italic", color: C.accent }}>who made it.</em>
-            </h2>
+            <div style={{ textAlign: "right" }}>
+              <h2 style={{ fontFamily: "'Fraunces',serif", fontSize: "clamp(28px,3.5vw,44px)", fontWeight: 400, color: "#fff", lineHeight: 1.15, marginBottom: 20 }}>
+                Hear it from students <em style={{ fontStyle: "italic", color: C.accent }}>who made it.</em>
+              </h2>
+              <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
+                <button className="tp-test-arrow" aria-label="Previous testimonial" onClick={() => setTIdx(i => (i - 1 + DEFAULT_TESTIMONIALS.length) % DEFAULT_TESTIMONIALS.length)}>←</button>
+                <button className="tp-test-arrow" aria-label="Next testimonial" onClick={() => setTIdx(i => (i + 1) % DEFAULT_TESTIMONIALS.length)}>→</button>
+              </div>
+            </div>
           </FadeIn>
         </div>
         <FadeIn delay={100}>
@@ -418,13 +426,6 @@ export default function TutoringPage() {
                 <p style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 13, color: "rgba(255,255,255,0.65)", lineHeight: 1.7 }}>"{t.quote}"</p>
               </div>
             ))}
-          </div>
-          <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 28 }}>
-            <button className="tp-test-arrow" onClick={() => setTIdx(i => (i - 1 + DEFAULT_TESTIMONIALS.length) % DEFAULT_TESTIMONIALS.length)}>←</button>
-            <button className="tp-test-arrow" onClick={() => setTIdx(i => (i + 1) % DEFAULT_TESTIMONIALS.length)}>→</button>
-          </div>
-          <div style={{ display: "flex", gap: 10, justifyContent: "center", marginTop: 16 }}>
-            {DEFAULT_TESTIMONIALS.map((_, i) => <button key={i} className={`tp-test-dot${tIdx === i ? " on" : ""}`} onClick={() => setTIdx(i)} />)}
           </div>
         </FadeIn>
       </section>
@@ -485,7 +486,7 @@ export default function TutoringPage() {
       </section>
 
       {/* ══ 8. FAQ ══ */}
-      <section style={{ background: C.ink, padding: "96px 0" }}>
+      <section className="tp-faq-section" style={{ background: C.ink, padding: "96px 0" }}>
         <div className="tpw">
           <div className="tp-faq-layout" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 56, alignItems: "start" }}>
             <div>
@@ -499,7 +500,7 @@ export default function TutoringPage() {
               </div>
             </div>
             <FadeIn delay={120}>
-              <div style={{ borderRadius: 14, overflow: "hidden", aspectRatio: "1/1", background: "#1a1a1a", minHeight: 400, position: "relative" }}>
+              <div className="tp-faq-img" style={{ borderRadius: 14, overflow: "hidden", aspectRatio: "1/1", background: "#1a1a1a", minHeight: 400, position: "relative" }}>
                 <img src="https://addededucation-assets.s3.us-east-1.amazonaws.com/images/Tutoring+Page/tutoring+FAQ.png" alt="" onError={e => e.currentTarget.style.display="none"} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", position: "absolute", inset: 0 }} />
               </div>
             </FadeIn>
@@ -535,7 +536,7 @@ export default function TutoringPage() {
       </section>
 
       {/* ══ 10. FORM ══ */}
-      <section id="tutoring-form" ref={formRef} style={{ background: C.cream, display: "grid", gridTemplateColumns: "1fr 1fr", alignItems: "start" }} className="tp-form-section">
+      <section id="tutoring-form" ref={formRef} style={{ background: C.cream, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", alignItems: "start" }} className="tp-form-section">
         {/* Left copy */}
         <div style={{ padding: "80px clamp(24px,7vw,112px)" }}>
           <h2 style={{ fontFamily: "'Fraunces',serif", fontWeight: 400, fontSize: 48, lineHeight: 1.05, letterSpacing: "-0.02em", color: C.ink, margin: "0 0 20px" }}>Start with a diagnostic.</h2>

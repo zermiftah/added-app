@@ -28,25 +28,25 @@ const WHO_THIS_IS_FOR = [
 
 const PROGRAMMES = [
   {
-    num: "offering1", name: "Arts & Portfolio Consultancy",
+    num: "https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567148936_offering1.webp", name: "Arts & Portfolio Consultancy",
     who: "Students wanting comprehensive support from concept to submission.",
     get: "An application-ready portfolio with intention, depth, and strategic direction.",
     tagline: "End-to-end, personalised guidance for students pursuing art school applications or supplemental portfolios.",
   },
   {
-    num: "offering2", name: "The Arts Salon",
+    num: "https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567150051_offering4.webp", name: "The Arts Salon",
     who: "Students who want to understand, question, and shape the ideas behind the work.",
     get: "An insightful discussion based exploration across a myriad of nuanced topics from a creative lens. Sharper critical thinking, reasoning, and wider base of knowledge.",
     tagline: "A curated discussion-based cohort exploring the arts through critical inquiry and creative practice.",
   },
   {
-    num: "offering3", name: "The Upskilling Workshop",
+    num: "https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567148099_offering3.webp", name: "The Upskilling Workshop",
     who: "Students wanting clear direction to strengthen a specific creative skill.",
     get: "Measurable skill progression, portfolio-ready outputs, personalised roadmap.",
     tagline: "Assessment, personalised planning, and guided execution to build a competitive portfolio in a compressed timeline.",
   },
   {
-    num: "offering4", name: "The Portfolio Bootcamp",
+    num: "https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567148378_offering2.webp", name: "The Portfolio Bootcamp",
     who: "Students needing a strong, submission-ready portfolio with a quick turnaround.",
     get: "A cohesive, polished portfolio demonstrating growth and creative maturity.",
     tagline: "High-impact, guided programme for students starting late or lacking confidence who still need a competitive portfolio.",
@@ -66,13 +66,13 @@ const MENTORS = [
     name: "Gayatri Degan", role: "Arts Specialist, AddedArt", initials: "GD",
     tags: ["Sarah Lawrence College", "UX & Graphic Design", "Illustration", "Animation", "London · Goa"],
     bio: "Gayatri is a multidisciplinary artist and designer with a BA from Sarah Lawrence College in art history and animation, and a consultancy track record spanning non-profits, corporates, and luxury brands. Her work ranges from UX and graphic design to branding, digital illustration, and animation, and she has held creative leadership roles in London and Goa. At AddedEducation, she works as an Art Specialist, helping young artists and designers build compelling portfolios and access top creative programmes worldwide.",
-    photo: "https://addededucation-assets.s3.us-east-1.amazonaws.com/images/Art+Page/Gayatri.png",
+    photo: "https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567148531_Gayatri.webp",
   },
   {
     name: "Linda Ye", role: "Performing Arts & Music Specialist", initials: "LY",
     tags: ["Harvard College", "Berklee College of Music", "SF Girls Chorus", "6 Languages", "12+ Years Music"],
     bio: "Linda Ye is a dual-degree student at Harvard College and Berklee College of Music — one of only four students selected for this programme in her year. A former member of the five-time GRAMMY Award-winning San Francisco Girls Chorus for 12 years, she has performed at San Francisco's Davies Symphony Hall, shared the stage with Bobby McFerrin, and sung at Senator Dianne Feinstein's Memorial Service. With over 12 years of music experience and fluency in six languages, she brings exceptional expertise to guiding students pursuing music at the university level.",
-    photo: "https://addededucation-assets.s3.us-east-1.amazonaws.com/images/Art+Page/Linda.png",
+    photo: "https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567148158_Linda.webp",
   },
 ]
 
@@ -283,7 +283,7 @@ select.aa-form-input option{background:#1A1A1A;color:#fff;}
 
       {/* ══ 1. HERO ══ */}
       <section style={{ background: C.ink, padding: "120px 0 80px", position: "relative", overflow: "hidden" }}>
-        <img src="https://addededucation-assets.s3.us-east-1.amazonaws.com/images/Art+Page/Hero+Art.jpg" alt="" onError={e => e.currentTarget.style.display = "none"} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0, opacity: 0.35 }} />
+        <img src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567149883_Hero_Art.webp" alt="" onError={e => e.currentTarget.style.display = "none"} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0, opacity: 0.35 }} />
    
         <div style={{ position: "absolute", top: -120, right: -120, width: 500, height: 500, borderRadius: "50%", background: `radial-gradient(circle, ${C.maroon}18 0%, transparent 65%)`, pointerEvents: "none", zIndex: 1 }} />
         <div className="aaw" style={{ position: "relative", zIndex: 2 }}>
@@ -350,13 +350,13 @@ select.aa-form-input option{background:#1A1A1A;color:#fff;}
           <Reveal delay={80}>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 16, marginBottom: 48 }}>
               {[
-                { img: "thejourney1", fig: "Fig. 02", label: "Studio Practice" },
-                { img: "thejourney2", fig: "Fig. 03", label: "Critique Review" },
-                { img: "thejourney3", fig: "Fig. 04", label: "Portfolio Piece" },
+                { img: "https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567151223_thejourney1.webp", fig: "Fig. 02", label: "Studio Practice" },
+                { img: "https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567151607_thejourney2.webp", fig: "Fig. 03", label: "Critique Review" },
+                { img: "https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567149616_thejourney3.webp", fig: "Fig. 04", label: "Portfolio Piece" },
               ].map((item, i) => (
                 <div key={i}>
                   <div style={{ borderRadius: 4, overflow: "hidden", aspectRatio: "3/4", background: "#1a1a1a", position: "relative", border: "1px solid rgba(255,255,255,0.08)" }}>
-                    <img src={`https://addededucation-assets.s3.us-east-1.amazonaws.com/images/Art+Page/${item.img}.jpg`} alt="" onError={e => e.currentTarget.style.display = "none"} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                    <img src={`${item.img}`} alt="" onError={e => e.currentTarget.style.display = "none"} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                   </div>
                   <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 9, letterSpacing: "0.15em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", marginTop: 10, textAlign: "center" }}>{item.fig} — {item.label}</p>
                 </div>
@@ -422,7 +422,7 @@ select.aa-form-input option{background:#1A1A1A;color:#fff;}
                 <div className="aa-card" style={{ background: C.cream, border: `1px solid ${C.border}`, borderRadius: 10, overflow: "hidden", height: "100%", display: "flex", flexDirection: "column" }}>
                   {/* Placeholder image area */}
                   <div style={{ width: "100%", aspectRatio: "4/3", background: C.creamWarm, flexShrink: 0, position: "relative", overflow: "hidden" }}>
-                    <img src={`https://addededucation-assets.s3.us-east-1.amazonaws.com/images/Art+Page/${p.num}.jpg`} alt={p.name} onError={e => e.currentTarget.style.display = "none"} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                    <img src={`${p.num}`} alt={p.name} onError={e => e.currentTarget.style.display = "none"} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                     <span style={{ position: "absolute", bottom: 10, right: 12, fontFamily: "'JetBrains Mono',monospace", fontSize: 10, letterSpacing: 1, textTransform: "uppercase", color: "rgba(0,0,0,0.3)" }}>Fig. {p.num}</span>
                   </div>
                   <div style={{ padding: "24px 24px 28px", display: "flex", flexDirection: "column", flex: 1 }}>

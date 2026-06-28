@@ -1,15 +1,15 @@
 // ─── Edit nama dan URL logo di sini ────────────────────────────────────────
 const UNIVERSITY_LOGOS = [
-  { name: "Hong Kong",  url: "https://addededucation-assets.s3.us-east-1.amazonaws.com/university-logo/hongkong.png" },
-  { name: "NUS",        url: "https://addededucation-assets.s3.us-east-1.amazonaws.com/university-logo/nus.png" },
-  { name: "IE",         url: "https://addededucation-assets.s3.us-east-1.amazonaws.com/university-logo/ie.png" },
-  { name: "Bocconi",    url: "https://addededucation-assets.s3.us-east-1.amazonaws.com/university-logo/bocconi.png" },
-  { name: "MIT",        url: "https://addededucation-assets.s3.us-east-1.amazonaws.com/university-logo/mit.png" },
-  { name: "Cornell",    url: "https://addededucation-assets.s3.us-east-1.amazonaws.com/university-logo/cornell.png" },
-  { name: "Oxford",     url: "https://addededucation-assets.s3.us-east-1.amazonaws.com/university-logo/oxford.png" },
-  { name: "Colombia",   url: "https://addededucation-assets.s3.us-east-1.amazonaws.com/university-logo/colombia.png" },
-  { name: "Princeton",  url: "https://addededucation-assets.s3.us-east-1.amazonaws.com/university-logo/princeton.png" },
-  { name: "Stanford",   url: "https://addededucation-assets.s3.us-east-1.amazonaws.com/university-logo/stanford.png" },
+  { name: "Hong Kong",  url: "https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782571300459_hongkong.webp" },
+  { name: "NUS",        url: "https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782571300460_nus.webp" },
+  { name: "IE",         url: "https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782571300462_ie.webp" },
+  { name: "Bocconi",    url: "https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782571300470_bocconi.webp" },
+  { name: "MIT",        url: "https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782571300473_mit.webp" },
+  { name: "Cornell",    url: "https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782571300485_cornell.webp" },
+  { name: "Oxford",     url: "https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782571300773_oxford.webp" },
+  { name: "Colombia",   url: "https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782571300787_colombia.webp" },
+  { name: "Princeton",  url: "https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782571300819_princeton.webp" },
+  { name: "Stanford",   url: "https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782571300820_stanford.webp" },
 ]
 // ───────────────────────────────────────────────────────────────────────────
 

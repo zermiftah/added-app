@@ -1,8 +1,9 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import { lazy, Suspense } from "react"
 import QueryProvider from "providers/QueryProvider"
+// HomePage imported eagerly — critical for LCP, no extra chunk load
+import HomePage from "features/user/home/HomePage"
 
-const HomePage        = lazy(() => import("features/user/home/HomePage"))
 const EventsPage      = lazy(() => import("features/user/events/EventsPage"))
 const CareersListPage = lazy(() => import("features/user/careers/CareersListPage"))
 const CareerDetailPage= lazy(() => import("features/user/careers/CareerDetailPage"))
@@ -14,9 +15,11 @@ const TutoringPage    = lazy(() => import("features/user/programs/TutoringPage")
 const ResearchPage    = lazy(() => import("features/user/programs/ResearchPage"))
 const AthleticPage    = lazy(() => import("features/user/programs/AthleticPage"))
 const AboutPage       = lazy(() => import("features/user/about/AboutPage"))
+const YourTeamPage    = lazy(() => import("features/user/team/YourTeamPage"))
 const FullServicePage = lazy(() => import("features/user/programs/FullServicePage"))
 const GetInTouchPage  = lazy(() => import("features/user/contact/GetInTouchPage"))
 const AddedAdmin      = lazy(() => import("features/admin/AddedAdmin"))
+const WebinarLandingPage = lazy(() => import("features/user/webinarLanding/WebinarLandingPage"))
 
 export default function App() {
   return (
@@ -36,10 +39,13 @@ export default function App() {
             <Route path="/programs/research"     element={<ResearchPage />} />
             <Route path="/programs/athletic"     element={<AthleticPage />} />
             <Route path="/about"                 element={<AboutPage />} />
+            <Route path="/team"                  element={<YourTeamPage />} />
             <Route path="/programs/admissions"   element={<FullServicePage />} />
             <Route path="/get-in-touch"          element={<GetInTouchPage />} />
             <Route path="/contact"               element={<GetInTouchPage />} />
             <Route path="/added-admin"           element={<AddedAdmin />} />
+            {/* Catch-all for webinar landing slugs — keep this LAST */}
+            <Route path="/:slug"                 element={<WebinarLandingPage />} />
           </Routes>
         </Suspense>
       </BrowserRouter>

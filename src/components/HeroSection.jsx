@@ -69,7 +69,7 @@ export default function HeroSection() {
       style={{ background: "#0E0E0E" }}
     >
       <img
-        src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567334679_vRwqcjkjJJvZusEeq6lojyQAW3s.webp"
+        src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782658947407_vRwqcjkjJJvZusEeq6lojyQAW3s.png"
         alt=""
         fetchpriority="high"
         decoding="async"

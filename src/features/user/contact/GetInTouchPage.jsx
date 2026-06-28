@@ -299,7 +299,7 @@ function ContactForm() {
       `}</style>
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
         {/* Row 1: First + Last */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 14 }}>
           <div>
             <label style={lbl}>First Name *</label>
             <input type="text" placeholder="Jane" value={form.firstname} onChange={e => set("firstname", e.target.value)} className="git-inp" style={inp(!!errors.firstname)} />
@@ -513,7 +513,7 @@ export default function GetInTouchPage() {
         <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.55)", zIndex: 1 }} />
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%)", zIndex: 0 }} />
         <img
-          src="https://addededucation-assets.s3.us-east-1.amazonaws.com/images/Contact+Us+Page/hero.png"
+          src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567182705_8GcnRiF6LGYAU0IkaeGqyUADA5I.webp"
           alt=""
           onError={e => e.currentTarget.style.display = "none"}
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", zIndex: 0 }}
@@ -553,7 +553,7 @@ export default function GetInTouchPage() {
           <div style={{ padding: "24px", boxSizing: "border-box" }}>
             <div style={{ width: "100%", height: "100%", borderRadius: 20, overflow: "hidden", background: C.creamWarm, minHeight: 400, position: "relative" }}>
               <img
-                src="https://addededucation-assets.s3.us-east-1.amazonaws.com/images/Contact+Us+Page/form.png"
+                src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567186708_form.webp"
                 alt=""
                 onError={e => e.currentTarget.style.display = "none"}
                 style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block" }}

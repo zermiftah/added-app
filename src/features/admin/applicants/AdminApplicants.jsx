@@ -156,7 +156,7 @@ export default function AdminApplicants() {
                   <div className="font-fraunces text-lg font-bold italic text-gray-900">{detail.first_name} {detail.last_name}</div>
                   <div className="text-xs text-gray-400 mt-0.5">{detail.job_title}</div>
                 </div>
-                <button onClick={() => setDetail(null)} className="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-200 text-gray-500 hover:bg-gray-300 transition-all text-sm">✕</button>
+                <button aria-label="Close detail" onClick={() => setDetail(null)} className="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-200 text-gray-500 hover:bg-gray-300 transition-all text-sm">✕</button>
               </div>
               <div className="flex-1 overflow-y-auto">
                 {/* Contact */}

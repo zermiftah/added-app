@@ -165,7 +165,7 @@ const styles = `
 @keyframes cl-pulse { 0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.65);} }
 
 .cl-hero { position:relative;overflow:hidden;background:#0E0E0E;color:#fff;padding-bottom:96px; }
-.cl-hero-bg { position:absolute;inset:0;background-image:url('https://addededucation-assets.s3.us-east-1.amazonaws.com/images/vRwqcjkjJJvZusEeq6lojyQAW3s.png');background-size:cover;background-position:center top;background-repeat:no-repeat; }
+.cl-hero-bg { position:absolute;inset:0;background-image:url('https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567169027_aqQAEBeYi3Kvp6OTolc2dhkyME.webp');background-size:cover;background-position:center top;background-repeat:no-repeat; }
 .cl-hero-overlay { position:absolute;inset:0;background:linear-gradient(to bottom,rgba(14,14,14,0.55) 0%,rgba(14,14,14,0.72) 50%,rgba(14,14,14,0.95) 100%); }
 .cl-hero-glow { position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(200,53,75,.12) 0%,transparent 65%);top:-120px;right:-80px;pointer-events:none; }
 .cl-hero-grid { position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:72px 72px;pointer-events:none;mask-image:linear-gradient(to bottom,transparent,black 20%,black 80%,transparent);-webkit-mask-image:linear-gradient(to bottom,transparent,black 20%,black 80%,transparent); }

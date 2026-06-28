@@ -17,8 +17,13 @@ const TESTIMONIALS = [
 // ───────────────────────────────────────────────────────────────────────────
 
 const GAP = 20
-const VISIBLE = 3
 const CARD_HEIGHT = 280
+
+function getVisible(w) {
+  if (w < 640) return 1
+  if (w < 1024) return 2
+  return 3
+}
 
 function TestimonialCard({ t }) {
   const [imgOk, setImgOk] = useState(true)
@@ -55,43 +60,56 @@ function TestimonialCard({ t }) {
 
 export default function TestimonialsSection() {
   const N = TESTIMONIALS.length
-  // Infinite clone: [clone_tail, ...original, clone_head]
-  // clone_tail = last VISIBLE items, clone_head = first VISIBLE items
-  const items = [
-    ...TESTIMONIALS.slice(N - VISIBLE),
-    ...TESTIMONIALS,
-    ...TESTIMONIALS.slice(0, VISIBLE),
-  ]
-  // real items start at index VISIBLE in items array
-  const OFFSET_START = VISIBLE
 
-  const wrapRef    = useRef(null)
-  const trackRef   = useRef(null)
-  const indexRef   = useRef(OFFSET_START) // actual position in items[]
-  const timerRef   = useRef(null)
-  const busyRef    = useRef(false)
-
-  const [dotActive, setDotActive] = useState(0)
-
-  // Cache card width via ResizeObserver to avoid forced reflow
-  const cardWRef = useRef(0)
-
-  // Card width computed from cached ref
-  const getCardWidth = useCallback(() => cardWRef.current, [])
+  // Reactive visible count based on viewport width
+  const [visible, setVisible] = useState(() =>
+    typeof window !== "undefined" ? getVisible(window.innerWidth) : 3
+  )
 
   useEffect(() => {
-    if (!wrapRef.current) return
-    const update = () => {
-      if (!wrapRef.current) return
-      cardWRef.current = (wrapRef.current.offsetWidth - GAP * (VISIBLE - 1)) / VISIBLE
-    }
-    update()
-    const ro = new ResizeObserver(update)
-    ro.observe(wrapRef.current)
-    return () => ro.disconnect()
+    const onResize = () => setVisible(getVisible(window.innerWidth))
+    window.addEventListener("resize", onResize, { passive: true })
+    return () => window.removeEventListener("resize", onResize)
   }, [])
 
-  // Jump to index instantly (no transition) — for infinite reset
+  // Rebuild cloned items when visible changes
+  const items = [
+    ...TESTIMONIALS.slice(N - visible),
+    ...TESTIMONIALS,
+    ...TESTIMONIALS.slice(0, visible),
+  ]
+  const OFFSET_START = visible
+
+  const wrapRef  = useRef(null)
+  const trackRef = useRef(null)
+  const indexRef = useRef(OFFSET_START)
+  const timerRef = useRef(null)
+  const busyRef  = useRef(false)
+  const cardWRef = useRef(
+    typeof window !== "undefined"
+      ? Math.floor((Math.min(window.innerWidth - 48, 1280) - GAP * (visible - 1)) / visible)
+      : 300
+  )
+  const [cardW, setCardW] = useState(cardWRef.current)
+
+  // Update card width from ResizeObserver — zero DOM read
+  useEffect(() => {
+    if (!wrapRef.current) return
+    const ro = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const w = entry.contentRect.width
+        if (w > 0) {
+          cardWRef.current = (w - GAP * (visible - 1)) / visible
+          setCardW(cardWRef.current)
+        }
+      }
+    })
+    ro.observe(wrapRef.current)
+    return () => ro.disconnect()
+  }, [visible])
+
+  const getCardWidth = useCallback(() => cardWRef.current || (wrapRef.current ? (wrapRef.current.offsetWidth - GAP * (visible - 1)) / visible : 300), [visible])
+
   const jumpTo = useCallback((idx) => {
     if (!trackRef.current) return
     const cw = getCardWidth()
@@ -100,30 +118,24 @@ export default function TestimonialsSection() {
     indexRef.current = idx
   }, [getCardWidth])
 
-  // Slide to index with animation
-  const slideTo = useCallback((idx, onDone) => {
+  const slideTo = useCallback((idx) => {
     if (!trackRef.current) return
     const cw = getCardWidth()
     trackRef.current.style.transition = "transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94)"
     trackRef.current.style.transform = `translateX(-${idx * (cw + GAP)}px)`
     indexRef.current = idx
     setTimeout(() => {
-      // infinite loop reset
       if (idx >= OFFSET_START + N) jumpTo(idx - N)
       if (idx < OFFSET_START)      jumpTo(idx + N)
       busyRef.current = false
-      if (onDone) onDone()
     }, 720)
   }, [getCardWidth, N, OFFSET_START, jumpTo])
 
   const move = useCallback((dir) => {
     if (busyRef.current) return
     busyRef.current = true
-    const next = indexRef.current + dir
-    const realIdx = (next - OFFSET_START + N) % N
-    setDotActive(realIdx)
-    slideTo(next)
-  }, [slideTo, OFFSET_START, N])
+    slideTo(indexRef.current + dir)
+  }, [slideTo])
 
   const next = useCallback(() => move(1), [move])
   const prev = useCallback(() => move(-1), [move])
@@ -133,23 +145,25 @@ export default function TestimonialsSection() {
     timerRef.current = setInterval(next, 3000)
   }, [next])
 
-  // Init position
+  // Re-init when visible changes — recalculate card width first
   useEffect(() => {
-    jumpTo(OFFSET_START)
-    resetTimer()
+    indexRef.current = OFFSET_START
+    if (wrapRef.current) {
+      const w = wrapRef.current.getBoundingClientRect().width
+      if (w > 0) {
+        cardWRef.current = (w - GAP * (visible - 1)) / visible
+        setCardW(cardWRef.current)
+      }
+    }
+    requestAnimationFrame(() => {
+      jumpTo(OFFSET_START)
+      resetTimer()
+    })
     return () => clearInterval(timerRef.current)
-  }, [])
+  }, [visible, OFFSET_START, jumpTo, resetTimer])
 
   const handlePrev = () => { prev(); resetTimer() }
   const handleNext = () => { next(); resetTimer() }
-  const handleDot  = (i) => {
-    if (busyRef.current) return
-    busyRef.current = true
-    const target = OFFSET_START + i
-    setDotActive(i)
-    slideTo(target)
-    resetTimer()
-  }
 
   return (
     <section style={{ background: "#0E0E0E", width: "100%", padding: "80px 0 96px" }}>
@@ -167,8 +181,8 @@ export default function TestimonialsSection() {
               Hear it from<br />students <em style={{ fontStyle: "italic", color: "#C8354B" }}>who made it.</em>
             </h2>
             <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
-              {[{ label: "←", fn: handlePrev }, { label: "→", fn: handleNext }].map(({ label, fn }) => (
-                <button key={label} onClick={fn} style={{
+              {[{ label: "←", fn: handlePrev, aria: "Previous testimonial" }, { label: "→", fn: handleNext, aria: "Next testimonial" }].map(({ label, fn, aria }) => (
+                <button key={label} onClick={fn} aria-label={aria} style={{
                   width: 44, height: 44, borderRadius: 999,
                   border: "1px solid rgba(255,255,255,0.2)", background: "transparent",
                   color: "#fff", fontSize: 16, cursor: "pointer",
@@ -185,38 +199,13 @@ export default function TestimonialsSection() {
 
         {/* Viewport */}
         <div ref={wrapRef} style={{ overflow: "hidden", height: CARD_HEIGHT }}>
-          {/* Track — full width of all cloned items */}
-          <div
-            ref={trackRef}
-            style={{
-              display: "flex",
-              gap: GAP,
-              height: CARD_HEIGHT,
-              willChange: "transform",
-            }}
-          >
-            {items.map((t, i) => {
-              const cw = wrapRef.current
-                ? (wrapRef.current.offsetWidth - GAP * (VISIBLE - 1)) / VISIBLE
-                : 380
-              return (
-                <div key={i} style={{ width: cw, flexShrink: 0 }}>
-                  <TestimonialCard t={t} />
-                </div>
-              )
-            })}
+          <div ref={trackRef} style={{ display: "flex", gap: GAP, height: CARD_HEIGHT, willChange: "transform" }}>
+            {items.map((t, i) => (
+              <div key={i} style={{ width: cardW || 300, flexShrink: 0 }}>
+                <TestimonialCard t={t} />
+              </div>
+            ))}
           </div>
-        </div>
-
-        {/* Dots */}
-        <div style={{ display: "flex", gap: 8, justifyContent: "center", marginTop: 32 }}>
-          {TESTIMONIALS.map((_, i) => (
-            <button key={i} onClick={() => handleDot(i)} style={{
-              width: i === dotActive ? 24 : 8, height: 8, borderRadius: 999, border: "none",
-              background: i === dotActive ? "#C8354B" : "rgba(255,255,255,0.2)",
-              cursor: "pointer", padding: 0, transition: "all 0.3s ease",
-            }} />
-          ))}
         </div>
 
       </div>

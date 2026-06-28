@@ -471,7 +471,7 @@ const CSS = `
 .rp-hero{
   background:#0E0E0E;padding-bottom:96px;position:relative;overflow:hidden;
 }
-.rp-hero-bg{position:absolute;inset:0;background-image:url('https://addededucation-assets.s3.us-east-1.amazonaws.com/images/vRwqcjkjJJvZusEeq6lojyQAW3s.png');background-size:cover;background-position:center 30%;background-repeat:no-repeat;}
+.rp-hero-bg{position:absolute;inset:0;background-image:url('https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567170150_Stand_Out.webp');background-size:cover;background-position:center 30%;background-repeat:no-repeat;}
 .rp-hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(14,14,14,0.6) 0%,rgba(14,14,14,0.75) 50%,rgba(14,14,14,0.96) 100%);}
 
 /* ── FILTER INLINE (inside article section) ── */
