@@ -1,31 +1,55 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom"
-import { lazy, Suspense } from "react"
 import QueryProvider from "providers/QueryProvider"
-// HomePage imported eagerly — critical for LCP, no extra chunk load
-import HomePage from "features/user/home/HomePage"
 
-const EventsPage      = lazy(() => import("features/user/events/EventsPage"))
-const CareersListPage = lazy(() => import("features/user/careers/CareersListPage"))
-const CareerDetailPage= lazy(() => import("features/user/careers/CareerDetailPage"))
-const CareerApplyPage = lazy(() => import("features/user/careers/CareerApplyPage"))
-const ResourcePage    = lazy(() => import("features/user/resources/ResourcePage"))
-const ResourceDetail  = lazy(() => import("features/user/resources/ResourceDetail"))
-const AddedArtsPage   = lazy(() => import("features/user/programs/AddedArtsPage"))
-const TutoringPage    = lazy(() => import("features/user/programs/TutoringPage"))
-const ResearchPage    = lazy(() => import("features/user/programs/ResearchPage"))
-const AthleticPage    = lazy(() => import("features/user/programs/AthleticPage"))
-const AboutPage       = lazy(() => import("features/user/about/AboutPage"))
-const YourTeamPage    = lazy(() => import("features/user/team/YourTeamPage"))
-const FullServicePage = lazy(() => import("features/user/programs/FullServicePage"))
-const GetInTouchPage  = lazy(() => import("features/user/contact/GetInTouchPage"))
-const AddedAdmin      = lazy(() => import("features/admin/AddedAdmin"))
+// ALL routes eager-imported — single bundle, zero navigation delay.
+// HomePage is eager for LCP; rest follow same pattern for instant nav.
+import HomePage          from "features/user/home/HomePage"
+import EventsPage        from "features/user/events/EventsPage"
+import CareersListPage   from "features/user/careers/CareersListPage"
+import CareerDetailPage  from "features/user/careers/CareerDetailPage"
+import CareerApplyPage   from "features/user/careers/CareerApplyPage"
+import ResourcePage      from "features/user/resources/ResourcePage"
+import ResourceDetail    from "features/user/resources/ResourceDetail"
+import AddedArtsPage     from "features/user/programs/AddedArtsPage"
+import TutoringPage      from "features/user/programs/TutoringPage"
+import ResearchPage      from "features/user/programs/ResearchPage"
+import AthleticPage      from "features/user/programs/AthleticPage"
+import AboutPage         from "features/user/about/AboutPage"
+import YourTeamPage      from "features/user/team/YourTeamPage"
+import FullServicePage   from "features/user/programs/FullServicePage"
+import GetInTouchPage    from "features/user/contact/GetInTouchPage"
+
+// Admin + Webinar landings stay lazy — they're heavy and not on hot navigation path
+import { lazy, Suspense } from "react"
+const AddedAdmin         = lazy(() => import("features/admin/AddedAdmin"))
 const WebinarLandingPage = lazy(() => import("features/user/webinarLanding/WebinarLandingPage"))
+
+function PageSkeleton() {
+  return (
+    <div style={{
+      position: "fixed", inset: 0,
+      background: "#0E0E0E",
+      zIndex: 9999,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    }}>
+      <div style={{
+        width: 36, height: 36, borderRadius: "50%",
+        border: "2px solid rgba(200,53,75,0.25)",
+        borderTopColor: "#C8354B",
+        animation: "spin 0.7s linear infinite",
+      }} />
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+    </div>
+  )
+}
 
 export default function App() {
   return (
     <QueryProvider>
       <BrowserRouter>
-        <Suspense fallback={null}>
+        <Suspense fallback={<PageSkeleton />}>
           <Routes>
             <Route path="/"                      element={<HomePage />} />
             <Route path="/events"                element={<EventsPage />} />

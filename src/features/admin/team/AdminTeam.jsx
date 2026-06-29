@@ -410,7 +410,7 @@ export default function AdminTeam() {
   const saving = createCat.isPending || updateCat.isPending || createMem.isPending || updateMem.isPending
 
   return (
-    <div className="p-6 max-w-[1400px] mx-auto">
+    <div className="p-6 w-full">
       <Toast msg={toast} />
 
       {/* Header */}

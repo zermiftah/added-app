@@ -1,6 +1,76 @@
 import { useState, useEffect, useRef } from "react"
 import { Link, useLocation } from "react-router-dom"
 
+
+const API_BASE = "https://zmiftah.tech/addedapi"
+
+// In-memory + sessionStorage cache. Prefetch on hover, render on click.
+// 60s freshness; stale data still shown instantly, refetched in background.
+const PREFETCH_TTL_MS = 60_000
+const PREFETCH_CACHE = new Map() // key -> { data, ts }
+
+function getCache(key) {
+  // Memory first
+  const mem = PREFETCH_CACHE.get(key)
+  if (mem && Date.now() - mem.ts < PREFETCH_TTL_MS) return mem.data
+  // SessionStorage fallback (survives reload within tab)
+  try {
+    const raw = sessionStorage.getItem("prefetch:" + key)
+    if (!raw) return null
+    const { data, ts } = JSON.parse(raw)
+    if (Date.now() - ts < PREFETCH_TTL_MS) {
+      PREFETCH_CACHE.set(key, { data, ts })
+      return data
+    }
+  } catch {}
+  return null
+}
+
+function setCache(key, data) {
+  const entry = { data, ts: Date.now() }
+  PREFETCH_CACHE.set(key, entry)
+  try { sessionStorage.setItem("prefetch:" + key, JSON.stringify(entry)) } catch {}
+}
+
+// Fire-and-forget fetch, cached so it only hits API once per minute per URL
+const inflight = new Map()
+function prefetch(url, cacheKey) {
+  if (getCache(cacheKey)) return // already cached fresh
+  if (inflight.has(cacheKey)) return // already fetching
+  const p = fetch(url)
+    .then(r => r.ok ? r.json() : null)
+    .then(data => { if (data) setCache(cacheKey, data) })
+    .catch(() => {})
+    .finally(() => inflight.delete(cacheKey))
+  inflight.set(cacheKey, p)
+}
+
+// Expose globally for the destination pages to read instantly
+if (typeof window !== "undefined") {
+  window.__addedPrefetch = { get: getCache, set: setCache, prefetch }
+}
+
+// Map route → API calls to prefetch
+const ROUTE_PREFETCH = {
+  "/careers":   () => prefetch(`${API_BASE}/careers`, "careers"),
+  "/resources": () => {
+    prefetch(`${API_BASE}/blog/public/topics`, "blog:topics")
+    prefetch(`${API_BASE}/blog/public/trending?limit=5`, "blog:trending")
+    prefetch(`${API_BASE}/blog/public/articles?page=1&limit=9`, "blog:articles:1::")
+  },
+  "/events":    () => prefetch(`${API_BASE}/events`, "events"),
+  "/team":      () => prefetch(`${API_BASE}/team/public`, "team:public"),
+}
+
+function prefetchRoute(href) {
+  const fn = ROUTE_PREFETCH[href]
+  if (fn) fn()
+}
+
+
+
+
+
 const PROGRAMS = [
   { label: "AddedEducation", href: "/programs/admissions" },
   { label: "AddedSport", href: "/programs/athletic" },
@@ -53,11 +123,14 @@ function NavRollButton({ label, href = "/contact" }) {
 
 /* ── Single nav link with underline ── */
 function NavLink({ link, isActive }) {
+  const handleEnter = () => prefetchRoute(link.href)
+
   const [hov, setHov] = useState(false)
   const underlineVisible = isActive || hov
   return (
     <Link
       to={link.href}
+      onMouseEnter={handleEnter}
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
       style={{

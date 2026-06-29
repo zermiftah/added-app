@@ -15,10 +15,18 @@ const interviewSteps = [
 ]
 
 export default function CareersListPage() {
-  const [jobs, setJobs] = useState([])
+  // Read prefetched data synchronously on first render → zero loading flash
+  const cached = (typeof window !== "undefined" && window.__addedPrefetch?.get("careers")) || null
+  const cachedJobs = cached?.jobs || cached || []
+
+  const [jobs, setJobs] = useState(Array.isArray(cachedJobs) ? cachedJobs : [])
   const [filtered, setFiltered] = useState([])
-  const [departments, setDepartments] = useState(["All"])
-  const [loading, setLoading] = useState(true)
+  const [departments, setDepartments] = useState(() => {
+    if (!Array.isArray(cachedJobs) || !cachedJobs.length) return ["All"]
+    const deps = Array.from(new Set(cachedJobs.map(j => j.department).filter(Boolean)))
+    return ["All", ...deps.sort()]
+  })
+  const [loading, setLoading] = useState(!cachedJobs.length)
   const [error, setError] = useState(null)
   const [activeFilter, setActiveFilter] = useState("All")
   const rolesRef = useRef(null)
@@ -50,6 +58,10 @@ export default function CareersListPage() {
   }
 
   function thumbUrl(p) { return `${API_BASE}/uploads/${p}` }
+  function smThumbUrl(p) {
+    if (!p) return null
+    return `${API_BASE}/uploads/${p.replace(/\.webp$/i, "_sm.webp")}`
+  }
 
   return (
     <div style={{ width: "100%", minHeight: "100vh", fontFamily: "'Inter', sans-serif", color: "#0E0E0E", background: "#FBFBFD", overflowX: "hidden" }}>
@@ -104,7 +116,15 @@ export default function CareersListPage() {
                   <motion.div key={job.id} className="cl-card" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ delay: i * 0.04 }} onClick={() => goToDetail(job.id, job.title)}>
                     <div className="cl-card-thumb">
                       {job.thumbnail
-                        ? <img src={thumbUrl(job.thumbnail)} alt={job.title} className="cl-card-img" />
+                        ? <img
+                          src={thumbUrl(job.thumbnail)}
+                          srcSet={`${smThumbUrl(job.thumbnail)} 480w, ${thumbUrl(job.thumbnail)} 800w`}
+                          sizes="(max-width: 640px) 100vw, 400px"
+                          alt={job.title}
+                          className="cl-card-img"
+                          loading="lazy"
+                          decoding="async"
+                        />
                         : <div className="cl-card-thumb-empty"><span className="cl-card-letter">{job.title.charAt(0)}</span></div>
                       }
                       <span className="cl-type-pill">{job.type}</span>

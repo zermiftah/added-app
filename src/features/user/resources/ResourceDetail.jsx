@@ -77,6 +77,10 @@ export default function ResourceDetail() {
   }
 
   function imgUrl(p) { return `${API_BASE}/uploads/${p}` }
+  function smImgUrl(p) {
+    if (!p) return null
+    return `${API_BASE}/uploads/${p.replace(/\.webp$/i, "_sm.webp")}`
+  }
   function formatDate(d) {
     if (!d) return ""
     return new Date(d).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })
@@ -154,7 +158,15 @@ export default function ResourceDetail() {
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ duration: 0.7, delay: 0.15 }}
                     >
-                      <img src={imgUrl(article.thumbnail)} alt={article.title} className="rd-hero-img" />
+                      <img
+                        src={imgUrl(article.thumbnail)}
+                        srcSet={`${smImgUrl(article.thumbnail)} 480w, ${imgUrl(article.thumbnail)} 800w`}
+                        sizes="(max-width: 640px) 100vw, 860px"
+                        alt={article.title}
+                        className="rd-hero-img"
+                        fetchpriority="high"
+                        decoding="async"
+                      />
                     </motion.div>
                   )}
                 </div>
@@ -248,7 +260,13 @@ export default function ResourceDetail() {
                               >
                                 <div className="rd-author-article-thumb">
                                   {a.thumbnail ? (
-                                    <img src={imgUrl(a.thumbnail)} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                                    <img
+                                      src={smImgUrl(a.thumbnail) || imgUrl(a.thumbnail)}
+                                      alt=""
+                                      style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                                      loading="lazy"
+                                      decoding="async"
+                                    />
                                   ) : (
                                     <div className="rd-author-article-empty">{a.title?.[0]}</div>
                                   )}
@@ -288,7 +306,13 @@ export default function ResourceDetail() {
                           <Link to={`${LIST_PATH}/detail?slug=${r.slug}`} className="rd-related-card">
                             <div className="rd-related-thumb">
                               {r.thumbnail ? (
-                                <img src={imgUrl(r.thumbnail)} alt="" className="rd-related-img" />
+                                <img
+                                src={smImgUrl(r.thumbnail) || imgUrl(r.thumbnail)}
+                                alt=""
+                                className="rd-related-img"
+                                loading="lazy"
+                                decoding="async"
+                              />
                               ) : (
                                 <div className="rd-related-empty">{r.title.charAt(0)}</div>
                               )}
@@ -327,7 +351,13 @@ export default function ResourceDetail() {
                           <Link to={`${LIST_PATH}/detail?slug=${a.slug}`} className="rd-related-card">
                             <div className="rd-related-thumb">
                               {a.thumbnail ? (
-                                <img src={imgUrl(a.thumbnail)} alt="" className="rd-related-img" />
+                                <img
+                                src={smImgUrl(a.thumbnail) || imgUrl(a.thumbnail)}
+                                alt=""
+                                className="rd-related-img"
+                                loading="lazy"
+                                decoding="async"
+                              />
                               ) : (
                                 <div className="rd-related-empty">{a.title.charAt(0)}</div>
                               )}

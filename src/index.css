@@ -79,3 +79,25 @@ body {
   /* Navbar mobile: ensure no overflow */
   nav { overflow: visible; }
 }
+
+/* ── Smooth image load-in ───────────────────────────────────── */
+/* Images start invisible and fade in once decoded/loaded.      */
+/* Uses @starting-style (Chrome 117+) with graceful fallback.   */
+img:not([data-no-fade]) {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+img:not([data-no-fade]).loaded,
+img:not([data-no-fade])[loading="eager"] {
+  opacity: 1;
+}
+
+/* ── Page transition: scroll to top on route change ── */
+/* Handled by ScrollToTop component — no CSS needed     */
+
+/* Override: eager + fetchpriority images no fade (LCP images) */
+img[fetchpriority="high"],
+img[loading="eager"] {
+  opacity: 1 !important;
+  transition: none !important;
+}

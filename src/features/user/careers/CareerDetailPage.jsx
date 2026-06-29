@@ -56,6 +56,10 @@ export default function CareerDetailPage() {
   }
 
   function imgUrl(p) { return `${API_BASE}/uploads/${p}` }
+  function smImgUrl(p) {
+    if (!p) return null
+    return `${API_BASE}/uploads/${p.replace(/\.webp$/i, "_sm.webp")}`
+  }
 
   return (
     <div style={{ width: "100%", minHeight: "100vh", fontFamily: "'Inter',sans-serif", color: "#0E0E0E", background: "#FBFBFD", overflowX: "hidden" }}>
@@ -103,7 +107,15 @@ export default function CareerDetailPage() {
               {/* Right */}
               <motion.div className="cd-hero-right" initial={{ opacity: 0, scale: 1.03 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.7, delay: 0.15 }}>
                 {job.thumbnail
-                  ? <div className="cd-img-wrap"><img src={imgUrl(job.thumbnail)} alt={job.title} className="cd-img" /></div>
+                  ? <div className="cd-img-wrap"><img
+                    src={imgUrl(job.thumbnail)}
+                    srcSet={`${smImgUrl(job.thumbnail)} 480w, ${imgUrl(job.thumbnail)} 800w`}
+                    sizes="(max-width: 640px) 100vw, 800px"
+                    alt={job.title}
+                    className="cd-img"
+                    fetchpriority="high"
+                    decoding="async"
+                  /></div>
                   : <div className="cd-img-placeholder"><span className="cd-img-letter">{job.title.charAt(0)}</span></div>
                 }
               </motion.div>

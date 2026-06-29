@@ -349,7 +349,7 @@ export default function AdminWebinarPages() {
   }
 
   return (
-    <div className="p-6 max-w-[1280px] mx-auto">
+    <div className="p-6 w-full">
       <Toast msg={toast.msg} kind={toast.kind} />
       <ConfirmDialog
         open={confirm.open}
@@ -394,7 +394,8 @@ export default function AdminWebinarPages() {
               <tr>
                 <th className="text-left px-4 py-2.5 font-medium text-gray-600">Title</th>
                 <th className="text-left px-4 py-2.5 font-medium text-gray-600">Slug</th>
-                <th className="text-left px-4 py-2.5 font-medium text-gray-600">Theme</th>
+                <th className="text-left px-4 py-2.5 font-medium text-gray-600">Date</th>
+                  <th className="text-left px-4 py-2.5 font-medium text-gray-600">Theme</th>
                 <th className="text-left px-4 py-2.5 font-medium text-gray-600">Status</th>
                 <th className="text-left px-4 py-2.5 font-medium text-gray-600">Updated</th>
                 <th className="px-4 py-2.5"></th>
@@ -406,6 +407,16 @@ export default function AdminWebinarPages() {
                   <td className="px-4 py-2.5 text-gray-900">{p.webinar_title}</td>
                   <td className="px-4 py-2.5">
                     <a href={`/${p.slug}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline font-mono text-[12px]">/{p.slug} ↗</a>
+                  </td>
+                  <td className="px-4 py-2.5 text-gray-600 text-[12px]">
+                    {p.date_start
+                      ? <>
+                          {new Date(p.date_start).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                          {p.date_end && p.date_end !== p.date_start
+                            ? <> – {new Date(p.date_end).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}</>
+                            : null}
+                        </>
+                      : p.webinar_date || <span className="text-gray-300">—</span>}
                   </td>
                   <td className="px-4 py-2.5 text-gray-600 text-[12px]">{p.theme}</td>
                   <td className="px-4 py-2.5">
@@ -439,7 +450,7 @@ function PageEditor({ pageId, token, onBack, onSaved, onError }) {
     slug: "", theme: "hero-form-side",
     webinar_title: "", webinar_subtitle: "",
     webinar_date: "", webinar_time: "", webinar_place: "", grade_years: "",
-    hero_image: "",
+    hero_image: "", date_start: "", date_end: "",
     why_data:   { title: "", subtitle: "", type: "paragraph", body: "" },
     learn_data: { title: "", subtitle: "", type: "list",      body: [{ title: "", description: "" }] },
     speakers:   [],
@@ -473,6 +484,8 @@ function PageEditor({ pageId, token, onBack, onSaved, onError }) {
           webinar_place: p.webinar_place || "",
           grade_years: p.grade_years || "",
           hero_image: p.hero_image || "",
+          date_start: p.date_start ? p.date_start.substring(0, 10) : "",
+          date_end:   p.date_end   ? p.date_end.substring(0, 10)   : "",
           why_data:   p.why_data   || { title: "", subtitle: "", type: "paragraph", body: "" },
           learn_data: p.learn_data || { title: "", subtitle: "", type: "list",      body: [] },
           speakers:   Array.isArray(p.speakers) ? p.speakers : [],
@@ -535,6 +548,8 @@ function PageEditor({ pageId, token, onBack, onSaved, onError }) {
       fd.append("webinar_place", form.webinar_place || "")
       fd.append("grade_years", form.grade_years || "")
       fd.append("hero_image", form.hero_image || "")
+      fd.append("date_start", form.date_start || "")
+      fd.append("date_end",   form.date_end   || "")
       fd.append("why_data",   JSON.stringify(form.why_data))
       fd.append("learn_data", JSON.stringify(form.learn_data))
       fd.append("about_data", JSON.stringify(form.about_data))
@@ -576,7 +591,7 @@ function PageEditor({ pageId, token, onBack, onSaved, onError }) {
   }
 
   return (
-    <div className="p-6 max-w-[920px] mx-auto">
+    <div className="p-6 w-full">
       <div className="flex items-center justify-between mb-5 gap-4 flex-wrap">
         <div>
           <button onClick={onBack} className="text-[12px] text-gray-500 hover:text-gray-900 mb-1">← Back to list</button>
@@ -647,10 +662,16 @@ function PageEditor({ pageId, token, onBack, onSaved, onError }) {
       {/* SCHEDULE */}
       <Section title="2 — Schedule">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Field label="Date"><input value={form.webinar_date} onChange={e => setF("webinar_date", e.target.value)} className={inputCls} placeholder="Saturday, July 12" /></Field>
+          <Field label="Start date" hint="First day of the webinar">
+            <input type="date" value={form.date_start} onChange={e => setF("date_start", e.target.value)} className={inputCls} />
+          </Field>
+          <Field label="End date" hint="Last day (same as start if single-day)">
+            <input type="date" value={form.date_end} onChange={e => setF("date_end", e.target.value)} className={inputCls} />
+          </Field>
           <Field label="Time"><input value={form.webinar_time} onChange={e => setF("webinar_time", e.target.value)} className={inputCls} placeholder="6:00 PM SGT" /></Field>
           <Field label="Place"><input value={form.webinar_place} onChange={e => setF("webinar_place", e.target.value)} className={inputCls} placeholder="Online via Zoom" /></Field>
           <Field label="For (grade years)"><input value={form.grade_years} onChange={e => setF("grade_years", e.target.value)} className={inputCls} placeholder="Grade 9–12 students & parents" /></Field>
+          <Field label="Date label" hint="Override displayed date text (optional)"><input value={form.webinar_date} onChange={e => setF("webinar_date", e.target.value)} className={inputCls} placeholder="e.g. 12–14 July 2025 (auto-filled if empty)" /></Field>
         </div>
 
         <Field label="Hero image" hint="Used in the hero section. Picks _sm.webp automatically on mobile.">

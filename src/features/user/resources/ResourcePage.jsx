@@ -47,6 +47,8 @@ function Reveal({ children, delay = 0 }) {
         transform: vis ? "translateY(0)" : "translateY(28px)",
         transition: `opacity 0.8s cubic-bezier(.16,1,.3,1), transform 0.8s cubic-bezier(.16,1,.3,1)`,
         transitionDelay: `${delay}ms`,
+        pointerEvents: "auto",       // always tappable even before visible
+        willChange: vis ? "auto" : "opacity, transform",
       }}
     >
       {children}
@@ -66,13 +68,22 @@ function formatDate(d) {
 /* ── Article Card ── */
 function ArticleCard({ article, index, apiBase }) {
   const thumbUrl = (p) => (p ? `${apiBase}/uploads/${p}` : null)
+  const smUrl    = (p) => (p ? `${apiBase}/uploads/${p.replace(/\.webp$/i, "_sm.webp")}` : null)
   return (
     <Reveal delay={index * 60}>
       <Link to={`/resources/detail?slug=${article.slug}`} style={{ textDecoration: "none" }}>
         <div className="rp-card">
           <div className="rp-card-img-wrap">
             {article.thumbnail ? (
-              <img src={thumbUrl(article.thumbnail)} alt={article.title} className="rp-card-img" />
+              <img
+              src={thumbUrl(article.thumbnail)}
+              srcSet={`${smUrl(article.thumbnail)} 480w, ${thumbUrl(article.thumbnail)} 800w`}
+              sizes="(max-width: 640px) 100vw, 400px"
+              alt={article.title}
+              className="rp-card-img"
+              loading="lazy"
+              decoding="async"
+            />
             ) : (
               <div className="rp-card-img-placeholder">
                 <span>{article.title?.charAt(0) || "A"}</span>
@@ -113,15 +124,23 @@ function ArticleCard({ article, index, apiBase }) {
    MAIN
    ══════════════════════════════════ */
 export default function ResourcePage() {
-  const [articles, setArticles] = useState([])
-  const [topics, setTopics] = useState([])
+  // Read prefetched data on first render → instant content
+  const _cT = (typeof window !== "undefined" && window.__addedPrefetch?.get("blog:topics")) || null
+  const _cTr = (typeof window !== "undefined" && window.__addedPrefetch?.get("blog:trending")) || null
+  const _cA = (typeof window !== "undefined" && window.__addedPrefetch?.get("blog:articles:1::")) || null
+  const _cAList = _cA?.articles || []
+  const _cFeatured = _cAList.length > 0 ? _cAList[0] : null
+  const _cRest = _cAList.length > 0 ? _cAList.slice(1) : []
+
+  const [articles, setArticles] = useState(_cRest)
+  const [topics, setTopics] = useState(_cT?.topics || [])
   const [activeTopic, setActiveTopic] = useState(null)
   const [search, setSearch] = useState("")
   const [page, setPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
-  const [loading, setLoading] = useState(true)
-  const [featured, setFeatured] = useState(null)
-  const [trending, setTrending] = useState([])
+  const [totalPages, setTotalPages] = useState(_cA?.totalPages || 1)
+  const [loading, setLoading] = useState(!_cA)
+  const [featured, setFeatured] = useState(_cFeatured)
+  const [trending, setTrending] = useState(_cTr?.trending || [])
 
   useEffect(() => { fetchTopics(); fetchTrending() }, [])
   useEffect(() => { fetchArticles() }, [activeTopic, search, page])
@@ -130,7 +149,7 @@ export default function ResourcePage() {
     try {
       const res = await fetch(`${API_BASE}/blog/public/topics`)
       const data = await res.json()
-      setTopics(data.topics || [])
+      setTopics(data.topics || []); try { window.__addedPrefetch?.set("blog:topics", data) } catch {}; try { window.__addedPrefetch?.set("blog:topics", data) } catch {}
     } catch {}
   }
 
@@ -138,7 +157,7 @@ export default function ResourcePage() {
     try {
       const res = await fetch(`${API_BASE}/blog/public/trending?limit=5`)
       const data = await res.json()
-      setTrending(data.trending || [])
+      setTrending(data.trending || []); try { window.__addedPrefetch?.set("blog:trending", data) } catch {}; try { window.__addedPrefetch?.set("blog:trending", data) } catch {}
     } catch {}
   }
 
@@ -158,7 +177,7 @@ export default function ResourcePage() {
         setFeatured(null)
         setArticles(all)
       }
-      setTotalPages(data.totalPages || 1)
+      setTotalPages(data.totalPages || 1); try { if (page === 1 && !activeTopic && !search) window.__addedPrefetch?.set("blog:articles:1::", data) } catch {}; try { if (page === 1 && !activeTopic && !search) window.__addedPrefetch?.set("blog:articles:1::", data) } catch {}
     } catch {
       setArticles([])
     } finally {
@@ -168,6 +187,9 @@ export default function ResourcePage() {
 
   function thumbUrl(p) {
     return p ? `${API_BASE}/uploads/${p}` : null
+  }
+  function smThumbUrl(p) {
+    return p ? `${API_BASE}/uploads/${p.replace(/\.webp$/i, "_sm.webp")}` : null
   }
 
   function handleTopicClick(slug) {
@@ -228,7 +250,15 @@ export default function ResourcePage() {
                 <div className="rp-featured">
                   <div className="rp-featured-img-wrap">
                     {featured.thumbnail ? (
-                      <img src={thumbUrl(featured.thumbnail)} alt={featured.title} className="rp-featured-img" />
+                      <img
+                      src={thumbUrl(featured.thumbnail)}
+                      srcSet={`${smThumbUrl(featured.thumbnail)} 480w, ${thumbUrl(featured.thumbnail)} 800w`}
+                      sizes="(max-width: 640px) 100vw, 900px"
+                      alt={featured.title}
+                      className="rp-featured-img"
+                      fetchpriority="high"
+                      decoding="async"
+                    />
                     ) : (
                       <div className="rp-featured-placeholder">
                         <span>AE</span>
@@ -283,7 +313,13 @@ export default function ResourcePage() {
                       {String(i + 1).padStart(2, "0")}
                     </div>
                     {a.thumbnail ? (
-                      <img src={thumbUrl(a.thumbnail)} alt={a.title} className="rp-trending-thumb" />
+                      <img
+                          src={smThumbUrl(a.thumbnail) || thumbUrl(a.thumbnail)}
+                          alt={a.title}
+                          className="rp-trending-thumb"
+                          loading="lazy"
+                          decoding="async"
+                        />
                     ) : (
                       <div className="rp-trending-thumb-empty">
                         <span>{a.title?.[0] || "A"}</span>
@@ -584,6 +620,7 @@ const CSS = `
   background:#fff;border-radius:16px;overflow:hidden;
   border:1px solid rgba(0,0,0,.04);transition:all .35s cubic-bezier(.16,1,.3,1);
   display:flex;flex-direction:column;
+  touch-action:manipulation;-webkit-tap-highlight-color:transparent;
 }
 .rp-card:hover{transform:translateY(-6px);box-shadow:0 16px 48px rgba(107,24,24,.08);border-color:rgba(200,53,75,.12);}
 .rp-card-img-wrap{aspect-ratio:16/10;overflow:hidden;position:relative;background:linear-gradient(135deg,rgba(107,24,24,.15),#F5F5F7);}
@@ -596,6 +633,7 @@ const CSS = `
   background:rgba(14,14,14,.7);backdrop-filter:blur(10px);border-radius:8px;
   font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;
   color:#fff;text-transform:uppercase;letter-spacing:.8px;
+  pointer-events:none;
 }
 .rp-card-body{padding:22px 22px 24px;flex:1;display:flex;flex-direction:column;}
 .rp-card-title{
