@@ -16,6 +16,7 @@ import ResearchPage      from "features/user/programs/ResearchPage"
 import AthleticPage      from "features/user/programs/AthleticPage"
 import AboutPage         from "features/user/about/AboutPage"
 import YourTeamPage      from "features/user/team/YourTeamPage"
+import WatchPage         from "features/user/watch/WatchPage"
 import FullServicePage   from "features/user/programs/FullServicePage"
 import GetInTouchPage    from "features/user/contact/GetInTouchPage"
 
@@ -68,6 +69,8 @@ export default function App() {
             <Route path="/get-in-touch"          element={<GetInTouchPage />} />
             <Route path="/contact"               element={<GetInTouchPage />} />
             <Route path="/added-admin"           element={<AddedAdmin />} />
+            {/* Watch recording page */}
+            <Route path="/watch/:token"          element={<WatchPage />} />
             {/* Catch-all for webinar landing slugs — keep this LAST */}
             <Route path="/:slug"                 element={<WebinarLandingPage />} />
           </Routes>

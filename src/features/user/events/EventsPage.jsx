@@ -101,7 +101,6 @@ function WebinarCard({ w }) {
           {[w.webinar_place, w.grade_years].filter(Boolean).join(" · ")}{" · Free"}
         </div>
         <div style={{ fontFamily: "'Fraunces',serif", fontSize: 17, fontWeight: 500, color: "#fff", lineHeight: 1.3 }}>{w.webinar_title}</div>
-        {w.webinar_subtitle && <div style={{ fontFamily: "'Fraunces',serif", fontSize: 17, fontWeight: 400, color: C.accentRose, fontStyle: "italic", lineHeight: 1.3, marginBottom: 12 }}>{w.webinar_subtitle}</div>}
         <div style={{ marginTop: 16, fontFamily: "'DM Sans',sans-serif", fontSize: 12, fontWeight: 600, color: "#fff", display: "flex", alignItems: "center", gap: hov ? 10 : 6, transition: "gap 0.3s" }}>
           Register Free <span>→</span>
         </div>
@@ -322,9 +321,7 @@ export default function EventsPage() {
                 const learn = typeof w.learn_data === "string" ? JSON.parse(w.learn_data || "null") : w.learn_data
                 return (
                   <div>
-                    <div style={{ fontFamily: "'Fraunces',serif", fontSize: 21, fontWeight: 400, color: C.ink, lineHeight: 1.3 }}>{w.webinar_title}</div>
-                    {w.webinar_subtitle && <div style={{ fontFamily: "'Fraunces',serif", fontSize: 21, fontWeight: 400, color: C.maroon, fontStyle: "italic", lineHeight: 1.3, marginBottom: 16 }}>{w.webinar_subtitle}</div>}
-                    {learn?.title && <p style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 14, fontWeight: 600, color: C.ink, marginBottom: 8 }}>{learn.title}</p>}
+                    {learn?.title && <p style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 16, fontWeight: 600, color: C.ink, marginBottom: 16 }}>{learn.title}</p>}
                     {learn?.subtitle && <p style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 14, color: C.stone, lineHeight: 1.6, marginBottom: 20 }}>{learn.subtitle}</p>}
                     {learn?.type === "list" && Array.isArray(learn.body) ? (
                       <div style={{ display: "flex", flexDirection: "column" }}>

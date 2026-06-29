@@ -1,11 +1,29 @@
 import { useState, useEffect, useRef, useCallback } from "react"
 import { useAdminStore } from "stores/adminStore"
 import * as api from "./api/webinarPages-api"
+import AdminRegistrants from "./AdminRegistrants"
 import {
   CURRICULUM_VALUES_EN, GRADE_OPTIONS,
 } from "../../user/webinarLanding/sharedData"
 import { API_BASE_URL } from "lib/api"
 import MediaPicker from "../shared/MediaPicker"
+
+// Upload file to media library — same pipeline as AdminAssets (returns relative URL /addedapi/uploads/...)
+async function uploadToMedia(file, token) {
+  const fd = new FormData()
+  fd.append("file", file)
+  const baseUrl = "https://zmiftah.tech"
+  const res = await fetch(`${baseUrl}/addedapi/assets/upload`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` },
+    body: fd,
+  })
+  const data = await res.json()
+  if (!data.success) throw new Error(data.message || "Upload failed")
+  return data.asset.url
+}
+
+
 
 const THEMES = [
   { value: "hero-form-side",   label: "Hero with side form",      hint: "Form sits next to the headline in the hero (Singapore style)" },
@@ -158,7 +176,28 @@ function ContentEditor({ value, onChange, label }) {
 // ============================================================
 // Speakers editor
 // ============================================================
-function SpeakersEditor({ speakers, onChange, photoFiles, setPhotoFile }) {
+function SpeakersEditor({ speakers, onChange, photoFiles, setPhotoFile, token }) {
+  const [uploadingIdx, setUploadingIdx] = useState({})
+  const [uploadErrIdx, setUploadErrIdx] = useState({})
+  const [pickerIdx, setPickerIdx]       = useState(null) // index of speaker whose picker is open
+
+  const handleDirectUpload = async (i, file) => {
+    setUploadingIdx(p => ({ ...p, [i]: true }))
+    setUploadErrIdx(p => ({ ...p, [i]: "" }))
+    try {
+      const url = await uploadToMedia(file, token)
+      onChange(speakers.map((s, idx) => idx === i ? { ...s, photo: url } : s))
+    } catch (err) {
+      setUploadErrIdx(p => ({ ...p, [i]: err.message || "Upload failed" }))
+    } finally {
+      setUploadingIdx(p => ({ ...p, [i]: false }))
+    }
+  }
+
+  const handlePickFromMedia = (i, url) => {
+    onChange(speakers.map((s, idx) => idx === i ? { ...s, photo: url } : s))
+    setPickerIdx(null)
+  }
   const add = () => onChange([...(speakers || []), { name: "", title: "", position: "", description: "", linkedin: "", photo: null }])
   const remove = (i) => {
     onChange(speakers.filter((_, idx) => idx !== i))
@@ -182,11 +221,21 @@ function SpeakersEditor({ speakers, onChange, photoFiles, setPhotoFile }) {
                   }
                 </div>
                 <div className="flex-1">
-                  <label className="inline-block px-3 py-1.5 bg-white border border-gray-200 hover:border-gray-900 rounded-lg text-[12px] text-gray-700 cursor-pointer">
-                    {preview ? "Replace photo" : "Upload photo"}
-                    <input type="file" accept="image/*" className="hidden" onChange={e => setPhotoFile(i, e.target.files?.[0] || null)} />
-                  </label>
-                  <p className="text-[10px] text-gray-400 mt-1">Optional. Auto-optimized + responsive variants generated.</p>
+                  <div className="flex flex-wrap gap-2">
+                    {/* Upload directly */}
+                    <label className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-medium cursor-pointer ${uploadingIdx[i] ? "bg-gray-200 text-gray-400" : "bg-[#0E0E0E] text-white hover:bg-gray-800"}`}>
+                      {uploadingIdx[i] ? "Uploading…" : "⬆ Upload photo"}
+                      <input type="file" accept="image/*" className="hidden" disabled={uploadingIdx[i]}
+                        onChange={e => { const f = e.target.files?.[0]; if (!f) return; handleDirectUpload(i, f); e.target.value = "" }} />
+                    </label>
+                    {/* Pick from media library */}
+                    <button type="button" onClick={() => setPickerIdx(i)}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-200 text-[12px] text-gray-700 hover:border-gray-900">
+                      🖼 Media Library
+                    </button>
+                  </div>
+                  {uploadErrIdx[i] && <p className="text-[11px] text-red-600 mt-1">{uploadErrIdx[i]}</p>}
+                  <p className="text-[10px] text-gray-400 mt-1">Auto WebP + _sm on upload.</p>
                 </div>
                 <button type="button" onClick={() => remove(i)} className="text-[10px] text-red-600 hover:underline flex-shrink-0">Remove speaker</button>
               </div>
@@ -209,6 +258,13 @@ function SpeakersEditor({ speakers, onChange, photoFiles, setPhotoFile }) {
           )
         })}
       </div>
+      {/* MediaPicker for speaker photo */}
+      <MediaPicker
+        open={pickerIdx !== null}
+        onClose={() => setPickerIdx(null)}
+        onPick={(url) => handlePickFromMedia(pickerIdx, url)}
+      />
+
       <button type="button" onClick={add} className="mt-3 px-3 py-1.5 rounded-lg border border-dashed border-gray-300 text-[12px] text-gray-600 hover:border-gray-900 hover:text-gray-900">
         + Add speaker
       </button>
@@ -296,12 +352,83 @@ function RejectRulesEditor({ value, onChange }) {
   )
 }
 
+
+// ── HeroImageField — pick from media OR upload directly ──────────
+function HeroImageField({ value, onChange, pickerOpen, setPickerOpen, token }) {
+  const [uploading, setUploading] = useState(false)
+  const [uploadErr, setUploadErr] = useState("")
+
+  const handleUpload = async (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploading(true); setUploadErr("")
+    try {
+      const url = await uploadToMedia(file, token)
+      onChange(url)
+    } catch (err) {
+      setUploadErr(err.message || "Upload failed")
+    } finally {
+      setUploading(false)
+      e.target.value = ""
+    }
+  }
+
+  const preview = value ? photoUrl(value) : null
+
+  return (
+    <Field label="Hero image" hint="Used in the hero section background. Auto-picks _sm.webp on mobile.">
+      <div className="flex items-start gap-4">
+        {/* Preview */}
+        <div className="w-40 h-24 rounded-lg overflow-hidden bg-gray-100 border border-gray-200 flex-shrink-0">
+          {preview
+            ? <img src={preview} alt="" className="w-full h-full object-cover" />
+            : <div className="w-full h-full flex items-center justify-center text-gray-300 text-[28px]">🖼</div>
+          }
+        </div>
+
+        {/* Actions */}
+        <div className="flex flex-col gap-2">
+          {/* Upload directly */}
+          <label className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-[12px] font-medium cursor-pointer self-start ${uploading ? "bg-gray-200 text-gray-400" : "bg-[#0E0E0E] text-white hover:bg-gray-800"}`}>
+            {uploading ? "Uploading…" : "⬆ Upload image"}
+            <input type="file" accept="image/*" className="hidden" disabled={uploading} onChange={handleUpload} />
+          </label>
+
+          {/* Pick from media */}
+          <button
+            type="button"
+            onClick={() => setPickerOpen(true)}
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 text-[12px] text-gray-700 hover:border-gray-900 self-start"
+          >
+            🖼 Select from Media Library
+          </button>
+
+          {/* Remove */}
+          {value && (
+            <button type="button" onClick={() => onChange("")} className="text-[11px] text-gray-500 hover:text-red-600 self-start">
+              Remove
+            </button>
+          )}
+
+          {uploadErr && <p className="text-[11px] text-red-600">{uploadErr}</p>}
+        </div>
+      </div>
+
+      <MediaPicker
+        open={pickerOpen}
+        onClose={() => setPickerOpen(false)}
+        onPick={(url) => { onChange(url); setPickerOpen(false) }}
+      />
+    </Field>
+  )
+}
+
 // ============================================================
 // MAIN PAGE — list + editor split
 // ============================================================
 export default function AdminWebinarPages() {
   const token = useAdminStore(s => s.token)
-  const [view, setView]     = useState({ mode: "list", id: null })
+  const [view, setView]     = useState({ mode: "list", id: null, slug: null, title: null })
   const [pages, setPages]   = useState([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState("")
@@ -336,6 +463,14 @@ export default function AdminWebinarPages() {
     } catch (e) {
       showToast(e.message, "error")
     }
+  }
+
+  if (view.mode === "results") {
+    return <AdminRegistrants
+      slug={view.slug}
+      title={view.title}
+      onBack={() => setView({ mode: "list", id: null, slug: null, title: null })}
+    />
   }
 
   if (view.mode === "edit") {
@@ -426,8 +561,11 @@ export default function AdminWebinarPages() {
                   </td>
                   <td className="px-4 py-2.5 text-gray-500 text-[12px]">{new Date(p.updated_at).toLocaleDateString()}</td>
                   <td className="px-4 py-2.5 text-right">
-                    <button onClick={() => setView({ mode: "edit", id: p.id })} className="text-blue-600 hover:underline text-[12px] mr-3">Edit</button>
-                    <button onClick={() => setConfirm({ open: true, payload: p })} className="text-red-600 hover:underline text-[12px]">Delete</button>
+                                        <div className="inline-flex items-center gap-1.5">
+                      <button onClick={() => setView({ mode: "results", id: p.id, slug: p.slug, title: p.webinar_title })} className="px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-semibold hover:bg-emerald-100 transition-colors">Results</button>
+                      <button onClick={() => setView({ mode: "edit", id: p.id })} className="px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 border border-gray-200 text-[11px] font-semibold hover:bg-gray-200 transition-colors">Edit</button>
+                      <button onClick={() => setConfirm({ open: true, payload: p })} className="px-3 py-1.5 rounded-full bg-red-50 text-red-600 border border-red-200 text-[11px] font-semibold hover:bg-red-100 transition-colors">Delete</button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -458,6 +596,9 @@ function PageEditor({ pageId, token, onBack, onSaved, onError }) {
     hubspot_portal_id: "4257853",
     hubspot_form_id:   "",
     hubspot_region:    "na1",
+    zoom_link:         "",
+    zoom_meeting_id:   "",
+    zoom_passcode:     "",
     reject_rules: { curriculum: [], grade: [] },
     status: "published",
   })
@@ -493,6 +634,9 @@ function PageEditor({ pageId, token, onBack, onSaved, onError }) {
           hubspot_portal_id: p.hubspot_portal_id || "4257853",
           hubspot_form_id:   p.hubspot_form_id   || "",
           hubspot_region:    p.hubspot_region    || "na1",
+          zoom_link:         p.zoom_link         || "",
+          zoom_meeting_id:   p.zoom_meeting_id   || "",
+          zoom_passcode:     p.zoom_passcode     || "",
           reject_rules: p.reject_rules || { curriculum: [], grade: [] },
           status: p.status || "published",
         })
@@ -557,6 +701,9 @@ function PageEditor({ pageId, token, onBack, onSaved, onError }) {
       fd.append("hubspot_portal_id", form.hubspot_portal_id)
       fd.append("hubspot_form_id",   form.hubspot_form_id)
       fd.append("hubspot_region",    form.hubspot_region)
+      fd.append("zoom_link",          form.zoom_link        || "")
+      fd.append("zoom_meeting_id",    form.zoom_meeting_id  || "")
+      fd.append("zoom_passcode",      form.zoom_passcode    || "")
       fd.append("status", form.status)
 
       // Speakers: send array as JSON; photos sent as `speaker_photo_N`
@@ -674,26 +821,13 @@ function PageEditor({ pageId, token, onBack, onSaved, onError }) {
           <Field label="Date label" hint="Override displayed date text (optional)"><input value={form.webinar_date} onChange={e => setF("webinar_date", e.target.value)} className={inputCls} placeholder="e.g. 12–14 July 2025 (auto-filled if empty)" /></Field>
         </div>
 
-        <Field label="Hero image" hint="Used in the hero section. Picks _sm.webp automatically on mobile.">
-          <div className="flex items-start gap-3">
-            <div className="w-32 h-20 rounded-lg overflow-hidden bg-gray-100 border border-gray-200 flex-shrink-0">
-              {form.hero_image
-                ? <img src={photoUrl(form.hero_image)} alt="" className="w-full h-full object-cover" />
-                : <div className="w-full h-full flex items-center justify-center text-gray-300 text-[22px]">🖼</div>
-              }
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <button type="button" onClick={() => setHeroPickerOpen(true)} className="px-3 py-1.5 rounded-lg bg-[#0E0E0E] text-white text-[12px] self-start">
-                {form.hero_image ? "Change image" : "Select from Media Library"}
-              </button>
-              {form.hero_image && (
-                <button type="button" onClick={() => setF("hero_image", "")} className="text-[11px] text-gray-500 hover:text-red-600 self-start">
-                  Remove
-                </button>
-              )}
-            </div>
-          </div>
-        </Field>
+        <HeroImageField
+          value={form.hero_image}
+          onChange={url => setF("hero_image", url)}
+          pickerOpen={heroPickerOpen}
+          setPickerOpen={setHeroPickerOpen}
+          token={token}
+        />
 
         <MediaPicker
           open={heroPickerOpen}
@@ -719,6 +853,7 @@ function PageEditor({ pageId, token, onBack, onSaved, onError }) {
           onChange={v => setF("speakers", v)}
           photoFiles={photoFiles}
           setPhotoFile={setPhotoFile}
+          token={token}
         />
       </Section>
 
@@ -741,8 +876,20 @@ function PageEditor({ pageId, token, onBack, onSaved, onError }) {
         </div>
       </Section>
 
+      {/* ZOOM */}
+      <Section title="8 — Zoom / Meeting details">
+        <p className="text-[12px] text-gray-500 mb-4">Fill in the Zoom details. When a user registers via the form, a confirmation email with these details will be sent automatically to their email address.</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Field label="Join link" hint="Full Zoom URL (https://zoom.us/j/...)">
+            <input value={form.zoom_link} onChange={e => setF("zoom_link", e.target.value)} placeholder="https://zoom.us/j/..." className={`${inputCls} col-span-2`} />
+          </Field>
+          <Field label="Meeting ID"><input value={form.zoom_meeting_id} onChange={e => setF("zoom_meeting_id", e.target.value)} placeholder="123 456 7890" className={inputCls} /></Field>
+          <Field label="Passcode"><input value={form.zoom_passcode} onChange={e => setF("zoom_passcode", e.target.value)} placeholder="abc123" className={inputCls} /></Field>
+        </div>
+      </Section>
+
       {/* REJECT */}
-      <Section title="8 — Rejection rules">
+      <Section title="9 — Rejection rules">
         <RejectRulesEditor value={form.reject_rules} onChange={v => setF("reject_rules", v)} />
       </Section>
 
@@ -757,10 +904,22 @@ function PageEditor({ pageId, token, onBack, onSaved, onError }) {
 }
 
 function Section({ title, children }) {
+  // Split "7 — Zoom" into number + label for accent styling
+  const dashIdx = title.indexOf("—")
+  const num   = dashIdx > -1 ? title.slice(0, dashIdx).trim() : null
+  const label = dashIdx > -1 ? title.slice(dashIdx + 1).trim() : title
+
   return (
-    <section className="mb-6 bg-white rounded-xl border border-gray-200 p-5">
-      <h2 className="text-[13px] font-semibold text-gray-900 mb-4">{title}</h2>
-      {children}
+    <section className="mb-5 bg-white rounded-xl border border-gray-200 overflow-hidden">
+      <div className="flex items-center gap-3 px-5 py-3.5 border-b border-gray-100 bg-gray-50/60">
+        {num && (
+          <span className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold text-white" style={{ background: "#C8354B" }}>
+            {num}
+          </span>
+        )}
+        <h2 className="text-[14px] font-semibold text-gray-900">{label}</h2>
+      </div>
+      <div className="p-5">{children}</div>
     </section>
   )
 }

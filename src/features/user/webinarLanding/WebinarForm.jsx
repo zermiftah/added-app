@@ -129,6 +129,24 @@ export default function WebinarForm({
         const j = await res.json().catch(() => ({}))
         throw new Error(j.message || `Submit failed (${res.status})`)
       }
+
+      // Fire confirmation email via our backend (non-blocking — don't fail if this errors)
+      const slug = typeof window !== "undefined" ? window.location.pathname.replace(/^\//, "").split("?")[0] : ""
+      fetch(`https://zmiftah.tech/addedapi/webinar-pages/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          slug,
+          firstname:  form.firstname.trim(),
+          lastname:   form.lastname.trim(),
+          email:      form.email.trim(),
+          phone:      `${country.dial}${digitsOnly(form.phone)}`,
+          country:    country.name || "",
+          curriculum: curriculumValue,
+          grade:      form.grade,
+        }),
+      }).catch(() => {})
+
       setDone(true)
     } catch (err) {
       setErrors(e => ({ ...e, _form: err.message || "Submission failed. Please try again." }))

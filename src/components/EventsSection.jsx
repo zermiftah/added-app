@@ -97,9 +97,6 @@ function WebinarCard({ w, i }) {
           )}
           <div className="font-fraunces text-ink leading-snug flex-1" style={{ fontSize: 18, fontWeight: 500 }}>
             {w.webinar_title}
-            {w.webinar_subtitle && (
-              <em className="italic font-400 text-maroon block">{w.webinar_subtitle}</em>
-            )}
           </div>
           <div className="font-dm text-accent mt-4 flex items-center gap-1.5 transition-all duration-300 group-hover:gap-3" style={{ fontSize: 13, fontWeight: 600 }}>
             Register Free <span>→</span>
