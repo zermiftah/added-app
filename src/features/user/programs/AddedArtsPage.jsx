@@ -319,7 +319,7 @@ select.aa-form-input option{background:#1A1A1A;color:#fff;}
               {SCHOOL_LOGOS.map(name => (
                 <div key={name} style={{ display: "flex", alignItems: "center", justifyContent: "center", opacity: 0.55 }}>
                   <img
-                    src={`https://addededucation-assets.s3.us-east-1.amazonaws.com/images/Art+Page/${name}.png`}
+                    src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(name)}&backgroundColor=f0ede8`}
                     alt={name}
                     style={{ height: 28, objectFit: "contain", display: "block" }}
                     onError={e => { e.currentTarget.style.display = "none"; e.currentTarget.nextSibling.style.display = "block" }}

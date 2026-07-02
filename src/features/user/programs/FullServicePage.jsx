@@ -70,37 +70,37 @@ const TESTIMONIALS = [
   {
     name: "Linda",
     school: "Harvard'28",
-    photo: "https://addededucation-assets.s3.us-east-1.amazonaws.com/testimonials/linda.jpg",
+    photo: "https://api.dicebear.com/7.x/avataaars/svg?seed=Linda&backgroundColor=b6e3f4",
     quote: "With everything going on, AddedEducation helped me figure out my activities and align my major, making sure I got into the right programs that fit my needs and dreams.",
   },
   {
     name: "Yosie",
     school: "Yale'28",
-    photo: "https://addededucation-assets.s3.us-east-1.amazonaws.com/testimonials/yosie.jpg",
+    photo: "https://api.dicebear.com/7.x/avataaars/svg?seed=Yosie&backgroundColor=ffd5dc",
     quote: "I had a lot of interests but no common thread. AE hand-held me throughout — ensuring my application reflected who I really was.",
   },
   {
     name: "Ethan",
     school: "Stanford'29",
-    photo: "https://addededucation-assets.s3.us-east-1.amazonaws.com/testimonials/ethan.jpg",
+    photo: "https://api.dicebear.com/7.x/avataaars/svg?seed=Ethan&backgroundColor=d5f0f0",
     quote: "With my counselor's guidance, I took my engineering projects, environmental leadership, and artistic portfolio and turned them into one standout application. I felt supported throughout the whole process.",
   },
   {
     name: "Lyla",
     school: "Columbia'29",
-    photo: "https://addededucation-assets.s3.us-east-1.amazonaws.com/testimonials/lyla.jpg",
+    photo: "https://api.dicebear.com/7.x/avataaars/svg?seed=Lyla&backgroundColor=ffecd2",
     quote: "Added Education was my rock. What stood out was their ability to connect the dots across all my projects — links I wouldn't have noticed myself.",
   },
   {
     name: "Aryan",
     school: "Cornell'29",
-    photo: "https://addededucation-assets.s3.us-east-1.amazonaws.com/testimonials/aryan.jpg",
+    photo: "https://api.dicebear.com/7.x/avataaars/svg?seed=Aryan&backgroundColor=c0d4f5",
     quote: "With everything going on, AddedEducation helped me figure out my activities and align my major — making sure I got into the right programs that fit my needs and dreams.",
   },
   {
     name: "Sondre",
     school: "RISD'29",
-    photo: "https://addededucation-assets.s3.us-east-1.amazonaws.com/testimonials/sondre.jpg",
+    photo: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sondre&backgroundColor=d5e8f5",
     quote: "I've always had a passion for animation and art. With AddedEducation's guidance, I built a strong foundation and navigated the application process seamlessly.",
   },
 ]

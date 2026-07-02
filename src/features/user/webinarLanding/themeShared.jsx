@@ -254,4 +254,144 @@ export function getResponsiveSrc(src) {
   }
 }
 
+
+// ─────────────────────────────────────────────────────────────
+// QuoteSection — accent-colored quote block with author attribution
+// variant: "dark" | "light"
+// ─────────────────────────────────────────────────────────────
+export function QuoteSection({ quote, variant = "dark" }) {
+  if (!quote?.message?.trim()) return null
+  const isDark = variant === "dark"
+  const bg = isDark ? C.accentDeep : C.accentDeep
+  return (
+    <section id="quote" style={{ background: bg, padding: "96px clamp(20px,5vw,56px)", color: "#fff" }}>
+      <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
+        <Reveal>
+          <svg width="32" height="24" viewBox="0 0 32 24" style={{ margin: "0 auto 32px", display: "block", opacity: 0.5 }}>
+            <text x="0" y="20" fill="#fff" fontSize="40" fontFamily="Georgia,serif" fontWeight="700">"</text>
+          </svg>
+        </Reveal>
+        <Reveal delay={80}>
+          <p style={{
+            fontFamily: serif, fontStyle: "italic", fontWeight: 400,
+            fontSize: "clamp(22px,3vw,32px)", lineHeight: 1.4,
+            color: "#fff", marginBottom: 40,
+          }}>
+            {quote.message}
+          </p>
+        </Reveal>
+        {(quote.author || quote.author_position) && (
+          <Reveal delay={160}>
+            <p style={{
+              fontFamily: mono, fontSize: 11, fontWeight: 600, letterSpacing: "0.16em",
+              textTransform: "uppercase", color: "rgba(255,255,255,0.85)",
+            }}>
+              {[quote.author, quote.author_position].filter(Boolean).join(" · ")}
+            </p>
+          </Reveal>
+        )}
+      </div>
+    </section>
+  )
+}
+
+// ─────────────────────────────────────────────────────────────
+// WhyFamiliesSection — 6-card grid with "Your own team" accent card at end
+// variant: "dark" | "light"
+// ─────────────────────────────────────────────────────────────
+export function WhyFamiliesSection({ data, variant = "light" }) {
+  if (!data?.title && !data?.body?.length && !data?.description) return null
+  const isDark = variant === "dark"
+  const bg     = isDark ? "rgba(0,0,0,0.35)" : C.creamSoft
+  const cardBg = isDark ? "rgba(255,255,255,0.04)" : "#fff"
+  const border = isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.07)"
+  const textCol   = isDark ? "#fff" : C.ink
+  const subCol    = isDark ? "rgba(255,255,255,0.65)" : C.stone
+  const numCol    = isDark ? "rgba(255,255,255,0.35)" : C.stoneLight
+
+  const items = data.type === "list" && Array.isArray(data.body) ? data.body : []
+
+  return (
+    <section id="why-families" style={{ background: bg, padding: "96px clamp(20px,5vw,56px)", borderTop: `1px solid ${border}` }}>
+      <div style={{ maxWidth: 1280, margin: "0 auto" }}>
+        <Reveal>
+          <span style={{
+            display: "inline-block", fontFamily: mono, fontSize: 11, fontWeight: 500,
+            letterSpacing: "0.22em", textTransform: "uppercase", color: C.accent,
+            borderBottom: `2px solid ${C.accent}`, paddingBottom: 4, marginBottom: 24,
+          }}>Why families work with us</span>
+        </Reveal>
+        {data.title && (
+          <Reveal delay={80}>
+            <h2 style={{
+              fontFamily: serif, fontWeight: 400, color: textCol,
+              fontSize: "clamp(30px,4vw,48px)", lineHeight: 1.05, letterSpacing: "-0.025em",
+              marginBottom: 20, maxWidth: 640,
+            }}>
+              {data.title}
+            </h2>
+          </Reveal>
+        )}
+        {data.description && (
+          <Reveal delay={140}>
+            <p style={{
+              fontFamily: sans, fontSize: 16, color: subCol, lineHeight: 1.7,
+              maxWidth: 720, marginBottom: 56,
+            }}>
+              {data.description}
+            </p>
+          </Reveal>
+        )}
+        {items.length > 0 && (
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))",
+            gap: 20,
+          }}>
+            {items.map((item, i) => (
+              <Reveal key={i} delay={100 + i * 80}>
+                <div style={{
+                  background: cardBg,
+                  borderLeft: `3px solid ${C.accent}`,
+                  padding: "26px 24px 28px",
+                  height: "100%",
+                  transition: "transform 0.25s ease, box-shadow 0.25s ease",
+                }}
+                onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = isDark ? "0 12px 32px rgba(0,0,0,0.35)" : "0 14px 40px rgba(0,0,0,0.08)" }}
+                onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none" }}
+                >
+                  <p style={{
+                    fontFamily: mono, fontSize: 11, fontWeight: 500, color: numCol,
+                    letterSpacing: "0.14em", marginBottom: 12,
+                  }}>{String(i + 1).padStart(2, "0")}</p>
+                  {item.title && (
+                    <h3 style={{
+                      fontFamily: serif, fontWeight: 500, fontSize: 20, color: textCol,
+                      marginBottom: 10, lineHeight: 1.25,
+                    }}>
+                      {item.title}
+                    </h3>
+                  )}
+                  {item.description && (
+                    <p style={{
+                      fontFamily: sans, fontSize: 14, color: subCol, lineHeight: 1.65,
+                    }}>{item.description}</p>
+                  )}
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        )}
+        {data.type === "paragraph" && data.body && (
+          <Reveal delay={200}>
+            <p style={{ fontFamily: sans, fontSize: 16, color: subCol, lineHeight: 1.75, maxWidth: 760 }}>
+              {data.body}
+            </p>
+          </Reveal>
+        )}
+      </div>
+    </section>
+  )
+}
+
 export { C, sans, serif, mono }

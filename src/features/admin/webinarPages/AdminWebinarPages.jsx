@@ -222,20 +222,12 @@ function SpeakersEditor({ speakers, onChange, photoFiles, setPhotoFile, token })
                 </div>
                 <div className="flex-1">
                   <div className="flex flex-wrap gap-2">
-                    {/* Upload directly */}
-                    <label className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-medium cursor-pointer ${uploadingIdx[i] ? "bg-gray-200 text-gray-400" : "bg-[#0E0E0E] text-white hover:bg-gray-800"}`}>
-                      {uploadingIdx[i] ? "Uploading…" : "⬆ Upload photo"}
-                      <input type="file" accept="image/*" className="hidden" disabled={uploadingIdx[i]}
-                        onChange={e => { const f = e.target.files?.[0]; if (!f) return; handleDirectUpload(i, f); e.target.value = "" }} />
-                    </label>
-                    {/* Pick from media library */}
                     <button type="button" onClick={() => setPickerIdx(i)}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-200 text-[12px] text-gray-700 hover:border-gray-900">
-                      🖼 Media Library
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#0E0E0E] text-white text-[12px] font-medium hover:bg-gray-800">
+                      🖼 {preview ? "Change from Media Library" : "Select from Media Library"}
                     </button>
                   </div>
-                  {uploadErrIdx[i] && <p className="text-[11px] text-red-600 mt-1">{uploadErrIdx[i]}</p>}
-                  <p className="text-[10px] text-gray-400 mt-1">Auto WebP + _sm on upload.</p>
+                  <p className="text-[10px] text-gray-400 mt-1">Upload photos in the Media Library first, then select here.</p>
                 </div>
                 <button type="button" onClick={() => remove(i)} className="text-[10px] text-red-600 hover:underline flex-shrink-0">Remove speaker</button>
               </div>
@@ -434,6 +426,9 @@ export default function AdminWebinarPages() {
   const [search, setSearch] = useState("")
   const [toast, setToast]   = useState({ msg: "", kind: "info" })
   const [confirm, setConfirm] = useState({ open: false, payload: null })
+  const [cloneModal, setCloneModal] = useState({ open: false, source: null, slug: "" })
+  const [cloneErr, setCloneErr]   = useState("")
+  const [cloning, setCloning]     = useState(false)
 
   const showToast = (msg, kind = "info") => {
     setToast({ msg, kind })
@@ -465,6 +460,22 @@ export default function AdminWebinarPages() {
     }
   }
 
+  const handleClone = async () => {
+    if (!cloneModal.source || !cloneModal.slug.trim()) return
+    setCloneErr(""); setCloning(true)
+    try {
+      const r = await api.cloneWebinarPage(cloneModal.source.id, cloneModal.slug.trim(), token)
+      setCloneModal({ open: false, source: null, slug: "" })
+      showToast("Cloned successfully", "success")
+      await refreshList()
+      setView({ mode: "edit", id: r.id })
+    } catch (e) {
+      setCloneErr(e.message || "Failed to clone")
+    } finally {
+      setCloning(false)
+    }
+  }
+
   if (view.mode === "results") {
     return <AdminRegistrants
       slug={view.slug}
@@ -493,6 +504,33 @@ export default function AdminWebinarPages() {
         onCancel={() => setConfirm({ open: false, payload: null })}
         onConfirm={handleDelete}
       />
+
+      {/* Clone modal */}
+      {cloneModal.open && (
+        <div className="fixed inset-0 bg-black/40 z-[80] flex items-center justify-center p-4" onClick={() => !cloning && setCloneModal({ open: false, source: null, slug: "" })}>
+          <div className="bg-white rounded-xl p-5 w-full max-w-md shadow-xl" onClick={e => e.stopPropagation()}>
+            <h3 className="text-[15px] font-semibold text-gray-900 mb-1">Clone landing page</h3>
+            <p className="text-[12px] text-gray-500 mb-4">Creates a copy of "{cloneModal.source?.webinar_title}" as a new draft. You can edit the slug below.</p>
+            <label className="block text-[11px] font-semibold text-gray-600 uppercase tracking-wider mb-1.5">New slug</label>
+            <input
+              autoFocus
+              value={cloneModal.slug}
+              onChange={e => { setCloneModal(m => ({ ...m, slug: e.target.value })); setCloneErr("") }}
+              placeholder="new-slug-here"
+              className="w-full px-3 py-2 rounded-lg border border-gray-200 text-[13px] focus:border-gray-900 focus:outline-none mb-2 font-mono"
+              disabled={cloning}
+            />
+            <p className="text-[11px] text-gray-500 mb-4">Lowercase letters, digits, and hyphens only.</p>
+            {cloneErr && <p className="text-[12px] text-red-600 bg-red-50 px-3 py-2 rounded mb-3">{cloneErr}</p>}
+            <div className="flex gap-2 justify-end">
+              <button onClick={() => setCloneModal({ open: false, source: null, slug: "" })} disabled={cloning} className="px-3 py-2 rounded-lg border border-gray-200 text-[12px]">Cancel</button>
+              <button onClick={handleClone} disabled={cloning || !cloneModal.slug.trim()} className="px-4 py-2 rounded-lg bg-[#0E0E0E] text-white text-[12px] disabled:opacity-50">
+                {cloning ? "Cloning…" : "Clone"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="flex items-center justify-between mb-5 gap-4 flex-wrap">
         <div>
@@ -563,6 +601,7 @@ export default function AdminWebinarPages() {
                   <td className="px-4 py-2.5 text-right">
                                         <div className="inline-flex items-center gap-1.5">
                       <button onClick={() => setView({ mode: "results", id: p.id, slug: p.slug, title: p.webinar_title })} className="px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-semibold hover:bg-emerald-100 transition-colors">Results</button>
+                      <button onClick={() => setCloneModal({ open: true, source: p, slug: `${p.slug}-copy` })} className="px-3 py-1.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 text-[11px] font-semibold hover:bg-amber-100 transition-colors">Clone</button>
                       <button onClick={() => setView({ mode: "edit", id: p.id })} className="px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 border border-gray-200 text-[11px] font-semibold hover:bg-gray-200 transition-colors">Edit</button>
                       <button onClick={() => setConfirm({ open: true, payload: p })} className="px-3 py-1.5 rounded-full bg-red-50 text-red-600 border border-red-200 text-[11px] font-semibold hover:bg-red-100 transition-colors">Delete</button>
                     </div>
@@ -593,6 +632,8 @@ function PageEditor({ pageId, token, onBack, onSaved, onError }) {
     learn_data: { title: "", subtitle: "", type: "list",      body: [{ title: "", description: "" }] },
     speakers:   [],
     about_data: { description: "", universities: [] },
+    quote_data: { message: "", author: "", author_position: "" },
+    why_families_data: { title: "", subtitle: "", description: "", type: "list", body: [] },
     hubspot_portal_id: "4257853",
     hubspot_form_id:   "",
     hubspot_region:    "na1",
@@ -631,6 +672,8 @@ function PageEditor({ pageId, token, onBack, onSaved, onError }) {
           learn_data: p.learn_data || { title: "", subtitle: "", type: "list",      body: [] },
           speakers:   Array.isArray(p.speakers) ? p.speakers : [],
           about_data: p.about_data || { description: "", universities: [] },
+          quote_data: p.quote_data || { message: "", author: "", author_position: "" },
+          why_families_data: p.why_families_data || { title: "", subtitle: "", description: "", type: "list", body: [] },
           hubspot_portal_id: p.hubspot_portal_id || "4257853",
           hubspot_form_id:   p.hubspot_form_id   || "",
           hubspot_region:    p.hubspot_region    || "na1",
@@ -697,6 +740,8 @@ function PageEditor({ pageId, token, onBack, onSaved, onError }) {
       fd.append("why_data",   JSON.stringify(form.why_data))
       fd.append("learn_data", JSON.stringify(form.learn_data))
       fd.append("about_data", JSON.stringify(form.about_data))
+      fd.append("quote_data", JSON.stringify(form.quote_data))
+      fd.append("why_families_data", JSON.stringify(form.why_families_data))
       fd.append("reject_rules", JSON.stringify(form.reject_rules))
       fd.append("hubspot_portal_id", form.hubspot_portal_id)
       fd.append("hubspot_form_id",   form.hubspot_form_id)
@@ -868,7 +913,35 @@ function PageEditor({ pageId, token, onBack, onSaved, onError }) {
       </Section>
 
       {/* HUBSPOT */}
-      <Section title="7 — HubSpot integration">
+      <Section title="7 — Quote">
+        <div className="grid grid-cols-1 gap-4">
+          <Field label="Quote / message" hint="Displayed prominently on the landing page">
+            <textarea rows={3} value={form.quote_data.message || ""} onChange={e => setF("quote_data", { ...form.quote_data, message: e.target.value })} className={`${inputCls} resize-y`} placeholder="By the time most families start thinking about strategy..." />
+          </Field>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Field label="Author name">
+              <input value={form.quote_data.author || ""} onChange={e => setF("quote_data", { ...form.quote_data, author: e.target.value })} className={inputCls} placeholder="Kevin DuPont" />
+            </Field>
+            <Field label="Author position">
+              <input value={form.quote_data.author_position || ""} onChange={e => setF("quote_data", { ...form.quote_data, author_position: e.target.value })} className={inputCls} placeholder="Former Admissions Officer, Cornell" />
+            </Field>
+          </div>
+        </div>
+      </Section>
+
+      <Section title="8 — Why families work with us">
+        <div className="grid grid-cols-1 gap-4">
+          <Field label="Title">
+            <input value={form.why_families_data.title || ""} onChange={e => setF("why_families_data", { ...form.why_families_data, title: e.target.value })} className={inputCls} placeholder="We know what it actually takes." />
+          </Field>
+          <Field label="Description (short paragraph)">
+            <textarea rows={2} value={form.why_families_data.description || ""} onChange={e => setF("why_families_data", { ...form.why_families_data, description: e.target.value })} className={`${inputCls} resize-y`} placeholder="Families across London, Dubai, Singapore, and Hong Kong have trusted us..." />
+          </Field>
+          <ContentEditor value={form.why_families_data} onChange={v => setF("why_families_data", v)} label="Details" />
+        </div>
+      </Section>
+
+      <Section title="9 — HubSpot integration">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <Field label="Portal ID"><input value={form.hubspot_portal_id} onChange={e => setF("hubspot_portal_id", e.target.value)} className={inputCls} /></Field>
           <Field label="Form ID *"><input value={form.hubspot_form_id} onChange={e => setF("hubspot_form_id", e.target.value)} className={inputCls} placeholder="abc12345-..." /></Field>
@@ -877,7 +950,7 @@ function PageEditor({ pageId, token, onBack, onSaved, onError }) {
       </Section>
 
       {/* ZOOM */}
-      <Section title="8 — Zoom / Meeting details">
+      <Section title="10 — Zoom / Meeting details">
         <p className="text-[12px] text-gray-500 mb-4">Fill in the Zoom details. When a user registers via the form, a confirmation email with these details will be sent automatically to their email address.</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Field label="Join link" hint="Full Zoom URL (https://zoom.us/j/...)">
@@ -889,7 +962,7 @@ function PageEditor({ pageId, token, onBack, onSaved, onError }) {
       </Section>
 
       {/* REJECT */}
-      <Section title="9 — Rejection rules">
+      <Section title="11 — Rejection rules">
         <RejectRulesEditor value={form.reject_rules} onChange={v => setF("reject_rules", v)} />
       </Section>
 

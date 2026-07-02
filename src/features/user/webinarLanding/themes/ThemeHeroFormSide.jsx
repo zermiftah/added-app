@@ -1,6 +1,6 @@
 import { useRef } from "react"
 import WebinarForm from "../WebinarForm"
-import { LandingHeader, LandingFooter, Reveal, getResponsiveSrc, C, sans, serif, mono } from "../themeShared"
+import { LandingHeader, LandingFooter, Reveal, QuoteSection, WhyFamiliesSection, getResponsiveSrc, C, sans, serif, mono } from "../themeShared"
 
 const NAV_SECTIONS = [
   { label: "Webinar", id: "webinar" },
@@ -169,6 +169,9 @@ export default function ThemeHeroFormSide({ page }) {
           </div>
         </section>
       )}
+
+      <QuoteSection quote={page.quote_data} variant="dark" />
+      <WhyFamiliesSection data={page.why_families_data} variant="dark" />
 
       <LandingFooter />
     </div>

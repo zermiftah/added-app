@@ -70,37 +70,37 @@ const TESTIMONIALS = [
   {
     name: "Saina",
     school: "MIT'27",
-    photo: "https://addededucation-assets.s3.us-east-1.amazonaws.com/testimonials/saina.jpg",
+    photo: "https://api.dicebear.com/7.x/avataaars/svg?seed=Saina&backgroundColor=ffe4e4",
     quote: "Getting into top universities isn't just about grades. I'm glad I started planning early. AddedEducation really helped me make my profile shine.",
   },
   {
     name: "Eren",
     school: "Tufts'27",
-    photo: "https://addededucation-assets.s3.us-east-1.amazonaws.com/testimonials/eren.jpg",
+    photo: "https://api.dicebear.com/7.x/avataaars/svg?seed=Eren&backgroundColor=e0d5f5",
     quote: "They gave me benchmarks for my grades, helped me plan my tournament schedule, and guided me through reaching out to coaches and the CommonApp. They helped me find the balance with everything.",
   },
   {
     name: "Anjan",
     school: "CMU'28",
-    photo: "https://addededucation-assets.s3.us-east-1.amazonaws.com/testimonials/anjan.jpg",
+    photo: "https://api.dicebear.com/7.x/avataaars/svg?seed=Anjan&backgroundColor=f5f0d5",
     quote: "AddedEducation connected me with coaches and helped me understand what they were looking for, and what in my profile could set me apart.",
   },
   {
     name: "Mik",
     school: "Dartmouth'27",
-    photo: "https://addededucation-assets.s3.us-east-1.amazonaws.com/testimonials/mik.jpg",
+    photo: "https://api.dicebear.com/7.x/avataaars/svg?seed=Mik&backgroundColor=d5f0e0",
     quote: "AddedEducation helped me define my purpose and clarify my future goals, leading to acceptances at Brown, Dartmouth, UC Berkeley, and Notre Dame.",
   },
   {
     name: "Alfonso",
     school: "Vassar'28",
-    photo: "https://addededucation-assets.s3.us-east-1.amazonaws.com/testimonials/alfonso.jpg",
+    photo: "https://api.dicebear.com/7.x/avataaars/svg?seed=Alfonso&backgroundColor=f5e0d5",
     quote: "Choose your best tournaments and videos and send them to everyone. You never know who might be looking.",
   },
   {
     name: "Tim",
     school: "UMass Amherst'28",
-    photo: "https://addededucation-assets.s3.us-east-1.amazonaws.com/testimonials/tim.jpg",
+    photo: "https://api.dicebear.com/7.x/avataaars/svg?seed=Tim&backgroundColor=d5e0f5",
     quote: "Work on your communication and practice interviews often. An outgoing personality and showing genuine interest can make a world of difference.",
   },
 ]

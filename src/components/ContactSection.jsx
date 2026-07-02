@@ -114,8 +114,8 @@ export default function ContactSection({
             { name: "lastname", value: form.lastname.trim() },
             { name: "email", value: form.email.trim() },
             { name: "phone", value: fullPhone },
-            { name: "schoolname", value: form.schoolname.trim() },
-            { name: "countryofresidance", value: COUNTRIES.find(c => c.iso === form.countryIso)?.name || "" },
+            { name: "school", value: form.schoolname.trim() },
+            { name: "countryofresidence", value: COUNTRIES.find(c => c.iso === form.countryIso)?.name || "" },
           ],
           context: {
             pageUri: typeof window !== "undefined" ? window.location.href : "",

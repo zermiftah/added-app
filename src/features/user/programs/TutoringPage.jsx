@@ -203,7 +203,7 @@ export default function TutoringPage() {
             { name: "email",     value: form.email.trim() },
             { name: "phone",     value: fullPhone },
             { name: "schoolname",value: form.schoolname.trim() },
-            { name: "countryofresidance", value: COUNTRIES.find(c => c.iso === form.countryIso)?.name || "" },
+            { name: "countryofresidence", value: COUNTRIES.find(c => c.iso === form.countryIso)?.name || "" },
             { name: "subject",   value: form.subject.trim() },
           ],
           context: { pageUri: window.location.href, pageName: "AddedEducation — Tutoring Enquiry" },

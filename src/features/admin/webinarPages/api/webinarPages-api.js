@@ -9,3 +9,4 @@ export const checkSlug   = (slug, excludeId) => {
   const qs = excludeId ? `?excludeId=${excludeId}` : ""
   return fetchData(`webinar-pages/check-slug/${encodeURIComponent(slug)}${qs}`, null, "GET")
 }
+export const cloneWebinarPage = (id, slug, token) => fetchData(`webinar-pages/${id}/clone`, { slug }, "POST", token)
