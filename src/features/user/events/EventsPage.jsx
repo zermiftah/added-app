@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react"
 import Navbar from "../../../components/Navbar"
 import Footer from "../../../components/Footer"
+import { formatWebinarTime } from "../webinarLanding/themeShared"
 
 const API_BASE = "https://zmiftah.tech/addedapi"
 
@@ -67,7 +68,7 @@ function WebinarCard({ w }) {
   const [hov, setHov] = useState(false)
   const hero    = getHeroSrc(w)
   const dateStr = formatDateRange(w)
-  const timeStr = [dateStr, w.webinar_time].filter(Boolean).join(" · ")
+  const timeStr = [dateStr, formatWebinarTime(w.webinar_time)].filter(Boolean).join(" · ")
   return (
     <a href={`/${w.slug}`} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
       style={{
@@ -309,7 +310,7 @@ export default function EventsPage() {
                   return (
                     <div key={w.id} onClick={() => setLearnIdx(i)} style={{ padding: "18px 24px", borderLeft: `3px solid ${active ? C.accent : "transparent"}`, background: active ? `${C.accent}08` : "transparent", cursor: "pointer", transition: "all 0.3s ease", marginBottom: 2, borderRadius: "0 10px 10px 0" }}>
                       <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 14, fontWeight: 600, color: active ? C.ink : C.stone, marginBottom: 3 }}>{w.webinar_place || w.webinar_title}</div>
-                      <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 12, color: C.stoneLight }}>{[dateStr, w.webinar_time].filter(Boolean).join(" · ")}</div>
+                      <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 12, color: C.stoneLight }}>{[dateStr, formatWebinarTime(w.webinar_time)].filter(Boolean).join(" · ")}</div>
                     </div>
                   )
                 })}

@@ -9,8 +9,8 @@
  * 
  * Kalau src bukan URL backend yang punya _sm variant, fallback ke regular <img>.
  */
-export default function ResponsiveImg({ src, alt = "", srcSm, ...rest }) {
-  if (!src) return <img alt={alt} {...rest} />
+export default function ResponsiveImg({ src, alt = "", srcSm, loading = "lazy", decoding = "async", ...rest }) {
+  if (!src) return <img alt={alt} loading={loading} decoding={decoding} {...rest} />
 
   // Auto-derive _sm URL from main URL if not explicitly passed
   // Matches: .../asset_xxx.webp → .../asset_xxx_sm.webp
@@ -20,7 +20,7 @@ export default function ResponsiveImg({ src, alt = "", srcSm, ...rest }) {
       : null
   )
 
-  if (!smUrl) return <img src={src} alt={alt} {...rest} />
+  if (!smUrl) return <img src={src} alt={alt} loading={loading} decoding={decoding} {...rest} />
 
   return (
     <img
@@ -28,6 +28,8 @@ export default function ResponsiveImg({ src, alt = "", srcSm, ...rest }) {
       srcSet={`${smUrl} 640w, ${src} 1000w`}
       sizes="(max-width: 768px) 100vw, 50vw"
       alt={alt}
+      loading={loading}
+      decoding={decoding}
       {...rest}
     />
   )

@@ -7,6 +7,9 @@ import {
 } from "../../user/webinarLanding/sharedData"
 import { API_BASE_URL } from "lib/api"
 import MediaPicker from "../shared/MediaPicker"
+import ThemePreviewModal from "./ThemePreviewModal"
+import CustomCodeEditor from "./CustomCodeEditor"
+import { COUNTRY_TIMEZONES } from "lib/countryTimezones"
 
 // Upload file to media library — same pipeline as AdminAssets (returns relative URL /addedapi/uploads/...)
 async function uploadToMedia(file, token) {
@@ -29,6 +32,9 @@ const THEMES = [
   { value: "hero-form-side",   label: "Hero with side form",      hint: "Form sits next to the headline in the hero (Singapore style)" },
   { value: "hero-cta-stacked", label: "Hero with stacked CTA",    hint: "Big hero with button, form section below (UK style)" },
   { value: "editorial-split",  label: "Editorial split",          hint: "Magazine-style asymmetric layout with sidebar meta" },
+  { value: "split-portrait",   label: "Split portrait",           hint: "Fixed full-height image/content split, hard-edged and editorial" },
+  { value: "centered-minimal", label: "Centered minimal",         hint: "Typography-led, no side image — quiet luxury, single centered column" },
+  { value: "bento-grid",       label: "Bento grid",               hint: "Modern mosaic of cards — photo, stat, quote, and form side by side" },
 ]
 
 const photoUrl = (photo) => {
@@ -79,6 +85,64 @@ function Field({ label, hint, error, children }) {
 }
 
 const inputCls = "w-full px-3 py-2 rounded-lg border border-gray-200 text-[13px] focus:border-gray-900 focus:outline-none"
+
+// Structured time picker — stores a clean 24h "HH:mm" string (e.g. "07:00"),
+// never free text. This is what lets the backend reliably compute an exact
+// UTC instant for the "Add to Calendar" email link — a typo-prone free-text
+// field like "6:00 PM SGT" can't be parsed safely.
+function TimePicker({ value, onChange }) {
+  // Parse "HH:mm" (24h) into { hour12, minute, ampm } for the selects.
+  // Also best-effort parses old legacy free-text values on first load
+  // (e.g. "6:00 PM") so existing pages don't show a blank picker.
+  const parsed = (() => {
+    let h24 = null, min = "00"
+    const clean = /^(\d{1,2}):(\d{2})$/.exec((value || "").trim())
+    if (clean) {
+      h24 = parseInt(clean[1], 10)
+      min = clean[2]
+    } else {
+      const legacy = /(\d{1,2}):(\d{2})\s*(AM|PM)?/i.exec(value || "")
+      if (legacy) {
+        h24 = parseInt(legacy[1], 10)
+        min = legacy[2]
+        if (legacy[3]?.toUpperCase() === "PM" && h24 < 12) h24 += 12
+        if (legacy[3]?.toUpperCase() === "AM" && h24 === 12) h24 = 0
+      }
+    }
+    if (h24 === null) return { hour12: "", minute: "00", ampm: "AM" }
+    const ampm = h24 >= 12 ? "PM" : "AM"
+    let hour12 = h24 % 12
+    if (hour12 === 0) hour12 = 12
+    return { hour12: String(hour12), minute: min, ampm }
+  })()
+
+  const emit = (hour12, minute, ampm) => {
+    if (!hour12) { onChange(""); return }
+    let h24 = parseInt(hour12, 10) % 12
+    if (ampm === "PM") h24 += 12
+    onChange(`${String(h24).padStart(2, "0")}:${minute}`)
+  }
+
+  const selectCls = "px-2.5 py-2 rounded-lg border border-gray-200 text-[13px] focus:border-gray-900 focus:outline-none bg-white"
+
+  return (
+    <div className="flex items-center gap-2">
+      <select value={parsed.hour12} onChange={e => emit(e.target.value, parsed.minute, parsed.ampm)} className={selectCls}>
+        <option value="">Hour</option>
+        {Array.from({ length: 12 }, (_, i) => i + 1).map(h => <option key={h} value={h}>{h}</option>)}
+      </select>
+      <span className="text-gray-400">:</span>
+      <select value={parsed.minute} onChange={e => emit(parsed.hour12, e.target.value, parsed.ampm)} className={selectCls}>
+        {["00", "15", "30", "45"].map(m => <option key={m} value={m}>{m}</option>)}
+      </select>
+      <select value={parsed.ampm} onChange={e => emit(parsed.hour12, parsed.minute, e.target.value)} className={selectCls}>
+        <option value="AM">AM</option>
+        <option value="PM">PM</option>
+      </select>
+      {parsed.hour12 && <button type="button" onClick={() => onChange("")} className="text-[11px] text-gray-400 hover:text-gray-700 ml-1">Clear</button>}
+    </div>
+  )
+}
 
 // ============================================================
 // Rich-content section editor (paragraph | list)
@@ -625,6 +689,7 @@ function PageEditor({ pageId, token, onBack, onSaved, onError }) {
   const [saving, setSaving]   = useState(false)
   const [form, setForm] = useState({
     slug: "", theme: "hero-form-side",
+    content_mode: "theme", custom_source: "",
     webinar_title: "", webinar_subtitle: "",
     webinar_date: "", webinar_time: "", webinar_place: "", grade_years: "",
     hero_image: "", date_start: "", date_end: "",
@@ -646,6 +711,7 @@ function PageEditor({ pageId, token, onBack, onSaved, onError }) {
   const [photoFiles, setPhotoFiles] = useState({}) // { 0: File, 1: File }
   const [heroPickerOpen, setHeroPickerOpen] = useState(false)
   const [slugStatus, setSlugStatus] = useState({ checking: false, available: null, reason: null })
+  const [previewTheme, setPreviewTheme] = useState(null) // { value, label } | null
   const slugCheckTimer = useRef(null)
 
   // Load existing page
@@ -659,6 +725,8 @@ function PageEditor({ pageId, token, onBack, onSaved, onError }) {
         setForm({
           slug: p.slug,
           theme: p.theme,
+          content_mode: p.content_mode || "theme",
+          custom_source: p.custom_source || "",
           webinar_title: p.webinar_title || "",
           webinar_subtitle: p.webinar_subtitle || "",
           webinar_date: p.webinar_date || "",
@@ -728,6 +796,8 @@ function PageEditor({ pageId, token, onBack, onSaved, onError }) {
       const fd = new FormData()
       fd.append("slug", form.slug.toLowerCase().trim())
       fd.append("theme", form.theme)
+      fd.append("content_mode", form.content_mode)
+      fd.append("custom_source", form.content_mode === "custom" ? form.custom_source : "")
       fd.append("webinar_title", form.webinar_title)
       fd.append("webinar_subtitle", form.webinar_subtitle || "")
       fd.append("webinar_date", form.webinar_date || "")
@@ -783,6 +853,7 @@ function PageEditor({ pageId, token, onBack, onSaved, onError }) {
   }
 
   return (
+    <>
     <div className="p-6 w-full">
       <div className="flex items-center justify-between mb-5 gap-4 flex-wrap">
         <div>
@@ -826,19 +897,56 @@ function PageEditor({ pageId, token, onBack, onSaved, onError }) {
           </div>
         </Field>
 
-        <Field label="Theme">
-          <div className="space-y-2">
-            {THEMES.map(t => (
-              <label key={t.value} className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer ${form.theme === t.value ? "border-gray-900 bg-gray-50" : "border-gray-200 hover:border-gray-400"}`}>
-                <input type="radio" name="theme" checked={form.theme === t.value} onChange={() => setF("theme", t.value)} className="mt-0.5" />
-                <div>
-                  <p className="text-[13px] font-medium text-gray-900">{t.label}</p>
-                  <p className="text-[11px] text-gray-500 mt-0.5">{t.hint}</p>
-                </div>
-              </label>
+        <Field label="Content Mode" hint="Custom Code lets you write your own React + Tailwind component instead of picking a theme">
+          <div className="flex gap-2">
+            {[
+              { value: "theme", label: "🎨 Theme" },
+              { value: "custom", label: "⌨️ Custom Code" },
+            ].map(m => (
+              <button
+                key={m.value}
+                type="button"
+                onClick={() => setF("content_mode", m.value)}
+                className={`px-4 py-2 rounded-lg text-[12px] font-semibold border transition-colors ${
+                  form.content_mode === m.value ? "bg-[#0E0E0E] text-white border-[#0E0E0E]" : "border-gray-200 text-gray-600 hover:border-gray-400"
+                }`}
+              >
+                {m.label}
+              </button>
             ))}
           </div>
         </Field>
+
+        {form.content_mode === "theme" ? (
+          <Field label="Theme">
+            <div className="space-y-2">
+              {THEMES.map(t => (
+                <label key={t.value} className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer ${form.theme === t.value ? "border-gray-900 bg-gray-50" : "border-gray-200 hover:border-gray-400"}`}>
+                  <input type="radio" name="theme" checked={form.theme === t.value} onChange={() => setF("theme", t.value)} className="mt-0.5" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[13px] font-medium text-gray-900">{t.label}</p>
+                    <p className="text-[11px] text-gray-500 mt-0.5">{t.hint}</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={(e) => { e.preventDefault(); setPreviewTheme({ value: t.value, label: t.label }) }}
+                    className="flex-shrink-0 px-3 py-1.5 rounded-full border border-gray-300 text-[11px] font-semibold text-gray-700 hover:border-gray-900 hover:text-gray-900 transition-colors"
+                  >
+                    👁 Preview
+                  </button>
+                </label>
+              ))}
+            </div>
+          </Field>
+        ) : (
+          <Field label="Custom Code" hint="Props available: page (all sidebar fields below) and registerForWebinar(fields) for the form">
+            <CustomCodeEditor
+              token={token}
+              value={form.custom_source}
+              onChange={(v) => setF("custom_source", v)}
+            />
+          </Field>
+        )}
       </Section>
 
       {/* TOPIC */}
@@ -860,8 +968,17 @@ function PageEditor({ pageId, token, onBack, onSaved, onError }) {
           <Field label="End date" hint="Last day (same as start if single-day)">
             <input type="date" value={form.date_end} onChange={e => setF("date_end", e.target.value)} className={inputCls} />
           </Field>
-          <Field label="Time"><input value={form.webinar_time} onChange={e => setF("webinar_time", e.target.value)} className={inputCls} placeholder="6:00 PM SGT" /></Field>
-          <Field label="Place"><input value={form.webinar_place} onChange={e => setF("webinar_place", e.target.value)} className={inputCls} placeholder="Online via Zoom" /></Field>
+          <Field label="Time" hint="Same time every day in the date range — used to compute the calendar invite">
+            <TimePicker value={form.webinar_time} onChange={v => setF("webinar_time", v)} />
+          </Field>
+          <Field label="Place" hint="Determines the timezone shown in Results → Registered">
+            <select value={form.webinar_place} onChange={e => setF("webinar_place", e.target.value)} className={inputCls}>
+              <option value="">Select a country…</option>
+              {COUNTRY_TIMEZONES.map(c => (
+                <option key={c.name} value={c.name}>{c.name}</option>
+              ))}
+            </select>
+          </Field>
           <Field label="For (grade years)"><input value={form.grade_years} onChange={e => setF("grade_years", e.target.value)} className={inputCls} placeholder="Grade 9–12 students & parents" /></Field>
           <Field label="Date label" hint="Override displayed date text (optional)"><input value={form.webinar_date} onChange={e => setF("webinar_date", e.target.value)} className={inputCls} placeholder="e.g. 12–14 July 2025 (auto-filled if empty)" /></Field>
         </div>
@@ -882,6 +999,7 @@ function PageEditor({ pageId, token, onBack, onSaved, onError }) {
       </Section>
 
       {/* WHY */}
+      {form.content_mode === "theme" && (<>
       <Section title="3 — Why you need this">
         <ContentEditor value={form.why_data} onChange={v => setF("why_data", v)} label="Why-section content" />
       </Section>
@@ -940,6 +1058,7 @@ function PageEditor({ pageId, token, onBack, onSaved, onError }) {
           <ContentEditor value={form.why_families_data} onChange={v => setF("why_families_data", v)} label="Details" />
         </div>
       </Section>
+      </>)}
 
       <Section title="9 — HubSpot integration">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -973,6 +1092,15 @@ function PageEditor({ pageId, token, onBack, onSaved, onError }) {
         </button>
       </div>
     </div>
+
+    {previewTheme && (
+      <ThemePreviewModal
+        themeKey={previewTheme.value}
+        themeLabel={previewTheme.label}
+        onClose={() => setPreviewTheme(null)}
+      />
+    )}
+    </>
   )
 }
 

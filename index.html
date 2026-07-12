@@ -2,7 +2,26 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!--
+      Import map for Custom Code landing pages (Added Admin, Landing Pages,
+      Custom Code). Compiled custom bundles import "react" etc. as bare
+      specifiers; this resolves them to a shared CDN copy, kept completely
+      separate from the app's own bundled React (see CustomPageRenderer.jsx
+      and ThemePreviewModal.jsx for why they must not share an instance).
+      Must stay the very first module-type tag in this document, before
+      Vite's own injected entry script -- do not move this block.
+    -->
+    <script type="importmap">
+      {
+        "imports": {
+          "react": "https://esm.sh/react@18.3.1",
+          "react/jsx-runtime": "https://esm.sh/react@18.3.1/jsx-runtime",
+          "react-dom": "https://esm.sh/react-dom@18.3.1",
+          "react-dom/client": "https://esm.sh/react-dom@18.3.1/client"
+        }
+      }
+    </script>
+    <link rel="icon" type="image/svg+xml" href="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1783859535373_Untitled_design__1_.webp" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AddedEducation — Premium University Admissions Consulting</title>
     <meta name="description" content="AddedEducation helps high-achieving students gain admission to top universities worldwide through personalized counseling, research programs, and athletic consulting." />

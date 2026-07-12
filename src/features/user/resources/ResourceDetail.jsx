@@ -139,7 +139,7 @@ export default function ResourceDetail() {
                     <h1 className="rd-title">{article.title}</h1>
                     <div className="rd-meta">
                       {article.author_photo ? (
-                        <img src={imgUrl(article.author_photo)} alt="" className="rd-author-img" />
+                        <img src={imgUrl(article.author_photo)} alt="" className="rd-author-img"  loading="lazy" decoding="async"/>
                       ) : (
                         <div className="rd-author-initial">{(article.author_name || "A")[0]}</div>
                       )}
@@ -166,7 +166,7 @@ export default function ResourceDetail() {
                         className="rd-hero-img"
                         fetchpriority="high"
                         decoding="async"
-                      />
+                       loading="lazy"/>
                     </motion.div>
                   )}
                 </div>
@@ -179,7 +179,7 @@ export default function ResourceDetail() {
                   <div className="rd-main">
                     {images.filter((img) => img.position === "top").map((img) => (
                       <figure key={img.id} className="rd-figure">
-                        <img src={imgUrl(img.image_path)} alt={img.caption || ""} className="rd-content-img" />
+                        <img src={imgUrl(img.image_path)} alt={img.caption || ""} className="rd-content-img"  loading="lazy" decoding="async"/>
                         {img.caption && <figcaption className="rd-caption">{img.caption}</figcaption>}
                       </figure>
                     ))}
@@ -195,7 +195,7 @@ export default function ResourceDetail() {
                     </motion.div>
                     {images.filter((img) => img.position === "bottom").map((img) => (
                       <figure key={img.id} className="rd-figure">
-                        <img src={imgUrl(img.image_path)} alt={img.caption || ""} className="rd-content-img" />
+                        <img src={imgUrl(img.image_path)} alt={img.caption || ""} className="rd-content-img"  loading="lazy" decoding="async"/>
                         {img.caption && <figcaption className="rd-caption">{img.caption}</figcaption>}
                       </figure>
                     ))}
@@ -214,7 +214,7 @@ export default function ResourceDetail() {
                         <p className="rd-card-label">About the Author</p>
                         <div className="rd-author-card">
                           {article.author_photo ? (
-                            <img src={imgUrl(article.author_photo)} alt="" className="rd-author-card-img" />
+                            <img src={imgUrl(article.author_photo)} alt="" className="rd-author-card-img"  loading="lazy" decoding="async"/>
                           ) : (
                             <div className="rd-author-card-initial">{(article.author_name || "A")[0]}</div>
                           )}

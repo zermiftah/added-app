@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState } from "react"
+import { formatWebinarTime } from "features/user/webinarLanding/themeShared"
 
 const API_BASE = "https://zmiftah.tech/addedapi"
 
@@ -45,7 +46,7 @@ function FadeIn({ children, delay = 0 }) {
 function WebinarCard({ w, i }) {
   const hero = getHeroSrc(w)
   const dateStr = formatDateRange(w)
-  const timeStr = [dateStr, w.webinar_time].filter(Boolean).join(" · ")
+  const timeStr = [dateStr, formatWebinarTime(w.webinar_time)].filter(Boolean).join(" · ")
 
   return (
     <FadeIn delay={80 + i * 80}>

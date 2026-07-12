@@ -4,11 +4,18 @@ import { fetchData } from "lib/api"
 import ThemeHeroFormSide   from "./themes/ThemeHeroFormSide"
 import ThemeHeroCtaStacked from "./themes/ThemeHeroCtaStacked"
 import ThemeEditorialSplit from "./themes/ThemeEditorialSplit"
+import ThemeSplitPortrait  from "./themes/ThemeSplitPortrait"
+import ThemeCenteredMinimal from "./themes/ThemeCenteredMinimal"
+import ThemeBentoGrid      from "./themes/ThemeBentoGrid"
+import CustomPageRenderer  from "./CustomPageRenderer"
 
 const THEMES = {
   "hero-form-side":   ThemeHeroFormSide,
   "hero-cta-stacked": ThemeHeroCtaStacked,
   "editorial-split":  ThemeEditorialSplit,
+  "split-portrait":   ThemeSplitPortrait,
+  "centered-minimal": ThemeCenteredMinimal,
+  "bento-grid":       ThemeBentoGrid,
 }
 
 export default function WebinarLandingPage() {
@@ -45,6 +52,10 @@ export default function WebinarLandingPage() {
   if (state.notFound || !state.page) {
     // Redirect to home — keeps SEO clean (no random 404 routes)
     return <Navigate to="/" replace />
+  }
+
+  if (state.page.content_mode === "custom") {
+    return <CustomPageRenderer page={state.page} />
   }
 
   const ThemeComp = THEMES[state.page.theme] || ThemeHeroFormSide

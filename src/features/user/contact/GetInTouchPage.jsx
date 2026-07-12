@@ -411,7 +411,7 @@ function TestimonialCard({ t }) {
         </div>
         <div style={{ width: 48, height: 48, borderRadius: 8, overflow: "hidden", flexShrink: 0, background: "#2a2a2a", marginLeft: 10 }}>
           {imgOk
-            ? <img src={t.photo} alt={t.name} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} onError={() => setImgOk(false)} />
+            ? <img src={t.photo} alt={t.name} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} onError={() => setImgOk(false)}  loading="lazy" decoding="async"/>
             : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}><span style={{ fontFamily: "'Fraunces',serif", fontSize: 20, color: "rgba(255,255,255,0.3)" }}>{t.name[0]}</span></div>
           }
         </div>
@@ -513,11 +513,11 @@ export default function GetInTouchPage() {
         <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.55)", zIndex: 1 }} />
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%)", zIndex: 0 }} />
         <img
-          src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567182705_8GcnRiF6LGYAU0IkaeGqyUADA5I.webp"
+          src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1783856705861_kgcCsv3JPReuxnmCCKHVESifPQM.webp"
           alt=""
           onError={e => e.currentTarget.style.display = "none"}
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", zIndex: 0 }}
-        />
+         loading="lazy" decoding="async"/>
         <div style={{ position: "absolute", bottom: 36, left: 52, zIndex: 2 }}>
           <h1 className="fraunces-display" style={{ fontSize: 52, lineHeight: 1.05, letterSpacing: "-0.02em", color: "#fff", margin: 0, textShadow: "0 2px 24px rgba(0,0,0,0.35)" }}>
             Contact Us
@@ -553,11 +553,11 @@ export default function GetInTouchPage() {
           <div style={{ padding: "24px", boxSizing: "border-box" }}>
             <div style={{ width: "100%", height: "100%", borderRadius: 20, overflow: "hidden", background: C.creamWarm, minHeight: 400, position: "relative" }}>
               <img
-                src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567186708_form.webp"
+                src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1783856617677_Rp4KC0SAKsxApEOn8xf07dywSM.webp"
                 alt=""
                 onError={e => e.currentTarget.style.display = "none"}
                 style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-              />
+               loading="lazy" decoding="async"/>
             </div>
           </div>
         </div>

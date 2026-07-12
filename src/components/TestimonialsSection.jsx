@@ -41,7 +41,7 @@ function TestimonialCard({ t }) {
         </div>
         <div style={{ width: 72, height: 72, borderRadius: 10, overflow: "hidden", flexShrink: 0, background: "#2a2a2a", marginLeft: 12 }}>
           {imgOk
-            ? <img src={t.photo} alt={t.name} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} onError={() => setImgOk(false)} />
+            ? <img src={t.photo} alt={t.name} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} onError={() => setImgOk(false)}  loading="lazy" decoding="async"/>
             : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <span style={{ fontFamily: "'Fraunces',serif", fontSize: 22, color: "rgba(255,255,255,0.3)" }}>{t.name[0]}</span>
               </div>

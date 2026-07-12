@@ -96,7 +96,7 @@ function ArticleCard({ article, index, apiBase }) {
             <div className="rp-card-footer">
               <div className="rp-card-author">
                 {article.author_photo ? (
-                  <img src={thumbUrl(article.author_photo)} alt="" className="rp-card-avatar" />
+                  <img src={thumbUrl(article.author_photo)} alt="" className="rp-card-avatar"  loading="lazy" decoding="async"/>
                 ) : (
                   <div className="rp-card-avatar-init">{(article.author_name || "A")[0]}</div>
                 )}
@@ -258,7 +258,7 @@ export default function ResourcePage() {
                       className="rp-featured-img"
                       fetchpriority="high"
                       decoding="async"
-                    />
+                     loading="lazy"/>
                     ) : (
                       <div className="rp-featured-placeholder">
                         <span>AE</span>
@@ -271,7 +271,7 @@ export default function ResourcePage() {
                     <h2 className="rp-featured-title">{featured.title}</h2>
                     <div className="rp-featured-author">
                       {featured.author_photo ? (
-                        <img src={thumbUrl(featured.author_photo)} alt="" className="rp-featured-avatar" />
+                        <img src={thumbUrl(featured.author_photo)} alt="" className="rp-featured-avatar"  loading="lazy" decoding="async"/>
                       ) : (
                         <div className="rp-featured-avatar-init">{(featured.author_name || "A")[0]}</div>
                       )}
@@ -507,7 +507,7 @@ const CSS = `
 .rp-hero{
   background:#0E0E0E;padding-bottom:96px;position:relative;overflow:hidden;
 }
-.rp-hero-bg{position:absolute;inset:0;background-image:url('https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567170150_Stand_Out.webp');background-size:cover;background-position:center 30%;background-repeat:no-repeat;}
+.rp-hero-bg{position:absolute;inset:0;background-image:url('https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1783857011389_Sq0fVwapXpWCFsRg5tWq2lTG0I.webp');background-size:cover;background-position:center 30%;background-repeat:no-repeat;}
 .rp-hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(14,14,14,0.6) 0%,rgba(14,14,14,0.75) 50%,rgba(14,14,14,0.96) 100%);}
 
 /* ── FILTER INLINE (inside article section) ── */

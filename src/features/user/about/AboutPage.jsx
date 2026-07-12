@@ -350,11 +350,11 @@ export default function AboutPage() {
         <div style={{ position: "absolute", inset: 0, zIndex: 1, background: "linear-gradient(to bottom, rgba(14,14,14,0.30) 0%, rgba(14,14,14,0.65) 100%)" }} />
         <div style={{ position: "absolute", inset: 0, zIndex: 0, background: "linear-gradient(135deg,#1a1a1a 0%,#2a2a2a 100%)" }} />
         <img
-          src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567186493_hero.webp"
+          src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1783813160328_i3QfApi6KpNwVEAPpTBZ6wQT5cA.webp"
           alt=""
           onError={e => e.currentTarget.style.display = "none"}
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top", zIndex: 0 }}
-        />
+         fetchpriority="high" loading="eager" decoding="async"/>
         <div style={{ position: "relative", zIndex: 2, padding: `clamp(120px,16vw,200px) ${px} clamp(48px,6vw,80px)`, width: "100%" }}>
           <h1 className="fraunces-display" style={{
             fontSize: "clamp(28px,3.8vw,56px)", lineHeight: 1.04,
@@ -426,11 +426,11 @@ export default function AboutPage() {
               </p>
               <div style={{ borderRadius: 14, overflow: "hidden", aspectRatio: "4/3", background: "#2a2a2a" }}>
                 <img
-                  src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567184030_beyond.webp"
+                  src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1783813239285_udvatWTmLPUK1h7VUNdj5WlaaX4.webp"
                   alt=""
                   onError={e => e.currentTarget.style.display = "none"}
                   style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                />
+                 loading="lazy" decoding="async"/>
               </div>
             </div>
 
@@ -485,11 +485,11 @@ export default function AboutPage() {
           {/* Right: image */}
           <div style={{ borderRadius: 16, overflow: "hidden", aspectRatio: "3/4", background: C.creamWarm, position: "sticky", top: 80 }}>
             <img
-              src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567184062_form.webp"
+              src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1783813247270_OY8u1CRSndxY6gJPNUASRegbUTg.webp"
               alt=""
               onError={e => e.currentTarget.style.display = "none"}
               style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-            />
+             loading="lazy" decoding="async"/>
           </div>
 
         </div>

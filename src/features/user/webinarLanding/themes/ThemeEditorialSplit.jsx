@@ -1,6 +1,6 @@
 import { useRef } from "react"
 import WebinarForm from "../WebinarForm"
-import { LandingHeader, LandingFooter, Reveal, QuoteSection, WhyFamiliesSection, getResponsiveSrc, C, sans, serif, mono } from "../themeShared"
+import { LandingHeader, LandingFooter, Reveal, QuoteSection, WhyFamiliesSection, getResponsiveSrc, formatWebinarTime, C, sans, serif, mono } from "../themeShared"
 
 const NAV_SECTIONS = [
   { label: "Webinar", id: "webinar" },
@@ -50,7 +50,7 @@ export default function ThemeEditorialSplit({ page }) {
         {heroImg.src && (
           <div aria-hidden style={{ position: "absolute", inset: 0, zIndex: 0, opacity: 0.16 }}>
             <img src={heroImg.src} srcSet={heroImg.srcSet} sizes="100vw" alt="" fetchpriority="high" decoding="async"
-              style={{ width: "100%", height: "100%", objectFit: "cover", animation: "es-pan 18s ease-in-out infinite", filter: "grayscale(30%)" }} />
+              style={{ width: "100%", height: "100%", objectFit: "cover", animation: "es-pan 18s ease-in-out infinite", filter: "grayscale(30%)" }}  loading="eager"/>
           </div>
         )}
         <div style={{ position: "relative", zIndex: 1, maxWidth: 1280, margin: "0 auto" }} className="es-hero-grid">
@@ -86,7 +86,7 @@ export default function ThemeEditorialSplit({ page }) {
 
           {/* Right: meta bar */}
           <aside className="es-meta-bar" style={{ borderLeft: `1px solid rgba(0,0,0,.1)`, paddingLeft: 36, display: "flex", flexDirection: "column", justifyContent: "flex-end", gap: 28 }}>
-            {[["Date", formatDateRange(page)], ["Time", page.webinar_time], ["Where", page.webinar_place], ["For", page.grade_years]].filter(([,v]) => v).map(([label, value], i) => (
+            {[["Date", formatDateRange(page)], ["Time", formatWebinarTime(page.webinar_time)], ["Where", page.webinar_place], ["For", page.grade_years]].filter(([,v]) => v).map(([label, value], i) => (
               <Reveal key={label} delay={180 + i * 60}>
                 <div>
                   <p style={{ fontFamily: mono, fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: C.stoneLight, marginBottom: 6 }}>{label}</p>

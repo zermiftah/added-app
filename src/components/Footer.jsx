@@ -6,9 +6,9 @@ const FOOTER_LINKS = {
 }
 
 const SOCIALS = [
-  { label: "Instagram", href: "https://instagram.com/addededucation", icon: "IG" },
-  { label: "LinkedIn", href: "https://linkedin.com/company/addededucation", icon: "LI" },
-  { label: "YouTube", href: "https://youtube.com/@addededucation", icon: "YT" },
+  { label: "Instagram", href: "https://instagram.com/addededucation", icon: "https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1783814241539_instagram_3938051.webp" },
+  { label: "LinkedIn", href: "https://linkedin.com/company/addededucation", icon: "https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1783814241286_linkedin_4008233.webp" },
+  { label: "YouTube", href: "https://youtube.com/@addededucation", icon: "https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1783814579990_youtube.webp" },
 ]
 
 export default function Footer() {
@@ -24,7 +24,7 @@ export default function Footer() {
               alt="AddedEducation"
               width={180} height={36}
               className="h-9 object-contain mb-5"
-            />
+             loading="lazy" decoding="async"/>
             <p className="font-inter text-stone-light leading-relaxed mb-5" style={{ fontSize: 13, fontWeight: 350 }}>
               Premium university admissions guidance for families worldwide.
             </p>
@@ -39,7 +39,15 @@ export default function Footer() {
                   style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)" }}
                   aria-label={s.label}
                 >
-                  {s.icon}
+                  <img
+                    src={s.icon}
+                    alt={s.label}
+                    width={16}
+                    height={16}
+                    className="w-4 h-4 opacity-70 group-hover:opacity-100 transition-opacity"
+                    loading="lazy"
+                    decoding="async"
+                  />
                 </a>
               ))}
             </div>
@@ -74,9 +82,6 @@ export default function Footer() {
           <p className="font-inter text-stone-light" style={{ fontSize: 12, fontWeight: 350 }}>
             © {new Date().getFullYear()} AddedEducation. All rights reserved.
           </p>
-          <div className="flex items-center gap-1">
-            <span className="font-mono text-[10px] text-stone-light uppercase tracking-widest">Families in 12+ countries</span>
-          </div>
         </div>
       </div>
     </footer>

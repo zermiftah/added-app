@@ -12,7 +12,7 @@ const C = {
   border: "rgba(255,255,255,0.08)",
 }
 
-const HERO_BG = "https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782640932634_Ma3Zar3CyfhdZE701tEZRDCZwm8.webp"
+const HERO_BG = "https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1783786662459_Ma3Zar3CyfhdZE701tEZRDCZwm8.webp"
 
 const photoUrl = (photo) => {
   if (!photo) return null
@@ -273,7 +273,7 @@ export default function YourTeamPage() {
           decoding="async"
           aria-hidden="true"
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center" }}
-        />
+         loading="lazy"/>
         <div style={{
           position: "absolute", inset: 0,
           background: "linear-gradient(to bottom, rgba(14,14,14,0.40) 0%, rgba(14,14,14,0.55) 50%, rgba(14,14,14,0.88) 100%)",

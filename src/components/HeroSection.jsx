@@ -69,7 +69,7 @@ export default function HeroSection() {
       style={{ background: "#0E0E0E" }}
     >
       <img
-        src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782658947407_vRwqcjkjJJvZusEeq6lojyQAW3s.png"
+        src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1783814852623_vRwqcjkjJJvZusEeq6lojyQAW3s.webp"
         alt=""
         fetchpriority="high"
         decoding="async"
@@ -83,7 +83,7 @@ export default function HeroSection() {
           objectPosition: "center top",
           pointerEvents: "none",
         }}
-      />
+       loading="eager"/>
       <div
         className="absolute inset-0"
         style={{

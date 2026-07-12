@@ -115,7 +115,7 @@ export default function CareerDetailPage() {
                     className="cd-img"
                     fetchpriority="high"
                     decoding="async"
-                  /></div>
+                   loading="lazy"/></div>
                   : <div className="cd-img-placeholder"><span className="cd-img-letter">{job.title.charAt(0)}</span></div>
                 }
               </motion.div>

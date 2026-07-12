@@ -98,7 +98,7 @@ export function LandingHeader({ variant = "light", sections = [], formId = "regi
               src={LOGO_URL}
               alt="AddedEducation"
               style={{ height: 28, width: "auto", display: "block", filter: logoFilter, transition: "filter 0.3s ease" }}
-            />
+             loading="lazy" decoding="async"/>
           </div>
 
           {/* Desktop nav */}
@@ -186,7 +186,7 @@ export function LandingFooter() {
             src={LOGO_URL}
             alt="AddedEducation"
             style={{ height: 30, width: "auto", display: "block", filter: LOGO_WHITE_FILTER, marginBottom: 10 }}
-          />
+           loading="lazy" decoding="async"/>
           <p style={{ fontFamily: sans, fontSize: 12, color: C.stone, margin: 0 }}>
             Premium University Admissions Services
           </p>
@@ -212,7 +212,7 @@ export function LandingFooter() {
 // ─────────────────────────────────────────────────────────────
 // Reveal — scroll-triggered fade-in
 // ─────────────────────────────────────────────────────────────
-export function Reveal({ children, delay = 0, y = 24, duration = 700, threshold = 0.12, style = {} }) {
+export function Reveal({ children, delay = 0, y = 24, duration = 700, threshold = 0.12, style = {}, className }) {
   const ref = useRef(null)
   const [shown, setShown] = useState(false)
 
@@ -229,7 +229,7 @@ export function Reveal({ children, delay = 0, y = 24, duration = 700, threshold 
   }, [threshold])
 
   return (
-    <div ref={ref} style={{
+    <div ref={ref} className={className} style={{
       ...style,
       opacity: shown ? 1 : 0,
       transform: shown ? "translateY(0)" : `translateY(${y}px)`,
@@ -392,6 +392,125 @@ export function WhyFamiliesSection({ data, variant = "light" }) {
       </div>
     </section>
   )
+}
+
+// ─────────────────────────────────────────────────────────────
+// Shared section primitives — used by the newer theme layouts
+// (SplitPortrait, CenteredMinimal, BentoGrid) to avoid re-defining
+// the same title/body/speaker markup in every theme file.
+// variant: "dark" | "light"
+// ─────────────────────────────────────────────────────────────
+export function Eyebrow({ children, variant = "dark" }) {
+  const isDark = variant === "dark"
+  return (
+    <span style={{
+      display: "inline-block", fontFamily: mono, fontSize: 11, fontWeight: 500,
+      letterSpacing: "0.22em", textTransform: "uppercase",
+      color: isDark ? "rgba(255,255,255,0.45)" : C.stone,
+      border: `1px solid ${isDark ? "rgba(255,255,255,0.12)" : "rgba(14,14,14,0.12)"}`,
+      borderRadius: 999, padding: "6px 14px", marginBottom: 20,
+    }}>{children}</span>
+  )
+}
+
+export function H2({ children, center, variant = "dark" }) {
+  const isDark = variant === "dark"
+  return (
+    <h2 style={{
+      fontFamily: serif, fontWeight: 400, color: isDark ? "#fff" : C.ink,
+      fontSize: "clamp(28px,3.5vw,44px)", lineHeight: 1.1, letterSpacing: "-0.02em",
+      marginBottom: 18, textAlign: center ? "center" : "left",
+    }}>{children}</h2>
+  )
+}
+
+export function Sub({ children, center, variant = "dark" }) {
+  const isDark = variant === "dark"
+  return (
+    <p style={{
+      fontFamily: sans, fontSize: 16, color: isDark ? "rgba(255,255,255,0.65)" : C.stone,
+      lineHeight: 1.7, maxWidth: 720, marginBottom: 32,
+      textAlign: center ? "center" : "left", margin: center ? "0 auto 32px" : "0 0 32px",
+    }}>{children}</p>
+  )
+}
+
+export function ContentBlock({ data, variant = "dark" }) {
+  if (!data) return null
+  const isDark = variant === "dark"
+  const cardBg     = isDark ? "rgba(255,255,255,0.04)" : "#fff"
+  const cardBorder = isDark ? "rgba(255,255,255,0.08)" : "rgba(14,14,14,0.08)"
+  const textCol    = isDark ? "#fff" : C.ink
+  const subCol     = isDark ? "rgba(255,255,255,.62)" : C.stone
+
+  if (data.type === "list" && Array.isArray(data.body)) {
+    return (
+      <div style={{ display: "grid", gap: 16 }}>
+        {data.body.map((item, i) => (
+          <div key={i} style={{
+            background: cardBg, border: `1px solid ${cardBorder}`, borderRadius: 14,
+            padding: "22px 24px", transition: "border-color .25s, transform .25s",
+          }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(200,53,75,.45)"; e.currentTarget.style.transform = "translateY(-2px)" }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = cardBorder; e.currentTarget.style.transform = "translateY(0)" }}>
+            {item.title && <h3 style={{ fontFamily: sans, fontWeight: 600, fontSize: 16, color: textCol, marginBottom: 8 }}>{item.title}</h3>}
+            {item.description && <p style={{ fontFamily: sans, fontSize: 14, color: subCol, lineHeight: 1.65 }}>{item.description}</p>}
+          </div>
+        ))}
+      </div>
+    )
+  }
+  return <p style={{ fontFamily: sans, fontSize: 15, color: subCol, lineHeight: 1.75, maxWidth: 760 }}>{data.body}</p>
+}
+
+export function SpeakerCard({ s, variant = "dark" }) {
+  const isDark = variant === "dark"
+  const { src, srcSet } = getResponsiveSrc(s.photo)
+  const cardBg     = isDark ? "rgba(255,255,255,.04)" : "#fff"
+  const cardBorder = isDark ? "rgba(255,255,255,.08)" : "rgba(14,14,14,.08)"
+  const textCol    = isDark ? "#fff" : C.ink
+  return (
+    <div style={{ background: cardBg, border: `1px solid ${cardBorder}`, borderRadius: 16, padding: 24, transition: "transform .25s, border-color .25s" }}
+         onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.borderColor = "rgba(200,53,75,.4)" }}
+         onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.borderColor = cardBorder }}>
+      {src && <div style={{ width: 72, height: 72, borderRadius: 999, overflow: "hidden", marginBottom: 16, background: "#222" }}>
+        <img src={src} srcSet={srcSet} alt={s.name} loading="lazy" decoding="async" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+      </div>}
+      {s.name && <h4 style={{ fontFamily: serif, fontSize: 21, fontWeight: 500, color: textCol, marginBottom: 4 }}>{s.name}</h4>}
+      {s.title && <p style={{ fontFamily: sans, fontSize: 12, color: C.accent, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 2 }}>{s.title}</p>}
+      {s.position && <p style={{ fontFamily: sans, fontSize: 13, color: isDark ? "rgba(255,255,255,.5)" : C.stone, marginBottom: 12 }}>{s.position}</p>}
+      {s.description && <p style={{ fontFamily: sans, fontSize: 13.5, color: isDark ? "rgba(255,255,255,.62)" : C.stone, lineHeight: 1.65 }}>{s.description}</p>}
+      {s.linkedin && <a href={s.linkedin} target="_blank" rel="noopener noreferrer" style={{ display: "inline-block", marginTop: 14, fontFamily: sans, fontSize: 12, color: C.accent, textDecoration: "none", borderBottom: `1px solid ${C.accent}` }}>LinkedIn ↗</a>}
+    </div>
+  )
+}
+
+// Shared date-range formatter (kept identical across every theme)
+export function formatDateRange(page) {
+  const label = page.webinar_date
+  const start = page.date_start
+  const end   = page.date_end
+  if (label) return label
+  if (!start) return null
+  const opts = { day: "numeric", month: "short", year: "numeric" }
+  const s = new Date(start).toLocaleDateString("en-GB", opts)
+  if (!end || end === start) return s
+  return `${s} – ${new Date(end).toLocaleDateString("en-GB", opts)}`
+}
+
+// Format a stored 24h "HH:mm" webinar_time into a friendly 12h display
+// string, e.g. "07:00" -> "7:00 AM". Leaves legacy free-text values
+// (from before the time picker existed) untouched so old pages don't break.
+export function formatWebinarTime(time) {
+  if (!time) return null
+  const m = /^(\d{1,2}):(\d{2})$/.exec(time.trim())
+  if (!m) return time // legacy free-text value — show as-is
+  let h = parseInt(m[1], 10)
+  const min = m[2]
+  const ampm = h >= 12 ? "PM" : "AM"
+  h = h % 12
+  if (h === 0) h = 12
+  return `${h}:${min} ${ampm}`
 }
 
 export { C, sans, serif, mono }

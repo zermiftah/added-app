@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react"
 import { useAdminStore } from "stores/adminStore"
 import { fetchData, API_BASE_URL } from "lib/api"
+import { formatInPlaceTimezone, getTimezoneForPlace, getTzAbbr } from "lib/countryTimezones"
 
 const BASE_URL = API_BASE_URL.replace(/\/addedapi$/, "")
 
@@ -68,17 +69,28 @@ function RecordingModal({ open, reg, onClose, onSaved }) {
 }
 
 function isExpired(dt) {
-  return !dt || new Date(dt) < new Date()
+  if (!dt) return true
+  const iso = String(dt).trim().replace(" ", "T")
+  const date = new Date(iso.endsWith("Z") ? iso : iso + "Z")
+  return date < new Date()
 }
 
+// Generic UTC-ish formatter — used for recording link expiry/sent-at,
+// which are system timestamps, not tied to the webinar's place/timezone.
+// MySQL returns these as tz-less strings that ARE true UTC (config/db.js
+// forces timezone:"+00:00") — must force UTC parsing explicitly, otherwise
+// `new Date(dt)` silently reinterprets it as the viewer's own local time.
 function formatDt(dt) {
   if (!dt) return "—"
-  return new Date(dt).toLocaleString("en-GB", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })
+  const iso = String(dt).trim().replace(" ", "T")
+  const date = new Date(iso.endsWith("Z") ? iso : iso + "Z")
+  return date.toLocaleString("en-GB", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "UTC" }) + " UTC"
 }
 
 export default function AdminRegistrants({ slug, title, onBack }) {
   const token = useAdminStore(s => s.token)
   const [registrants, setRegistrants] = useState([])
+  const [webinarPlace, setWebinarPlace] = useState(null)
   const [loading, setLoading]         = useState(true)
   const [toast, setToast]             = useState({ msg: "", kind: "info" })
   const [recModal, setRecModal]       = useState({ open: false, reg: null })
@@ -95,6 +107,7 @@ export default function AdminRegistrants({ slug, title, onBack }) {
     try {
       const r = await fetchData(`webinar-registrants/${slug}`, null, "GET", token)
       setRegistrants(r.registrants || [])
+      setWebinarPlace(r.webinar_place || null)
     } catch (e) {
       showToast(e.message, "error")
     } finally {
@@ -181,7 +194,9 @@ export default function AdminRegistrants({ slug, title, onBack }) {
                 <th className="text-left px-3 py-2.5 font-medium text-gray-600 whitespace-nowrap">Phone</th>
                 <th className="text-left px-3 py-2.5 font-medium text-gray-600 whitespace-nowrap">Curriculum</th>
                 <th className="text-left px-3 py-2.5 font-medium text-gray-600 whitespace-nowrap">Grade</th>
-                <th className="text-left px-3 py-2.5 font-medium text-gray-600 whitespace-nowrap">Registered</th>
+                <th className="text-left px-3 py-2.5 font-medium text-gray-600 whitespace-nowrap">
+                  Registered{(() => { const tz = getTimezoneForPlace(webinarPlace); const abbr = getTzAbbr(tz); return abbr ? ` (${abbr})` : "" })()}
+                </th>
                 <th className="text-left px-3 py-2.5 font-medium text-gray-600 whitespace-nowrap">Recording URL</th>
                 <th className="text-left px-3 py-2.5 font-medium text-gray-600 whitespace-nowrap">Watch Link</th>
                 <th className="text-left px-3 py-2.5 font-medium text-gray-600 whitespace-nowrap">Expires</th>
@@ -203,7 +218,7 @@ export default function AdminRegistrants({ slug, title, onBack }) {
                     <td className="px-3 py-2.5 text-gray-600 whitespace-nowrap">{r.phone || "—"}</td>
                     <td className="px-3 py-2.5 text-gray-600 whitespace-nowrap">{r.curriculum || "—"}</td>
                     <td className="px-3 py-2.5 text-gray-600 whitespace-nowrap">{r.grade || "—"}</td>
-                    <td className="px-3 py-2.5 text-gray-500 whitespace-nowrap">{formatDt(r.created_at)}</td>
+                    <td className="px-3 py-2.5 text-gray-500 whitespace-nowrap">{formatInPlaceTimezone(r.created_at, webinarPlace)}</td>
 
                     {/* Recording URL */}
                     <td className="px-3 py-2.5">

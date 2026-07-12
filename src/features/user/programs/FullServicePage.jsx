@@ -173,7 +173,7 @@ function TestimonialCard({ t }) {
         </div>
         <div style={{ width: 48, height: 48, borderRadius: 8, overflow: "hidden", flexShrink: 0, background: "#2a2a2a", marginLeft: 10 }}>
           {imgOk
-            ? <img src={t.photo} alt={t.name} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} onError={() => setImgOk(false)} />
+            ? <img src={t.photo} alt={t.name} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} onError={() => setImgOk(false)}  loading="lazy" decoding="async"/>
             : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <span style={{ fontFamily: "'Fraunces',serif", fontSize: 20, color: "rgba(255,255,255,0.3)" }}>{t.name[0]}</span>
               </div>
@@ -340,11 +340,11 @@ export default function FullServicePage() {
         <div style={{ position: "absolute", inset: 0, zIndex: 1, background: "linear-gradient(to bottom, rgba(14,14,14,0.35) 0%, rgba(14,14,14,0.70) 100%)" }} />
         <div style={{ position: "absolute", inset: 0, zIndex: 0, background: "linear-gradient(135deg,#1a1a1a 0%,#2a2a2a 100%)" }} />
         <img
-          src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567182758_admission_hero.webp"
+          src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1783815142127_b8q3NTrhRGcCoalSCbjuwrO7o.webp"
           alt=""
           onError={e => e.currentTarget.style.display = "none"}
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0 }}
-        />
+         fetchpriority="high" loading="eager" decoding="async"/>
         <div style={{ position: "relative", zIndex: 2, padding: `clamp(100px,14vw,180px) ${px} clamp(48px,6vw,80px)`, width: "100%" }}>
           <span style={{
             display: "inline-block", marginBottom: 16,
@@ -395,7 +395,7 @@ export default function FullServicePage() {
               alt=""
               onError={e => e.currentTarget.style.display = "none"}
               style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-            />
+             loading="lazy" decoding="async"/>
           </div>
           {/* right copy */}
           <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
@@ -436,7 +436,7 @@ export default function FullServicePage() {
               <div key={img} style={{ borderRadius: 12, overflow: "hidden", aspectRatio: "4/3", background: C.creamWarm }}>
                 <img src={`https://zmiftah.tech/addedapi/uploads/addededucation-assets/${img}.webp`} alt=""
                   style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                  onError={e => e.currentTarget.style.display = "none"} />
+                  onError={e => e.currentTarget.style.display = "none"}  loading="lazy" decoding="async"/>
               </div>
             ))}
           </div>
@@ -457,7 +457,7 @@ export default function FullServicePage() {
               <div key={img} style={{ borderRadius: 12, overflow: "hidden", aspectRatio: "4/3", background: C.creamWarm }}>
                 <img src={`${img}`} alt=""
                   style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                  onError={e => e.currentTarget.style.display = "none"} />
+                  onError={e => e.currentTarget.style.display = "none"}  loading="lazy" decoding="async"/>
               </div>
             ))}
           </div>
@@ -510,7 +510,7 @@ export default function FullServicePage() {
                   alt=""
                   onError={e => e.currentTarget.style.display = "none"}
                   style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                />
+                 loading="lazy" decoding="async"/>
               </div>
 
             </div>

@@ -147,7 +147,7 @@ function TestimonialCard({ t }) {
         </div>
         <div style={{ width: 52, height: 52, borderRadius: 8, overflow: "hidden", flexShrink: 0, background: "rgba(255,255,255,0.04)", marginLeft: 12, display: "flex", alignItems: "center", justifyContent: "center" }}>
           {uniOk && t.uni
-            ? <img src={t.uni} alt="uni" style={{ width: "100%", height: "100%", objectFit: "contain", padding: 4 }} onError={() => setUniOk(false)} />
+            ? <img src={t.uni} alt="uni" style={{ width: "100%", height: "100%", objectFit: "contain", padding: 4 }} onError={() => setUniOk(false)}  loading="lazy" decoding="async"/>
             : <span style={{ fontFamily: "'Fraunces',serif", fontSize: 18, color: "rgba(255,255,255,0.3)" }}>{t.name[0]}</span>
           }
         </div>
@@ -466,11 +466,11 @@ export default function ResearchPage() {
         <div style={{ position: "absolute", inset: 0, zIndex: 0, background: "linear-gradient(135deg, #1a1a1a 0%, #2d1a1e 100%)" }} />
         {/* image — zIndex: 0 (sama dengan fallback, render belakangan jadi di atas) */}
         <img
-          src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567170562_Research_Hero.webp"
+          src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1783857115641_zTgSiutkPyNYcwILaMmWVsMRTU.webp"
           alt=""
           onError={e => e.currentTarget.style.display = "none"}
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0 }}
-        />
+         fetchpriority="high" loading="eager" decoding="async"/>
         {/* fallback gradient if image fails */}
         <div style={{ position: "absolute", inset: 0, zIndex: -2, background: "linear-gradient(135deg, #1a1a1a 0%, #2d1a1e 100%)" }} />
 
@@ -528,11 +528,11 @@ export default function ResearchPage() {
           {/* Left: image */}
           <div style={{ borderRadius: 16, overflow: "hidden", aspectRatio: "4/3", background: "#1a1a1a" }}>
             <img
-              src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567170150_Stand_Out.webp"
+              src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1783857418075_F0na79PwmneI2gmJh1P3jEHDmEI.webp"
               alt="Library"
               style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
               onError={e => { e.currentTarget.parentElement.style.background = "linear-gradient(135deg,#1a1a1a,#2d1a1e)" }}
-            />
+             loading="lazy" decoding="async"/>
           </div>
 
           {/* Right: copy */}
@@ -564,11 +564,11 @@ export default function ResearchPage() {
           <div style={{ position: "relative" }}>
             <div style={{ borderRadius: 14, overflow: "hidden", aspectRatio: "3/4", background: C.creamWarm }}>
               <img
-                src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567169027_aqQAEBeYi3Kvp6OTolc2dhkyME.webp"
+                src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1783857383802_aqQAEBeYi3Kvp6OTolc2dhkyME.webp"
                 alt=""
                 style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
                 onError={e => e.currentTarget.parentElement.style.background = C.creamWarm}
-              />
+               loading="lazy" decoding="async"/>
             </div>
           </div>
 
@@ -588,7 +588,7 @@ export default function ResearchPage() {
                 alt=""
                 style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
                 onError={e => e.currentTarget.parentElement.style.background = C.creamWarm}
-              />
+               loading="lazy" decoding="async"/>
             </div>
           </div>
         </div>
@@ -613,7 +613,7 @@ export default function ResearchPage() {
                 e.currentTarget.parentElement.style.justifyContent = "center"
                 e.currentTarget.parentElement.innerHTML = `<span style="font-family:'Fraunces',serif;font-size:64px;color:rgba(0,0,0,0.15)">MS</span>`
               }}
-            />
+             loading="lazy" decoding="async"/>
           </div>
 
           {/* copy */}

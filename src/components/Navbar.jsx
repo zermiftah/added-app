@@ -262,7 +262,7 @@ export default function Navbar() {
       <nav className="w-full px-6 lg:px-20 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex-shrink-0">
-          <img src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782570954773_Horizontal___Maroon.webp" alt="AddedEducation" width={180} height={36} className="h-9 object-contain" style={scrolled ? {} : { filter: "brightness(0) invert(1)" }} />
+          <img src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782570954773_Horizontal___Maroon.webp" alt="AddedEducation" width={180} height={36} className="h-9 object-contain" style={scrolled ? {} : { filter: "brightness(0) invert(1)" }}  loading="lazy" decoding="async"/>
         </Link>
 
         {/* Desktop links */}

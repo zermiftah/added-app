@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import QueryProvider from "providers/QueryProvider"
+import TopLoadingBar from "ui/TopLoadingBar/TopLoadingBar"
 
 // ALL routes eager-imported — single bundle, zero navigation delay.
 // HomePage is eager for LCP; rest follow same pattern for instant nav.
@@ -50,6 +51,7 @@ export default function App() {
   return (
     <QueryProvider>
       <BrowserRouter>
+        <TopLoadingBar />
         <Suspense fallback={<PageSkeleton />}>
           <Routes>
             <Route path="/"                      element={<HomePage />} />

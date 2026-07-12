@@ -261,7 +261,7 @@ export default function WatchPage() {
   if (state.error) {
     return (
       <div style={{ minHeight: "100vh", background: "#0E0E0E", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 24, textAlign: "center" }}>
-        <img src={LOGO_URL} alt="AddedEducation" style={{ height: 28, filter: "brightness(0) invert(1)", marginBottom: 32, opacity: 0.6 }} />
+        <img src={LOGO_URL} alt="AddedEducation" style={{ height: 28, filter: "brightness(0) invert(1)", marginBottom: 32, opacity: 0.6 }}  loading="lazy" decoding="async"/>
         <h1 style={{ fontFamily: "'Fraunces',serif", fontSize: 28, fontWeight: 400, color: "#fff", marginBottom: 12 }}>
           {state.error === "This link has expired" ? "Link Expired" : "Link Not Found"}
         </h1>
@@ -284,7 +284,7 @@ export default function WatchPage() {
     <div style={{ minHeight: "100vh", background: "#0E0E0E", color: "#fff" }}>
       {/* Header */}
       <header style={{ padding: "18px clamp(20px,4vw,48px)", borderBottom: "1px solid rgba(255,255,255,0.07)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <img src={LOGO_URL} alt="AddedEducation" style={{ height: 24, filter: "brightness(0) invert(1)", opacity: 0.85 }} />
+        <img src={LOGO_URL} alt="AddedEducation" style={{ height: 24, filter: "brightness(0) invert(1)", opacity: 0.85 }}  loading="lazy" decoding="async"/>
         <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 10, fontWeight: 500, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)" }}>
           Recording
         </span>

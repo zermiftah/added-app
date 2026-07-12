@@ -1,6 +1,6 @@
 import { useRef } from "react"
 import WebinarForm from "../WebinarForm"
-import { LandingHeader, LandingFooter, Reveal, QuoteSection, WhyFamiliesSection, getResponsiveSrc, C, sans, serif, mono } from "../themeShared"
+import { LandingHeader, LandingFooter, Reveal, QuoteSection, WhyFamiliesSection, getResponsiveSrc, formatWebinarTime, C, sans, serif, mono } from "../themeShared"
 
 const NAV_SECTIONS = [
   { label: "Webinar", id: "webinar" },
@@ -46,7 +46,7 @@ export default function ThemeHeroFormSide({ page }) {
           <div aria-hidden style={{ position: "absolute", inset: 0, zIndex: 0 }}>
             <img src={heroImg.src} srcSet={heroImg.srcSet} sizes="100vw" alt=""
               fetchpriority="high" decoding="async"
-              style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.38 }} />
+              style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.38 }}  loading="eager"/>
             <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(14,14,14,0.96) 0%, rgba(14,14,14,0.82) 55%, rgba(14,14,14,0.6) 100%)" }} />
           </div>
         )}
@@ -84,7 +84,7 @@ export default function ThemeHeroFormSide({ page }) {
               {(page.webinar_date || page.webinar_time || page.webinar_place || page.grade_years) && (
                 <Reveal delay={300}>
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(110px,1fr))", gap: 20, paddingTop: 28, borderTop: "1px solid rgba(255,255,255,0.1)" }}>
-                    {[["Date", formatDateRange(page)], ["Time", page.webinar_time], ["Where", page.webinar_place], ["For", page.grade_years]].filter(([,v]) => v).map(([label, value]) => (
+                    {[["Date", formatDateRange(page)], ["Time", formatWebinarTime(page.webinar_time)], ["Where", page.webinar_place], ["For", page.grade_years]].filter(([,v]) => v).map(([label, value]) => (
                       <div key={label}>
                         <p style={{ fontFamily: mono, fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.4)", marginBottom: 5 }}>{label}</p>
                         <p style={{ fontFamily: sans, fontSize: 14, fontWeight: 500, color: "#fff" }}>{value}</p>

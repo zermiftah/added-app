@@ -1,6 +1,6 @@
 import { useRef } from "react"
 import WebinarForm from "../WebinarForm"
-import { LandingHeader, LandingFooter, Reveal, QuoteSection, WhyFamiliesSection, getResponsiveSrc, C, sans, serif, mono } from "../themeShared"
+import { LandingHeader, LandingFooter, Reveal, QuoteSection, WhyFamiliesSection, getResponsiveSrc, formatWebinarTime, C, sans, serif, mono } from "../themeShared"
 
 const NAV_SECTIONS = [
   { label: "Webinar", id: "webinar" },
@@ -43,7 +43,7 @@ export default function ThemeHeroCtaStacked({ page }) {
         {heroImg.src && (
           <div aria-hidden style={{ position: "absolute", inset: 0, zIndex: 0 }}>
             <img src={heroImg.src} srcSet={heroImg.srcSet} sizes="100vw" alt="" fetchpriority="high" decoding="async"
-              style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.5 }} />
+              style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.5 }}  loading="eager"/>
             <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(14,14,14,.55) 0%, rgba(14,14,14,.72) 60%, rgba(14,14,14,.96) 100%)" }} />
           </div>
         )}
@@ -83,7 +83,7 @@ export default function ThemeHeroCtaStacked({ page }) {
           {(page.webinar_date || page.webinar_time || page.webinar_place || page.grade_years) && (
             <Reveal delay={400}>
               <div style={{ marginTop: 56, display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "24px 40px", paddingTop: 32, borderTop: "1px solid rgba(255,255,255,.12)" }}>
-                {[["Date", formatDateRange(page)], ["Time", page.webinar_time], ["Where", page.webinar_place], ["For", page.grade_years]].filter(([,v]) => v).map(([label, value]) => (
+                {[["Date", formatDateRange(page)], ["Time", formatWebinarTime(page.webinar_time)], ["Where", page.webinar_place], ["For", page.grade_years]].filter(([,v]) => v).map(([label, value]) => (
                   <div key={label} style={{ textAlign: "center" }}>
                     <p style={{ fontFamily: mono, fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,.45)", marginBottom: 4 }}>{label}</p>
                     <p style={{ fontFamily: sans, fontSize: 14, fontWeight: 500, color: "#fff" }}>{value}</p>
