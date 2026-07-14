@@ -298,7 +298,7 @@ export default function WatchPage() {
           <h1 style={{ fontFamily: "'Fraunces',serif", fontWeight: 400, fontStyle: "italic", fontSize: "clamp(20px,3vw,32px)", lineHeight: 1.2, color: "#fff", marginBottom: 8 }}>
             {webinar_title}
           </h1>
-          {expires_at && (
+          {expires_at && new Date(expires_at).getFullYear() < 2099 && (
             <p style={{ fontFamily: "'Inter',sans-serif", fontSize: 12, color: "rgba(255,255,255,0.3)" }}>
               Access expires: {formatExpiry(expires_at)}
             </p>

@@ -18,11 +18,12 @@ function Toast({ msg, kind = "info" }) {
 function RecordingModal({ open, reg, onClose, onSaved }) {
   const token = useAdminStore(s => s.token)
   const [url, setUrl]       = useState("")
+  const [expiresIn, setExpiresIn] = useState(48)
   const [saving, setSaving] = useState(false)
   const [toast, setToast]   = useState("")
 
   useEffect(() => {
-    if (open) setUrl(reg?.recording_youtube_url || "")
+    if (open) { setUrl(reg?.recording_youtube_url || ""); setExpiresIn(48) }
   }, [open, reg])
 
   if (!open || !reg) return null
@@ -31,7 +32,7 @@ function RecordingModal({ open, reg, onClose, onSaved }) {
     if (!url.trim()) return
     setSaving(true)
     try {
-      const r = await fetchData(`webinar-registrants/${reg.id}/recording`, { recording_youtube_url: url.trim() }, "PUT", token)
+      const r = await fetchData(`webinar-registrants/${reg.id}/recording`, { recording_youtube_url: url.trim(), expires_in_hours: expiresIn }, "PUT", token)
       onSaved({ ...reg, recording_youtube_url: url.trim(), recording_token: r.recording_token, recording_expires_at: r.recording_expires_at })
       onClose()
     } catch (e) {
@@ -41,6 +42,12 @@ function RecordingModal({ open, reg, onClose, onSaved }) {
       setSaving(false)
     }
   }
+
+  const EXPIRY_OPTIONS = [
+    { label: "12 hours", value: 12 },
+    { label: "48 hours", value: 48 },
+    { label: "Not Expire", value: "never" },
+  ]
 
   return (
     <div className="fixed inset-0 bg-black/40 z-[80] flex items-center justify-center p-4" onClick={onClose}>
@@ -57,6 +64,21 @@ function RecordingModal({ open, reg, onClose, onSaved }) {
           placeholder="https://www.youtube.com/watch?v=..."
           className="w-full px-3 py-2 rounded-lg border border-gray-200 text-[13px] focus:border-gray-900 focus:outline-none mb-4"
         />
+        <label className="block text-[11px] font-semibold text-gray-600 uppercase tracking-wider mb-1.5">Link expires</label>
+        <div className="flex gap-2 mb-4">
+          {EXPIRY_OPTIONS.map(opt => (
+            <button
+              key={opt.value}
+              type="button"
+              onClick={() => setExpiresIn(opt.value)}
+              className={`flex-1 px-3 py-2 rounded-lg text-[12px] font-semibold border transition-colors ${
+                expiresIn === opt.value ? "bg-[#0E0E0E] text-white border-[#0E0E0E]" : "border-gray-200 text-gray-600 hover:border-gray-400"
+              }`}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
         <div className="flex gap-2 justify-end">
           <button onClick={onClose} className="px-3 py-2 rounded-lg border border-gray-200 text-[12px]">Cancel</button>
           <button disabled={saving || !url.trim()} onClick={save} className="px-4 py-2 rounded-lg bg-[#0E0E0E] text-white text-[12px] disabled:opacity-50">
@@ -90,7 +112,7 @@ function formatDt(dt) {
 /* ── Bulk (page-wide) recording link — one link shared by every
    registrant of this page, with its own expiry and a notify-everyone
    email flow (all registrants, or a custom pasted list). ── */
-function BulkRecordingPanel({ pageId, slug, registrantCount, token, showToast }) {
+function BulkRecordingPanel({ pageId, slug, registrantCount, token, showToast, onRegistrantsChanged }) {
   const [page, setPage] = useState(null)
   const [loading, setLoading] = useState(true)
   const [editing, setEditing] = useState(false)
@@ -121,15 +143,17 @@ function BulkRecordingPanel({ pageId, slug, registrantCount, token, showToast })
 
   const watchUrl = page?.bulk_recording_token ? `${BASE_URL}/watch/${page.bulk_recording_token}` : null
   const isExpired = page?.bulk_recording_expires_at && new Date(page.bulk_recording_expires_at) < new Date()
+  const isNeverExpires = page?.bulk_recording_expires_at && new Date(page.bulk_recording_expires_at).getFullYear() >= 2099
 
   const handleSetLink = async () => {
     if (!url.trim()) { showToast("Enter a YouTube URL first", "error"); return }
     setSaving(true)
     try {
-      await fetchData(`webinar-pages/${pageId}/bulk-recording`, { youtube_url: url.trim(), expires_in_hours: hours }, "PUT", token)
-      showToast("Bulk watch link set", "success")
+      const r = await fetchData(`webinar-pages/${pageId}/bulk-recording`, { youtube_url: url.trim(), expires_in_hours: hours }, "PUT", token)
+      showToast(r.message || "Bulk watch link set", "success")
       setEditing(false)
       load()
+      onRegistrantsChanged?.()
     } catch (e) {
       showToast(e.message || "Failed to set link", "error")
     } finally {
@@ -137,11 +161,11 @@ function BulkRecordingPanel({ pageId, slug, registrantCount, token, showToast })
     }
   }
 
-  const handleReactivate = async () => {
+  const handleReactivate = async (expiresIn) => {
     setReactivating(true)
     try {
-      await fetchData(`webinar-pages/${pageId}/bulk-recording/reactivate`, { expires_in_hours: 48 }, "POST", token)
-      showToast("Reactivated for 48 hours", "success")
+      await fetchData(`webinar-pages/${pageId}/bulk-recording/reactivate`, { expires_in_hours: expiresIn }, "POST", token)
+      showToast(expiresIn === "never" ? "Set to never expire" : `Reactivated for ${expiresIn} hours`, "success")
       load()
     } catch (e) {
       showToast(e.message || "Failed to reactivate", "error")
@@ -197,8 +221,21 @@ function BulkRecordingPanel({ pageId, slug, registrantCount, token, showToast })
             <input value={url} onChange={e => setUrl(e.target.value)} placeholder="https://youtube.com/watch?v=..." className="w-full px-3 py-2 rounded-lg border border-gray-200 text-[12.5px] focus:border-gray-900 focus:outline-none" />
           </div>
           <div>
-            <label className="block text-[11px] text-gray-500 mb-1">Expires in (hours)</label>
-            <input type="number" min="1" value={hours} onChange={e => setHours(e.target.value)} className="w-24 px-3 py-2 rounded-lg border border-gray-200 text-[12.5px] focus:border-gray-900 focus:outline-none" />
+            <label className="block text-[11px] text-gray-500 mb-1">Link expires</label>
+            <div className="flex gap-1.5">
+              {[["12 hours", 12], ["48 hours", 48], ["Not Expire", "never"]].map(([label, val]) => (
+                <button
+                  key={val}
+                  type="button"
+                  onClick={() => setHours(val)}
+                  className={`px-3 py-2 rounded-lg text-[12px] font-semibold border transition-colors ${
+                    hours === val ? "bg-[#0E0E0E] text-white border-[#0E0E0E]" : "border-gray-200 text-gray-600 hover:border-gray-400"
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
           </div>
           <button onClick={handleSetLink} disabled={saving} className="px-4 py-2 rounded-lg bg-[#0E0E0E] text-white text-[12px] font-semibold disabled:opacity-50">
             {saving ? "Saving…" : "Set link"}
@@ -209,12 +246,16 @@ function BulkRecordingPanel({ pageId, slug, registrantCount, token, showToast })
           <code className="text-[11.5px] bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-gray-700 truncate max-w-[320px]">{watchUrl}</code>
           <button onClick={copyLink} className="px-3 py-1.5 rounded-full border border-gray-200 text-[11px] font-semibold text-gray-700 hover:border-gray-400">Copy</button>
           <span className={`text-[11px] px-2.5 py-1 rounded-full font-semibold ${isExpired ? "bg-red-50 text-red-600" : "bg-emerald-50 text-emerald-700"}`}>
-            {isExpired ? "Expired" : `Expires ${new Date(page.bulk_recording_expires_at).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}`}
+            {isExpired ? "Expired" : isNeverExpires ? "Never expires" : `Expires ${new Date(page.bulk_recording_expires_at).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}`}
           </span>
           {isExpired && (
-            <button onClick={handleReactivate} disabled={reactivating} className="px-3 py-1.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 text-[11px] font-semibold hover:bg-amber-100 disabled:opacity-50">
-              {reactivating ? "…" : "Reactivate 48h"}
-            </button>
+            <div className="flex gap-1.5">
+              {[["12h", 12], ["48h", 48], ["∞", "never"]].map(([label, val]) => (
+                <button key={val} onClick={() => handleReactivate(val)} disabled={reactivating} className="px-3 py-1.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 text-[11px] font-semibold hover:bg-amber-100 disabled:opacity-50">
+                  {reactivating ? "…" : label}
+                </button>
+              ))}
+            </div>
           )}
           <button onClick={() => setNotifyOpen(true)} className="ml-auto px-4 py-1.5 rounded-full bg-[#C8354B] text-white text-[11.5px] font-semibold hover:bg-[#9E2538] transition-colors">
             📧 Notify registrants
@@ -313,11 +354,11 @@ export default function AdminRegistrants({ pageId, slug, title, onBack }) {
     }
   }
 
-  const handleReactivate = async (reg) => {
+  const handleReactivate = async (reg, expiresIn) => {
     setReactivating(s => ({ ...s, [reg.id]: true }))
     try {
-      const r = await fetchData(`webinar-registrants/${reg.id}/reactivate`, {}, "POST", token)
-      showToast("Reactivated for 48 hours", "success")
+      const r = await fetchData(`webinar-registrants/${reg.id}/reactivate`, { expires_in_hours: expiresIn }, "POST", token)
+      showToast(expiresIn === "never" ? "Set to never expire" : `Reactivated for ${expiresIn} hours`, "success")
       updateLocal({ ...reg, recording_expires_at: r.recording_expires_at })
     } catch (e) {
       showToast(e.message || "Failed", "error")
@@ -357,7 +398,7 @@ export default function AdminRegistrants({ pageId, slug, title, onBack }) {
         <span className="ml-auto text-[12px] text-gray-500">{registrants.length} registrant{registrants.length !== 1 ? "s" : ""}</span>
       </div>
 
-      <BulkRecordingPanel pageId={pageId} slug={slug} registrantCount={registrants.length} token={token} showToast={showToast} />
+      <BulkRecordingPanel pageId={pageId} slug={slug} registrantCount={registrants.length} token={token} showToast={showToast} onRegistrantsChanged={load} />
 
       {loading ? (
         <div className="text-[13px] text-gray-400 py-20 text-center">Loading…</div>
@@ -378,7 +419,6 @@ export default function AdminRegistrants({ pageId, slug, title, onBack }) {
                 <th className="text-left px-3 py-2.5 font-medium text-gray-600 whitespace-nowrap">
                   Registered{(() => { const tz = getTimezoneForPlace(webinarPlace); const abbr = getTzAbbr(tz); return abbr ? ` (${abbr})` : "" })()}
                 </th>
-                <th className="text-left px-3 py-2.5 font-medium text-gray-600 whitespace-nowrap">Recording URL</th>
                 <th className="text-left px-3 py-2.5 font-medium text-gray-600 whitespace-nowrap">Watch Link</th>
                 <th className="text-left px-3 py-2.5 font-medium text-gray-600 whitespace-nowrap">Expires</th>
                 <th className="px-3 py-2.5 whitespace-nowrap">Actions</th>
@@ -401,26 +441,6 @@ export default function AdminRegistrants({ pageId, slug, title, onBack }) {
                     <td className="px-3 py-2.5 text-gray-600 whitespace-nowrap">{r.grade || "—"}</td>
                     <td className="px-3 py-2.5 text-gray-500 whitespace-nowrap">{formatInPlaceTimezone(r.created_at, webinarPlace)}</td>
 
-                    {/* Recording URL */}
-                    <td className="px-3 py-2.5">
-                      <div className="flex items-center gap-1.5">
-                        {r.recording_youtube_url ? (
-                          <a href={r.recording_youtube_url} target="_blank" rel="noopener noreferrer"
-                             className="text-blue-600 hover:underline truncate max-w-[120px]">
-                            YouTube ↗
-                          </a>
-                        ) : (
-                          <span className="text-gray-300">—</span>
-                        )}
-                        <button
-                          onClick={() => setRecModal({ open: true, reg: r })}
-                          className="flex-shrink-0 px-1.5 py-0.5 rounded bg-gray-100 hover:bg-gray-200 text-[10px] text-gray-600"
-                        >
-                          {r.recording_youtube_url ? "Edit" : "Set"}
-                        </button>
-                      </div>
-                    </td>
-
                     {/* Watch link */}
                     <td className="px-3 py-2.5">
                       {watchUrl ? (
@@ -442,10 +462,18 @@ export default function AdminRegistrants({ pageId, slug, title, onBack }) {
 
                     {/* Expires */}
                     <td className="px-3 py-2.5 whitespace-nowrap">
-                      {r.recording_expires_at ? (
-                        <span className={expired ? "text-red-500" : "text-green-600"}>
-                          {expired ? "Expired" : formatDt(r.recording_expires_at)}
-                        </span>
+                      {hasRec ? (
+                        <select
+                          value={r.recording_expires_at && new Date(r.recording_expires_at).getFullYear() >= 2099 ? "never" : expired ? "" : "custom"}
+                          onChange={e => handleReactivate(r, e.target.value === "never" ? "never" : Number(e.target.value))}
+                          className={`px-2 py-1 rounded-lg border text-[11px] font-semibold focus:outline-none ${expired ? "border-red-200 text-red-600 bg-red-50" : "border-green-200 text-green-700 bg-green-50"}`}
+                        >
+                          {expired && <option value="" disabled>Expired</option>}
+                          {!expired && new Date(r.recording_expires_at).getFullYear() < 2099 && <option value="custom" disabled>{formatDt(r.recording_expires_at)}</option>}
+                          <option value={12}>12 hours</option>
+                          <option value={48}>48 hours</option>
+                          <option value="never">Not Expire</option>
+                        </select>
                       ) : <span className="text-gray-300">—</span>}
                     </td>
 
@@ -461,17 +489,6 @@ export default function AdminRegistrants({ pageId, slug, title, onBack }) {
                             title={r.recording_sent_at ? `Last sent ${formatDt(r.recording_sent_at)}` : "Send recording link"}
                           >
                             {sending[r.id] ? "…" : (r.recording_sent_at ? "Resend" : "Send link")}
-                          </button>
-                        )}
-
-                        {/* Reactivate */}
-                        {hasRec && expired && (
-                          <button
-                            disabled={reactivating[r.id]}
-                            onClick={() => handleReactivate(r)}
-                            className="px-2 py-1 rounded bg-amber-600 text-white text-[10px] disabled:opacity-50 hover:bg-amber-700"
-                          >
-                            {reactivating[r.id] ? "…" : "Reactivate"}
                           </button>
                         )}
 

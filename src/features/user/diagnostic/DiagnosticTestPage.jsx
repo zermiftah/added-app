@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { fetchData } from "lib/api"
+import { useNavigate } from "react-router-dom"
 
 const C = {
   cream: "#FBFBFD", creamSoft: "#F5F5F7", creamWarm: "#F0EFEA",
@@ -17,33 +17,33 @@ const monoFont  = "'JetBrains Mono',monospace"
 // ── Archetypes ──
 const ARCHETYPES = {
   builder: {
-    label: "The Builder", tagline: "You make ideas real.",
-    blurb: "You learn by making things break, then work. A built, working, testable thing does more for a file than any description of interest ever could — admissions officers can see the hours in it.",
-    move: "Ship one real, functional project this year — and document the failures, not just the win.",
+    label: "The Builder", tagline: "You make ideas real.", icon: "🔨",
+    blurb: "You learn by making things break, then work. A built, working, testable thing does more for a file than any description of interest ever could - admissions officers can see the hours in it.",
+    move: "Ship one real, functional project this year - and document the failures, not just the win.",
   },
   researcher: {
-    label: "The Researcher", tagline: "You chase the question everyone else drops.",
-    blurb: "You'd rather find out for yourself than take someone's word. That instinct is the raw material of independent research — the single strongest signal a selective reader looks for beyond your grades.",
+    label: "The Researcher", tagline: "You chase the question everyone else drops.", icon: "🔬",
+    blurb: "You'd rather find out for yourself than take someone's word. That instinct is the raw material of independent research - the single strongest signal a selective reader looks for beyond your grades.",
     move: "Turn one question you can't stop thinking about into a structured research project with a mentor or teacher.",
   },
   creator: {
-    label: "The Creator", tagline: "You make what doesn't exist yet.",
-    blurb: "You build things because the version in your head isn't out there. A body of original work — not a hobby list — is exactly what separates a genuine creative spike from another activity line.",
+    label: "The Creator", tagline: "You make what doesn't exist yet.", icon: "🎨",
+    blurb: "You build things because the version in your head isn't out there. A body of original work - not a hobby list - is exactly what separates a genuine creative spike from another activity line.",
     move: "Build a portfolio around one clear throughline instead of a scattered set of one-offs.",
   },
   changemaker: {
-    label: "The Changemaker", tagline: "You move people toward what's missing.",
-    blurb: "You notice the gap and pull people together to close it. Selective admissions reads leadership as follow-through and measurable impact — not titles, not membership.",
-    move: "Attach a number to your impact — people reached, funds raised, outcomes changed.",
+    label: "The Changemaker", tagline: "You move people toward what's missing.", icon: "📣",
+    blurb: "You notice the gap and pull people together to close it. Selective admissions reads leadership as follow-through and measurable impact - not titles, not membership.",
+    move: "Attach a number to your impact - people reached, funds raised, outcomes changed.",
   },
   founder: {
-    label: "The Founder", tagline: "You'd rather build it than wait for it.",
+    label: "The Founder", tagline: "You'd rather build it than wait for it.", icon: "🚀",
     blurb: "You pitch the idea instead of waiting for permission. This is the instinct behind the ventures, competitions, and initiatives an admissions officer physically cannot ignore.",
-    move: "Take the idea past a school club — pitch it, monetize it, or enter it in a real competition.",
+    move: "Take the idea past a school club - pitch it, monetize it, or enter it in a real competition.",
   },
   specialist: {
-    label: "The Specialist", tagline: "You go deep where others go wide.",
-    blurb: "You climb instead of dabbling. Depth read consistently over years — an olympiad ladder, a research track, a competitive ranking — is one of the clearest spike signals a file can carry.",
+    label: "The Specialist", tagline: "You go deep where others go wide.", icon: "🎯",
+    blurb: "You climb instead of dabbling. Depth read consistently over years - an olympiad ladder, a research track, a competitive ranking - is one of the clearest spike signals a file can carry.",
     move: "Commit to one ladder (olympiad, certification, ranked competition) and climb it visibly, year over year.",
   },
 }
@@ -67,7 +67,7 @@ const SPIKE_OPTIONS = ["Not me", "Sometimes", "That's me"]
 const FOUNDATION_ITEMS = [
   { text: "What grade or year are you in?", key: "grade", options: ["Grade 9 or below", "Grade 10", "Grade 11", "Grade 12"] },
   { text: "Where do your grades sit right now?", key: "grades", options: ["Top band (A*/A, 90%+ or equivalent)", "Strong (A/B, 80–89%)", "Mixed (B/C, below 80%)", "Not available yet"], score: [2, 1, 0, 0] },
-  { text: "How's standardized testing going?", key: "testing", options: ["Haven't started", "Prepping now", "Taken it once", "Done — happy with the score"], score: [0, 1, 1.5, 2] },
+  { text: "How's standardized testing going?", key: "testing", options: ["Haven't started", "Prepping now", "Taken it once", "Done - happy with the score"], score: [0, 1, 1.5, 2] },
   { text: "Where are you aiming?", key: "destination", options: ["United States", "United Kingdom", "Other / still deciding"] },
 ]
 
@@ -131,6 +131,7 @@ function PixelEmblem({ archetypeKey, size }) {
 const EMPTY_SCORES = { builder: 0, researcher: 0, creator: 0, changemaker: 0, founder: 0, specialist: 0 }
 
 export default function DiagnosticTestPage() {
+  const navigate = useNavigate()
   const [step, setStep] = useState(-1) // -1 = intro, 0..11 = spike, 12 = transition, 13..16 = foundation, 17+ = result
   const [selected, setSelected] = useState(null)
   const [scores, setScores] = useState(EMPTY_SCORES)
@@ -149,33 +150,35 @@ export default function DiagnosticTestPage() {
   const continueQuiz = () => setStep((s) => s + 1)
   const retake = () => {
     setStep(-1); setSelected(null); setScores(EMPTY_SCORES); setFoundationScore(0); setFoundationAnswers({}); setSaved(false)
+    try { sessionStorage.removeItem("ae_diagnostic_pending") } catch { /* noop */ }
   }
+  const turnIntoPlan = () => navigate("/contact-us")
 
   const foundationStage = (f) => (f >= 3 ? "Strong" : f >= 1.5 ? "Developing" : "Emerging")
 
-  const submitResult = async (finalScores, fAnswers, fScore) => {
+  // Doesn't hit the backend at all — the diagnostic result only gets saved
+  // once the person actually submits the /contact-us form (one sequence,
+  // one row, identity comes from that form). This just computes the
+  // result and stashes it so /contact-us can pick it up after navigation.
+  const stashResult = (finalScores, fAnswers, fScore) => {
     const sorted = Object.entries(finalScores).sort((a, b) => b[1] - a[1])
     const [pKey, pScore] = sorted[0]
     const [sKey, sScore] = sorted[1]
     const hasSecondary = pScore - sScore <= 1 && sScore > 0
-    try {
-      await fetchData("diagnostic-test/submit", {
-        spike_scores: finalScores,
-        primary_archetype: pKey,
-        secondary_archetype: hasSecondary ? sKey : null,
-        is_hybrid: hasSecondary,
-        foundation_grade: fAnswers.grade || null,
-        foundation_grades: fAnswers.grades || null,
-        foundation_testing: fAnswers.testing || null,
-        foundation_destination: fAnswers.destination || null,
-        foundation_score: fScore,
-        foundation_stage: foundationStage(fScore),
-      }, "POST")
-    } catch {
-      // Non-blocking — the person still sees their result even if the save fails
-    } finally {
-      setSaved(true)
+    const payload = {
+      spike_scores: finalScores,
+      primary_archetype: pKey,
+      secondary_archetype: hasSecondary ? sKey : null,
+      is_hybrid: hasSecondary,
+      foundation_grade: fAnswers.grade || null,
+      foundation_grades: fAnswers.grades || null,
+      foundation_testing: fAnswers.testing || null,
+      foundation_destination: fAnswers.destination || null,
+      foundation_score: fScore,
+      foundation_stage: foundationStage(fScore),
     }
+    try { sessionStorage.setItem("ae_diagnostic_pending", JSON.stringify(payload)) } catch { /* storage unavailable — non-fatal */ }
+    setSaved(true)
   }
 
   const answer = (idx) => {
@@ -204,7 +207,7 @@ export default function DiagnosticTestPage() {
       const nextStep = step + 1
       setStep(nextStep)
       setSelected(null)
-      if (nextStep >= TOTAL + 1 && !saved) submitResult(nextScores, nextAnswers, nextFScore)
+      if (nextStep >= TOTAL + 1 && !saved) stashResult(nextScores, nextAnswers, nextFScore)
     }, 210)
   }
 
@@ -237,7 +240,7 @@ export default function DiagnosticTestPage() {
     titleText = hasSecondary ? `${primary.label.replace("The ", "")} × ${secondary.label.replace("The ", "")}` : primary.label
     tagline = primary.tagline
     const stage = foundationStage(foundationScore)
-    foundationLine = `${foundationAnswers.grade || ""} · ${stage} foundation · aiming ${foundationAnswers.destination || "—"}`
+    foundationLine = `${foundationAnswers.grade || ""} · ${stage} foundation · aiming ${foundationAnswers.destination || "-"}`
     blurbs = hasSecondary ? [primary.blurb, secondary.blurb] : [primary.blurb]
     moves = hasSecondary ? [primary.move, secondary.move] : [primary.move]
   }
@@ -283,7 +286,7 @@ export default function DiagnosticTestPage() {
                   Every application tells a story. <em style={{ fontStyle: "italic", color: C.maroon }}>What does yours say?</em>
                 </h1>
                 <p style={{ fontSize: 15.5, lineHeight: 1.65, color: C.stone, margin: "0 0 26px" }}>
-                  Sixteen fast taps decode the <b style={{ color: C.ink, fontWeight: 600 }}>spike</b> hidden in your profile — the one signal top-20 admissions officers actually read for. You'll walk away knowing your type and the single move that would sharpen it.
+                  Sixteen fast taps decode the <b style={{ color: C.ink, fontWeight: 600 }}>spike</b> hidden in your profile - the one signal top-20 admissions officers actually read for. You'll walk away knowing your type and the single move that would sharpen it.
                 </p>
                 <button onClick={start} style={{ display: "inline-flex", alignItems: "center", gap: 10, background: C.maroon, color: "#fff", border: "none", borderRadius: 10, padding: "15px 28px", fontFamily: sansFont, fontSize: 15, fontWeight: 600, letterSpacing: "0.01em", cursor: "pointer", boxShadow: "0 2px 8px rgba(104,24,24,0.25)" }}
                   onMouseEnter={(e) => e.currentTarget.style.background = C.maroon600}
@@ -314,7 +317,7 @@ export default function DiagnosticTestPage() {
               <div style={{ textAlign: "center", padding: "44px 20px 40px" }}>
                 <div style={{ width: 46, height: 46, borderRadius: "50%", background: C.maroon, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 18px", fontFamily: serifFont, fontSize: 22 }}>✓</div>
                 <h2 style={{ fontFamily: serifFont, fontWeight: 400, fontSize: 26, color: C.ink, margin: "0 0 10px" }}>Spike locked in.</h2>
-                <p style={{ fontSize: 15, lineHeight: 1.6, color: C.stone, margin: "0 auto 26px", maxWidth: 360 }}>Now the fundamentals — grade, results, targets. Four quick taps and your file is complete.</p>
+                <p style={{ fontSize: 15, lineHeight: 1.6, color: C.stone, margin: "0 auto 26px", maxWidth: 360 }}>Now the fundamentals - grade, results, targets. Four quick taps and your file is complete.</p>
                 <button onClick={continueQuiz} style={{ display: "inline-flex", alignItems: "center", gap: 10, background: C.maroon, color: "#fff", border: "none", borderRadius: 10, padding: "14px 26px", fontFamily: sansFont, fontSize: 15, fontWeight: 600, cursor: "pointer", boxShadow: "0 2px 8px rgba(104,24,24,0.25)" }}
                   onMouseEnter={(e) => e.currentTarget.style.background = C.maroon600}
                   onMouseLeave={(e) => e.currentTarget.style.background = C.maroon}>
@@ -336,6 +339,9 @@ export default function DiagnosticTestPage() {
                     <div style={{ width: 132, height: 132, borderRadius: 18, background: `linear-gradient(160deg, ${C.maroon600}, ${C.maroonDeep})`, border: `1px solid ${C.gold}`, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 14px 34px -10px rgba(74,16,16,0.55)", animation: "ae-stamp 0.55s cubic-bezier(.34,1.56,.64,1) both" }}>
                       <PixelEmblem archetypeKey={primaryKey} size={92} />
                     </div>
+                    <div style={{ position: "absolute", left: -10, top: -10, width: 34, height: 34, borderRadius: "50%", background: C.cream, border: `2px solid ${C.gold}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 17, boxShadow: "0 4px 10px rgba(0,0,0,0.2)", animation: "ae-pop 0.5s ease 0.1s both" }}>
+                      {ARCHETYPES[primaryKey]?.icon}
+                    </div>
                     {hasSecondary && (
                       <div style={{ position: "absolute", right: -14, bottom: -14, width: 60, height: 60, borderRadius: 12, background: `linear-gradient(160deg, ${C.maroon600}, ${C.maroonDeep})`, border: `1px solid ${C.gold}`, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 6px 16px rgba(0,0,0,0.25)", animation: "ae-stamp 0.55s cubic-bezier(.34,1.56,.64,1) 0.14s both" }}>
                         <PixelEmblem archetypeKey={secondaryKey} size={42} />
@@ -344,7 +350,9 @@ export default function DiagnosticTestPage() {
                   </div>
                 </div>
 
-                <h1 style={{ fontFamily: serifFont, fontWeight: 400, fontSize: 34, lineHeight: 1.12, letterSpacing: "-0.02em", color: C.maroonDeep, textAlign: "center", margin: "0 0 8px", animation: "ae-pop 0.5s ease 0.2s both" }}>{titleText}</h1>
+                <h1 style={{ fontFamily: serifFont, fontWeight: 400, fontSize: 34, lineHeight: 1.12, letterSpacing: "-0.02em", color: C.maroonDeep, textAlign: "center", margin: "0 0 8px", animation: "ae-pop 0.5s ease 0.2s both" }}>
+                  <span style={{ marginRight: 8 }}>{ARCHETYPES[primaryKey]?.icon}</span>{titleText}{hasSecondary && <span style={{ marginLeft: 8 }}>{ARCHETYPES[secondaryKey]?.icon}</span>}
+                </h1>
                 <p style={{ fontFamily: serifFont, fontStyle: "italic", fontSize: 18, color: C.accent, textAlign: "center", margin: "0 0 22px", animation: "ae-pop 0.5s ease 0.28s both" }}>{tagline}</p>
 
                 <div style={{ fontFamily: monoFont, fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", color: C.stone, textAlign: "center", margin: "0 0 22px" }}>{foundationLine}</div>
@@ -361,10 +369,10 @@ export default function DiagnosticTestPage() {
                 </div>
 
                 <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-                  <a href="https://www.addededucation.com" target="_blank" rel="noopener noreferrer"
-                    style={{ display: "inline-flex", alignItems: "center", gap: 9, background: C.maroon, color: "#fff", borderRadius: 10, padding: "14px 24px", fontSize: 15, fontWeight: 600, textDecoration: "none", boxShadow: "0 2px 8px rgba(104,24,24,0.25)" }}>
+                  <button onClick={turnIntoPlan}
+                    style={{ display: "inline-flex", alignItems: "center", gap: 9, background: C.maroon, color: "#fff", border: "none", borderRadius: 10, padding: "14px 24px", fontSize: 15, fontWeight: 600, cursor: "pointer", fontFamily: sansFont, boxShadow: "0 2px 8px rgba(104,24,24,0.25)" }}>
                     Turn this into a plan →
-                  </a>
+                  </button>
                   <button onClick={retake} style={{ display: "inline-flex", alignItems: "center", background: "transparent", color: C.maroon, border: `1px solid ${C.maroon}`, borderRadius: 10, padding: "14px 22px", fontFamily: sansFont, fontSize: 15, fontWeight: 600, cursor: "pointer" }}>
                     Retake
                   </button>

@@ -28,10 +28,12 @@ import YourTeamPage      from "features/user/team/YourTeamPage"
 import WatchPage         from "features/user/watch/WatchPage"
 import FullServicePage   from "features/user/programs/FullServicePage"
 import GetInTouchPage    from "features/user/contact/GetInTouchPage"
+import ContactUsPage     from "features/user/contact/ContactUsPage"
 
 // Admin + Webinar landings stay lazy — they're heavy and not on hot navigation path
 import { lazy, Suspense } from "react"
 const AddedAdmin         = lazy(() => import("features/admin/AddedAdmin"))
+const WebinarRegistrantsPage = lazy(() => import("features/admin/webinarPages/WebinarRegistrantsPage"))
 const WebinarLandingPage = lazy(() => import("features/user/webinarLanding/WebinarLandingPage"))
 
 function PageSkeleton() {
@@ -78,7 +80,9 @@ export default function App() {
             <Route path="/programs/admissions"   element={<FullServicePage />} />
             <Route path="/get-in-touch"          element={<GetInTouchPage />} />
             <Route path="/contact"               element={<GetInTouchPage />} />
+            <Route path="/contact-us"            element={<ContactUsPage />} />
             <Route path="/added-admin"           element={<AddedAdmin />} />
+            <Route path="/webinar-registrants"   element={<WebinarRegistrantsPage />} />
             {/* Watch recording page */}
             <Route path="/watch/:token"          element={<WatchPage />} />
 

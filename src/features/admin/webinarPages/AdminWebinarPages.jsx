@@ -667,7 +667,7 @@ export default function AdminWebinarPages() {
                   <td className="px-4 py-2.5 text-gray-500 text-[12px]">{new Date(p.updated_at).toLocaleDateString()}</td>
                   <td className="px-4 py-2.5 text-right">
                                         <div className="inline-flex items-center gap-1.5">
-                      <button onClick={() => setView({ mode: "results", id: p.id, slug: p.slug, title: p.webinar_title })} className="px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-semibold hover:bg-emerald-100 transition-colors">Results</button>
+                      <button onClick={() => setView({ mode: "results", id: p.id, slug: p.slug, title: p.webinar_title })} className="px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-semibold hover:bg-emerald-100 transition-colors">Finally Leads</button>
                       <button onClick={() => setCloneModal({ open: true, source: p, slug: `${p.slug}-copy` })} className="px-3 py-1.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 text-[11px] font-semibold hover:bg-amber-100 transition-colors">Clone</button>
                       <button onClick={() => setView({ mode: "edit", id: p.id })} className="px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 border border-gray-200 text-[11px] font-semibold hover:bg-gray-200 transition-colors">Edit</button>
                       <button onClick={() => setConfirm({ open: true, payload: p })} className="px-3 py-1.5 rounded-full bg-red-50 text-red-600 border border-red-200 text-[11px] font-semibold hover:bg-red-100 transition-colors">Delete</button>
