@@ -1,15 +1,15 @@
 // ─── Edit nama dan URL logo di sini ────────────────────────────────────────
 const UNIVERSITY_LOGOS = [
-  { name: "Hong Kong",  url: "https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782571300459_hongkong.webp" },
-  { name: "NUS",        url: "https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782571300460_nus.webp" },
-  { name: "IE",         url: "https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782571300462_ie.webp" },
-  { name: "Bocconi",    url: "https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782571300470_bocconi.webp" },
-  { name: "MIT",        url: "https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782571300473_mit.webp" },
-  { name: "Cornell",    url: "https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782571300485_cornell.webp" },
-  { name: "Oxford",     url: "https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782571300773_oxford.webp" },
-  { name: "Colombia",   url: "https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782571300787_colombia.webp" },
-  { name: "Princeton",  url: "https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782571300819_princeton.webp" },
-  { name: "Stanford",   url: "https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782571300820_stanford.webp" },
+  { name: "Hong Kong",  url: "https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1782571300459_hongkong.webp" },
+  { name: "NUS",        url: "https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1782571300460_nus.webp" },
+  { name: "IE",         url: "https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1782571300462_ie.webp" },
+  { name: "Bocconi",    url: "https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1782571300470_bocconi.webp" },
+  { name: "MIT",        url: "https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1782571300473_mit.webp" },
+  { name: "Cornell",    url: "https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1782571300485_cornell.webp" },
+  { name: "Oxford",     url: "https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1782571300773_oxford.webp" },
+  { name: "Colombia",   url: "https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1782571300787_colombia.webp" },
+  { name: "Princeton",  url: "https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1782571300819_princeton.webp" },
+  { name: "Stanford",   url: "https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1782571300820_stanford.webp" },
 ]
 // ───────────────────────────────────────────────────────────────────────────
 

@@ -132,7 +132,7 @@ export default function WebinarForm({
 
       // Fire confirmation email via our backend (non-blocking — don't fail if this errors)
       const slug = typeof window !== "undefined" ? window.location.pathname.replace(/^\//, "").split("?")[0] : ""
-      fetch(`https://zmiftah.tech/addedapi/webinar-pages/register`, {
+      fetch(`https://addededucation.com/addedapi/webinar-pages/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

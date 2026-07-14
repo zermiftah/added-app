@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 
-const LOGO_URL = "https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782570954773_Horizontal___Maroon.webp"
+const LOGO_URL = "https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1782570954773_Horizontal___Maroon.webp"
 const LOGO_WHITE_FILTER = "brightness(0) invert(1)"
 
 const C = {

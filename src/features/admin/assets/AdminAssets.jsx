@@ -8,7 +8,7 @@ import {
 import { API_BASE_URL } from "lib/api"
 import { useToast } from "hooks/useToast"
 
-const FILE_URL = (url) => `https://zmiftah.tech${url}`
+const FILE_URL = (url) => `https://addededucation.com${url}`
 
 function fmtSize(bytes) {
   if (bytes < 1024) return `${bytes} B`

@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_BASE || "https://zmiftah.tech/addedapi"
+const API_BASE = import.meta.env.VITE_API_BASE || "https://addededucation.com/addedapi"
 
 /**
  * Core fetch wrapper — mirrors sh-extranet networking pattern

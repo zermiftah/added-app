@@ -3,7 +3,7 @@ import { motion } from "framer-motion"
 import Navbar from "../../../components/Navbar"
 import Footer from "../../../components/Footer"
 
-const API_BASE = "https://zmiftah.tech/addedapi"
+const API_BASE = "https://addededucation.com/addedapi"
 const LIST_PATH = "/careers"
 
 function Field({ label, error, children }) {

@@ -283,7 +283,7 @@ export default function TutoringPage() {
       <section style={{ position: "relative", minHeight: 540, display: "flex", alignItems: "flex-end", overflow: "hidden", background: C.ink }}>
         <div style={{ position: "absolute", inset: 0, zIndex: 0, background: `linear-gradient(135deg, ${C.inkSoft} 0%, #1a1a1a 60%, ${C.maroon}30 100%)` }} />
         <img
-          src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1783856362771_tHjQDoq295dCxsgmBLFAJqQI.webp"
+          src="https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1782567169326_hero_tutoring.webp"
           alt=""
           onError={e => e.currentTarget.style.display = "none"}
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0 }}
@@ -308,7 +308,7 @@ export default function TutoringPage() {
       <section style={{ background: C.ink, padding: "72px clamp(24px,7vw,112px)", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 48, alignItems: "center" }}>
         <FadeIn>
           <div style={{ borderRadius: 14, overflow: "hidden", aspectRatio: "4/3", background: "#1a1a1a", position: "relative" }}>
-            <img src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567151111_added_tutoring.webp" alt="" onError={e => e.currentTarget.style.display="none"} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", position: "absolute", inset: 0 }}  loading="lazy" decoding="async"/>
+            <img src="https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1782567151111_added_tutoring.webp" alt="" onError={e => e.currentTarget.style.display="none"} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", position: "absolute", inset: 0 }}  loading="lazy" decoding="async"/>
           </div>
         </FadeIn>
         <FadeIn delay={80}>
@@ -329,7 +329,7 @@ export default function TutoringPage() {
             </FadeIn>
             <FadeIn delay={80}>
               <div style={{ borderRadius: 14, overflow: "hidden", height: 180, background: C.creamWarm, position: "relative" }}>
-                <img src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567168736_bvXo38Kc5Z51K98t6ZrpGeVOpg.webp" alt="" onError={e => e.currentTarget.style.display="none"} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", position: "absolute", inset: 0 }}  loading="lazy" decoding="async"/>
+                <img src="https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1782567168736_bvXo38Kc5Z51K98t6ZrpGeVOpg.webp" alt="" onError={e => e.currentTarget.style.display="none"} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", position: "absolute", inset: 0 }}  loading="lazy" decoding="async"/>
               </div>
             </FadeIn>
           </div>
@@ -355,7 +355,7 @@ export default function TutoringPage() {
               ))}
               {/* image cell */}
                <div style={{ background: C.ink, overflow: "hidden", position: "relative", minHeight: 180 }}>
-                <img src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567168548_LclcFm8NLFa9DMy3nwiUQO4uTWg.webp" alt="" onError={e => e.currentTarget.style.display="none"} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", position: "absolute", inset: 0 }}  loading="lazy" decoding="async"/>
+                <img src="https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1782567168548_LclcFm8NLFa9DMy3nwiUQO4uTWg.webp" alt="" onError={e => e.currentTarget.style.display="none"} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", position: "absolute", inset: 0 }}  loading="lazy" decoding="async"/>
               </div>
             </div>
           </FadeIn>
@@ -365,7 +365,7 @@ export default function TutoringPage() {
       {/* ══ 4. COMPARISON ══ */}
       <section style={{ position: "relative", padding: "96px clamp(24px,7vw,112px)", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, zIndex: 0, background: C.ink }} />
-        <img src="https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567186877_tutoring_FAQ.webp" alt="" onError={e => e.currentTarget.style.display="none"} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0, opacity: 0.18 }}  loading="lazy" decoding="async"/>
+        <img src="https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1782567186877_tutoring_FAQ.webp" alt="" onError={e => e.currentTarget.style.display="none"} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0, opacity: 0.18 }}  loading="lazy" decoding="async"/>
         <div style={{ position: "absolute", inset: 0, zIndex: 1, background: "rgba(14,14,14,0.7)" }} />
         <div style={{ position: "relative", zIndex: 2, maxWidth: 1280, margin: "0 auto" }}>
         <FadeIn>

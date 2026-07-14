@@ -21,8 +21,8 @@ const IFRAME_HEAD = `
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;350;400;450;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
-    @font-face { font-family: 'Fraunces'; font-style: normal; font-weight: 300 400; font-display: swap; src: url('https://zmiftah.tech/fonts/fr-n-latin.woff2') format('woff2'); }
-    @font-face { font-family: 'Fraunces'; font-style: italic; font-weight: 300 400; font-display: swap; src: url('https://zmiftah.tech/fonts/fr-i-latin.woff2') format('woff2'); }
+    @font-face { font-family: 'Fraunces'; font-style: normal; font-weight: 300 400; font-display: swap; src: url('https://addededucation.com/fonts/fr-n-latin.woff2') format('woff2'); }
+    @font-face { font-family: 'Fraunces'; font-style: italic; font-weight: 300 400; font-display: swap; src: url('https://addededucation.com/fonts/fr-i-latin.woff2') format('woff2'); }
     * { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; background: #0E0E0E; }
     body { -webkit-font-smoothing: antialiased; }

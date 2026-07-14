@@ -30,12 +30,12 @@ const IFRAME_HEAD = `
     @font-face {
       font-family: 'Fraunces';
       font-style: normal; font-weight: 300 400; font-display: swap;
-      src: url('https://zmiftah.tech/fonts/fr-n-latin.woff2') format('woff2');
+      src: url('https://addededucation.com/fonts/fr-n-latin.woff2') format('woff2');
     }
     @font-face {
       font-family: 'Fraunces';
       font-style: italic; font-weight: 300 400; font-display: swap;
-      src: url('https://zmiftah.tech/fonts/fr-i-latin.woff2') format('woff2');
+      src: url('https://addededucation.com/fonts/fr-i-latin.woff2') format('woff2');
     }
     * { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; background: #0E0E0E; }

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import Navbar from "../../../components/Navbar"
 
-const API_BASE = "https://zmiftah.tech/addedapi"
+const API_BASE = "https://addededucation.com/addedapi"
 
 /* ── Palette ── */
 const C = {
@@ -507,7 +507,7 @@ const CSS = `
 .rp-hero{
   background:#0E0E0E;padding-bottom:96px;position:relative;overflow:hidden;
 }
-.rp-hero-bg{position:absolute;inset:0;background-image:url('https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1783857011389_Sq0fVwapXpWCFsRg5tWq2lTG0I.webp');background-size:cover;background-position:center 30%;background-repeat:no-repeat;}
+.rp-hero-bg{position:absolute;inset:0;background-image:url('https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1782567170150_Stand_Out.webp');background-size:cover;background-position:center 30%;background-repeat:no-repeat;}
 .rp-hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(14,14,14,0.6) 0%,rgba(14,14,14,0.75) 50%,rgba(14,14,14,0.96) 100%);}
 
 /* ── FILTER INLINE (inside article section) ── */

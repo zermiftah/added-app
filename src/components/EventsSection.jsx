@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState } from "react"
 import { formatWebinarTime } from "features/user/webinarLanding/themeShared"
 
-const API_BASE = "https://zmiftah.tech/addedapi"
+const API_BASE = "https://addededucation.com/addedapi"
 
 function formatDateRange(w) {
   if (w.webinar_date) return w.webinar_date

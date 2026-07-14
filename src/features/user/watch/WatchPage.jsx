@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react"
 import { useParams } from "react-router-dom"
 
-const LOGO_URL = "https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782570954773_Horizontal___Maroon.webp"
-const API_BASE = "https://zmiftah.tech/addedapi"
+const LOGO_URL = "https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1782570954773_Horizontal___Maroon.webp"
+const API_BASE = "https://addededucation.com/addedapi"
 
 function extractYouTubeId(url) {
   if (!url) return null

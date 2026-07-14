@@ -15,7 +15,7 @@ import { COUNTRY_TIMEZONES } from "lib/countryTimezones"
 async function uploadToMedia(file, token) {
   const fd = new FormData()
   fd.append("file", file)
-  const baseUrl = "https://zmiftah.tech"
+  const baseUrl = "https://addededucation.com"
   const res = await fetch(`${baseUrl}/addedapi/assets/upload`, {
     method: "POST",
     headers: { Authorization: `Bearer ${token}` },
@@ -884,7 +884,7 @@ function PageEditor({ pageId, token, onBack, onSaved, onError }) {
         <Field
           label="Slug"
           error={slugMsg?.type === "err" ? slugMsg.text : null}
-          hint={slugMsg?.type === "ok" ? slugMsg.text : (slugMsg?.type === "info" ? slugMsg.text : "Lowercase letters, numbers, hyphens only. e.g. uk-nus → https://zmiftah.tech/uk-nus")}
+          hint={slugMsg?.type === "ok" ? slugMsg.text : (slugMsg?.type === "info" ? slugMsg.text : "Lowercase letters, numbers, hyphens only. e.g. uk-nus → https://addededucation.com/uk-nus")}
         >
           <div className="flex items-center gap-2">
             <span className="text-[12px] text-gray-400 font-mono">/</span>

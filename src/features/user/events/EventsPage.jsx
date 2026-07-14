@@ -3,7 +3,7 @@ import Navbar from "../../../components/Navbar"
 import Footer from "../../../components/Footer"
 import { formatWebinarTime } from "../webinarLanding/themeShared"
 
-const API_BASE = "https://zmiftah.tech/addedapi"
+const API_BASE = "https://addededucation.com/addedapi"
 
 const C = {
   cream: "#FBFBFD", creamSoft: "#F5F5F7", creamWarm: "#F0EFEA",
@@ -413,7 +413,7 @@ const CSS = `
 .ev-hero-bg {
   position: absolute;
   inset: 0;
-  background-image: url('https://zmiftah.tech/addedapi/uploads/addededucation-assets/asset_1782567334679_vRwqcjkjJJvZusEeq6lojyQAW3s.webp');
+  background-image: url('https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1782567334679_vRwqcjkjJJvZusEeq6lojyQAW3s.webp');
   background-size: cover;
   background-position: center top;
   background-repeat: no-repeat;

@@ -3,7 +3,7 @@ import { Link, useSearchParams, useNavigate } from "react-router-dom"
 import { motion } from "framer-motion"
 import Navbar from "../../../components/Navbar"
 
-const API_BASE = "https://zmiftah.tech/addedapi"
+const API_BASE = "https://addededucation.com/addedapi"
 const LIST_PATH = "/resources"
 
 /* ══════════════════════════════════
