@@ -350,7 +350,7 @@ export default function AboutPage() {
         <div style={{ position: "absolute", inset: 0, zIndex: 1, background: "linear-gradient(to bottom, rgba(14,14,14,0.30) 0%, rgba(14,14,14,0.65) 100%)" }} />
         <div style={{ position: "absolute", inset: 0, zIndex: 0, background: "linear-gradient(135deg,#1a1a1a 0%,#2a2a2a 100%)" }} />
         <img
-          src="https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1782567186493_hero.webp"
+          src="https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1783813160328_i3QfApi6KpNwVEAPpTBZ6wQT5cA.webp"
           alt=""
           onError={e => e.currentTarget.style.display = "none"}
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top", zIndex: 0 }}
@@ -426,7 +426,7 @@ export default function AboutPage() {
               </p>
               <div style={{ borderRadius: 14, overflow: "hidden", aspectRatio: "4/3", background: "#2a2a2a" }}>
                 <img
-                  src="https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1782567184030_beyond.webp"
+                  src="https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1783813239285_udvatWTmLPUK1h7VUNdj5WlaaX4.webp"
                   alt=""
                   onError={e => e.currentTarget.style.display = "none"}
                   style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
@@ -485,7 +485,7 @@ export default function AboutPage() {
           {/* Right: image */}
           <div style={{ borderRadius: 16, overflow: "hidden", aspectRatio: "3/4", background: C.creamWarm, position: "sticky", top: 80 }}>
             <img
-              src="https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1782567184062_form.webp"
+              src="https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1783813247270_OY8u1CRSndxY6gJPNUASRegbUTg.webp"
               alt=""
               onError={e => e.currentTarget.style.display = "none"}
               style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}

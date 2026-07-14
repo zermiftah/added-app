@@ -15,6 +15,14 @@ import AddedArtsPage     from "features/user/programs/AddedArtsPage"
 import TutoringPage      from "features/user/programs/TutoringPage"
 import ResearchPage      from "features/user/programs/ResearchPage"
 import AthleticPage      from "features/user/programs/AthleticPage"
+import HkBrandAwarenessPage   from "features/user/brandAwareness/HkBrandAwarenessPage"
+import UkBrandAwarenessPage   from "features/user/brandAwareness/UkBrandAwarenessPage"
+import IndiaBrandAwarenessPage from "features/user/brandAwareness/IndiaBrandAwarenessPage"
+import IndoBrandAwarenessPage  from "features/user/brandAwareness/IndoBrandAwarenessPage"
+import PhBrandAwarenessPage    from "features/user/brandAwareness/PhBrandAwarenessPage"
+import SgBrandAwarenessPage    from "features/user/brandAwareness/SgBrandAwarenessPage"
+import UaeBrandAwarenessPage   from "features/user/brandAwareness/UaeBrandAwarenessPage"
+import DiagnosticTestPage      from "features/user/diagnostic/DiagnosticTestPage"
 import AboutPage         from "features/user/about/AboutPage"
 import YourTeamPage      from "features/user/team/YourTeamPage"
 import WatchPage         from "features/user/watch/WatchPage"
@@ -73,6 +81,15 @@ export default function App() {
             <Route path="/added-admin"           element={<AddedAdmin />} />
             {/* Watch recording page */}
             <Route path="/watch/:token"          element={<WatchPage />} />
+
+            <Route path="/hk-brand-awareness"    element={<HkBrandAwarenessPage />} />
+            <Route path="/uk-brand-awareness"    element={<UkBrandAwarenessPage />} />
+            <Route path="/india-brand-awareness" element={<IndiaBrandAwarenessPage />} />
+            <Route path="/indo-brand-awareness"  element={<IndoBrandAwarenessPage />} />
+            <Route path="/ph-brand-awareness"    element={<PhBrandAwarenessPage />} />
+            <Route path="/sg-brand-awareness"    element={<SgBrandAwarenessPage />} />
+            <Route path="/uae-brand-awareness"   element={<UaeBrandAwarenessPage />} />
+            <Route path="/diagnostic-test"       element={<DiagnosticTestPage />} />
             {/* Catch-all for webinar landing slugs — keep this LAST */}
             <Route path="/:slug"                 element={<WebinarLandingPage />} />
           </Routes>

@@ -468,7 +468,7 @@ export default function ContactSection({
               style={{ background: "#E8E4DC", minHeight: 600 }}
             >
               <img
-                src="https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1782568975008_hWfYRPyqK5zWooV419AVB4Oxw.webp"
+                src="https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1783856816968_hWfYRPyqK5zWooV419AVB4Oxw.webp"
                 alt=""
                 loading="lazy"
                 decoding="async"

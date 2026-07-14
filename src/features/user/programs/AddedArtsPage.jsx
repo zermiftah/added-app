@@ -277,31 +277,77 @@ select.aa-form-input option{background:#1A1A1A;color:#fff;}
 .aa-card:hover{transform:translateY(-4px);box-shadow:0 16px 36px rgba(14,14,14,0.08);}
 .aa-result-row{display:grid;grid-template-columns:280px 1fr;gap:32px;align-items:center;}
 @media(max-width:700px){.aa-result-row{grid-template-columns:1fr;gap:10px;}}
+
+/* Hero-specific responsive tweaks */
+.aa-hero{padding:180px 0 120px;}
+@media(max-width:900px){.aa-hero{padding:140px 0 90px;}}
+@media(max-width:560px){.aa-hero{padding:120px 0 70px;}}
+.aa-hero-fig{display:flex;}
+@media(max-width:640px){.aa-hero-fig{display:none;}}
       `}</style>
 
       <Navbar />
 
       {/* ══ 1. HERO ══ */}
-      <section style={{ background: C.ink, padding: "120px 0 80px", position: "relative", overflow: "hidden" }}>
-        <img src="https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1782567149883_Hero_Art.webp" alt="" onError={e => e.currentTarget.style.display = "none"} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0, opacity: 0.35 }} fetchpriority="high" loading="eager" decoding="async"/>
-   
-        <div style={{ position: "absolute", top: -120, right: -120, width: 500, height: 500, borderRadius: "50%", background: `radial-gradient(circle, ${C.maroon}18 0%, transparent 65%)`, pointerEvents: "none", zIndex: 1 }} />
+      <section className="aa-hero" style={{ background: C.ink, position: "relative", overflow: "hidden" }}>
+        {/* Background image */}
+        <img
+          src="https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1783815334657_oiHtA6P9M6jw4gClIPCJoqv5c__1_.webp"
+          alt=""
+          onError={e => e.currentTarget.style.display = "none"}
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 20%", zIndex: 0, opacity: 1 }}
+          fetchpriority="high" loading="eager" decoding="async"
+        />
+
+        {/* Left→right readability gradient — only the left ~55% (where text sits) darkens; right side stays clear so the image reads */}
+        <div style={{
+          position: "absolute", inset: 0, zIndex: 1,
+          background: `linear-gradient(90deg, ${C.ink} 0%, ${C.ink}E6 18%, ${C.ink}B3 32%, ${C.ink}55 46%, ${C.ink}1A 58%, transparent 68%)`,
+        }} />
+        {/* Faint edge vignette on the far right so it doesn't cut off abruptly */}
+        <div style={{
+          position: "absolute", inset: 0, zIndex: 1,
+          background: `linear-gradient(90deg, transparent 88%, ${C.ink}55 100%)`,
+        }} />
+        {/* Top/bottom vignette for depth — kept light so image stays visible */}
+        <div style={{
+          position: "absolute", inset: 0, zIndex: 1,
+          background: `linear-gradient(180deg, ${C.ink}B3 0%, transparent 20%, transparent 76%, ${C.ink}CC 100%)`,
+        }} />
+
+        {/* Decorative radial glow */}
+        <div style={{ position: "absolute", top: -140, right: -140, width: 560, height: 560, borderRadius: "50%", background: `radial-gradient(circle, ${C.maroon}22 0%, transparent 65%)`, pointerEvents: "none", zIndex: 1 }} />
+
+        {/* Editorial "Fig." caption, bottom right — matches Challenges section convention */}
+        <div className="aa-hero-fig" style={{
+          position: "absolute", bottom: 40, right: "clamp(24px,7vw,120px)", zIndex: 2,
+          alignItems: "center", gap: 10,
+        }}>
+          <span style={{ width: 24, height: 1, background: "rgba(255,255,255,0.3)" }} />
+          <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 10, letterSpacing: "0.15em", textTransform: "uppercase", color: "rgba(255,255,255,0.4)" }}>
+            Fig. 01 — Portrait Study
+          </span>
+        </div>
+
         <div className="aaw" style={{ position: "relative", zIndex: 2 }}>
           <Reveal>
-            <Label light>AddedArt · The Creative Arts Division of AddedEducation</Label>
+            <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 20 }}>
+              <span style={{ width: 28, height: 2, background: C.accent, borderRadius: 2 }} />
+              <Label light>AddedArt · The Creative Arts Division of AddedEducation</Label>
+            </div>
           </Reveal>
           <Reveal delay={50}>
-            <h1 style={{ fontFamily: "'Fraunces',serif", fontSize: "clamp(36px,5.5vw,62px)", fontWeight: 400, color: "#fff", lineHeight: 1.08, maxWidth: 720, letterSpacing: "-0.01em" }}>
+            <h1 style={{ fontFamily: "'Fraunces',serif", fontSize: "clamp(38px,6vw,68px)", fontWeight: 400, color: "#fff", lineHeight: 1.06, maxWidth: 760, letterSpacing: "-0.015em" }}>
               Cultivating the next generation of creative thinkers and makers.
             </h1>
           </Reveal>
           <Reveal delay={100}>
-            <p style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 18, color: "rgba(255,255,255,0.6)", lineHeight: 1.7, maxWidth: 580, marginTop: 24, marginBottom: 36 }}>
+            <p style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 18, color: "rgba(255,255,255,0.62)", lineHeight: 1.75, maxWidth: 580, marginTop: 28, marginBottom: 40, borderLeft: `2px solid ${C.accent}55`, paddingLeft: 20 }}>
               AddedArt helps students discover their unique artistic voice, produce exceptional work, and build portfolios that open doors to world-class opportunities.
             </p>
           </Reveal>
           <Reveal delay={150}>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 36 }}>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 44 }}>
               {["🎨 Art · Design · Architecture · Media", "🎓 Portfolio & supplemental portfolio", "🌐 Online, global cohorts", "✦ Four distinct programmes"].map(t => (
                 <span key={t} style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 12, color: "rgba(255,255,255,0.65)", background: "rgba(255,255,255,0.06)", border: `1px solid ${C.borderLight}`, borderRadius: 100, padding: "7px 14px" }}>{t}</span>
               ))}
@@ -315,18 +361,24 @@ select.aa-form-input option{background:#1A1A1A;color:#fff;}
           </Reveal>
           {/* School logos */}
           <Reveal delay={250}>
-            <div style={{ marginTop: 64, display: "flex", flexWrap: "wrap", gap: 32, paddingTop: 18, borderTop: `1px solid ${C.borderLight}`, alignItems: "center" }}>
-              {SCHOOL_LOGOS.map(name => (
-                <div key={name} style={{ display: "flex", alignItems: "center", justifyContent: "center", opacity: 0.55 }}>
-                  <img
-                    src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(name)}&backgroundColor=f0ede8`}
-                    alt={name}
-                    style={{ height: 28, objectFit: "contain", display: "block" }}
-                    onError={e => { e.currentTarget.style.display = "none"; e.currentTarget.nextSibling.style.display = "block" }}
-                   loading="lazy" decoding="async"/>
-                  <span style={{ display: "none", fontFamily: "'Fraunces',serif", fontStyle: "italic", fontSize: 17, color: "rgba(255,255,255,0.4)" }}>{name}</span>
-                </div>
-              ))}
+            <div style={{ marginTop: 80 }}>
+              <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", marginBottom: 20 }}>
+                Trusted admissions outcomes at
+              </p>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 32, paddingTop: 18, borderTop: `1px solid ${C.borderLight}`, alignItems: "center" }}>
+                {SCHOOL_LOGOS.map(name => (
+                  <div key={name} style={{ display: "flex", alignItems: "center", justifyContent: "center", opacity: 0.55 }}>
+                    <img
+                      src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(name)}&backgroundColor=f0ede8`}
+                      alt={name}
+                      style={{ height: 28, objectFit: "contain", display: "block" }}
+                      onError={e => { e.currentTarget.style.display = "none"; e.currentTarget.nextSibling.style.display = "block" }}
+                      loading="lazy" decoding="async"
+                    />
+                    <span style={{ display: "none", fontFamily: "'Fraunces',serif", fontStyle: "italic", fontSize: 17, color: "rgba(255,255,255,0.4)" }}>{name}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </Reveal>
         </div>

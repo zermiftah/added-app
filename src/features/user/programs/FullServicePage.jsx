@@ -340,7 +340,7 @@ export default function FullServicePage() {
         <div style={{ position: "absolute", inset: 0, zIndex: 1, background: "linear-gradient(to bottom, rgba(14,14,14,0.35) 0%, rgba(14,14,14,0.70) 100%)" }} />
         <div style={{ position: "absolute", inset: 0, zIndex: 0, background: "linear-gradient(135deg,#1a1a1a 0%,#2a2a2a 100%)" }} />
         <img
-          src="https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1782567182758_admission_hero.webp"
+          src="https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1783815142127_b8q3NTrhRGcCoalSCbjuwrO7o.webp"
           alt=""
           onError={e => e.currentTarget.style.display = "none"}
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0 }}

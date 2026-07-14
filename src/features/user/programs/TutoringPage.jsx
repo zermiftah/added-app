@@ -283,7 +283,7 @@ export default function TutoringPage() {
       <section style={{ position: "relative", minHeight: 540, display: "flex", alignItems: "flex-end", overflow: "hidden", background: C.ink }}>
         <div style={{ position: "absolute", inset: 0, zIndex: 0, background: `linear-gradient(135deg, ${C.inkSoft} 0%, #1a1a1a 60%, ${C.maroon}30 100%)` }} />
         <img
-          src="https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1782567169326_hero_tutoring.webp"
+          src="https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1783856362771_tHjQDoq295dCxsgmBLFAJqQI.webp"
           alt=""
           onError={e => e.currentTarget.style.display = "none"}
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0 }}

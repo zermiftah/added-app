@@ -185,7 +185,7 @@ const styles = `
 @keyframes cl-pulse { 0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.65);} }
 
 .cl-hero { position:relative;overflow:hidden;background:#0E0E0E;color:#fff;padding-bottom:96px; }
-.cl-hero-bg { position:absolute;inset:0;background-image:url('https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1782567169027_aqQAEBeYi3Kvp6OTolc2dhkyME.webp');background-size:cover;background-position:center top;background-repeat:no-repeat; }
+.cl-hero-bg { position:absolute;inset:0;background-image:url('https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1783999565431_ChatGPT_Image_Jun_2__2026__02_44_33_PM.webp');background-size:cover;background-position:center top;background-repeat:no-repeat; }
 .cl-hero-overlay { position:absolute;inset:0;background:linear-gradient(to bottom,rgba(14,14,14,0.55) 0%,rgba(14,14,14,0.72) 50%,rgba(14,14,14,0.95) 100%); }
 .cl-hero-glow { position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(200,53,75,.12) 0%,transparent 65%);top:-120px;right:-80px;pointer-events:none; }
 .cl-hero-grid { position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:72px 72px;pointer-events:none;mask-image:linear-gradient(to bottom,transparent,black 20%,black 80%,transparent);-webkit-mask-image:linear-gradient(to bottom,transparent,black 20%,black 80%,transparent); }
@@ -254,4 +254,5 @@ const styles = `
 .cl-step-desc { font-family:'Inter',sans-serif;font-size:14px;color:rgba(255,255,255,.40);line-height:1.7;font-weight:350; }
 
 @media(max-width:640px){.cl-grid{grid-template-columns:1fr;}.cl-h1{font-size:clamp(28px,8vw,44px);}.cl-hero-inner{padding-top:100px;}.cl-section-inner{padding:72px 24px;}}
+@media(max-width:400px){.cl-hero-inner{padding-top:88px;}.cl-section-inner{padding:56px 18px;}.cl-card-body{padding:16px 18px;}.cl-card-footer{padding:0 18px 16px;}.cl-step{gap:20px;}.cl-filter-row{gap:6px;}.cl-pill{padding:7px 14px;font-size:12px;}}
 `

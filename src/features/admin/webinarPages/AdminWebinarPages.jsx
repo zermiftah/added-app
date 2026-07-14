@@ -147,7 +147,7 @@ function TimePicker({ value, onChange }) {
 // ============================================================
 // Rich-content section editor (paragraph | list)
 // ============================================================
-function ContentEditor({ value, onChange, label }) {
+function ContentEditor({ value, onChange, label, showMeta = true }) {
   const v = value || { title: "", subtitle: "", type: "paragraph", body: "" }
 
   const setF = (k, val) => onChange({ ...v, [k]: val })
@@ -169,6 +169,7 @@ function ContentEditor({ value, onChange, label }) {
     <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
       <p className="text-[12px] font-semibold text-gray-700 mb-3">{label}</p>
 
+      {showMeta && (<>
       <Field label="Section title">
         <input value={v.title || ""} onChange={e => setF("title", e.target.value)} className={inputCls} placeholder="e.g. Why you need this" />
       </Field>
@@ -176,6 +177,7 @@ function ContentEditor({ value, onChange, label }) {
       <Field label="Subtitle">
         <input value={v.subtitle || ""} onChange={e => setF("subtitle", e.target.value)} className={inputCls} placeholder="Short intro line under the title" />
       </Field>
+      </>)}
 
       <Field label="Content type">
         <div className="flex gap-2">
@@ -542,6 +544,7 @@ export default function AdminWebinarPages() {
 
   if (view.mode === "results") {
     return <AdminRegistrants
+      pageId={view.id}
       slug={view.slug}
       title={view.title}
       onBack={() => setView({ mode: "list", id: null, slug: null, title: null })}
@@ -705,6 +708,7 @@ function PageEditor({ pageId, token, onBack, onSaved, onError }) {
     zoom_link:         "",
     zoom_meeting_id:   "",
     zoom_passcode:     "",
+    send_confirmation_email: true,
     reject_rules: { curriculum: [], grade: [] },
     status: "published",
   })
@@ -748,6 +752,7 @@ function PageEditor({ pageId, token, onBack, onSaved, onError }) {
           zoom_link:         p.zoom_link         || "",
           zoom_meeting_id:   p.zoom_meeting_id   || "",
           zoom_passcode:     p.zoom_passcode     || "",
+          send_confirmation_email: p.send_confirmation_email !== 0,
           reject_rules: p.reject_rules || { curriculum: [], grade: [] },
           status: p.status || "published",
         })
@@ -819,6 +824,7 @@ function PageEditor({ pageId, token, onBack, onSaved, onError }) {
       fd.append("zoom_link",          form.zoom_link        || "")
       fd.append("zoom_meeting_id",    form.zoom_meeting_id  || "")
       fd.append("zoom_passcode",      form.zoom_passcode    || "")
+      fd.append("send_confirmation_email", String(!!form.send_confirmation_email))
       fd.append("status", form.status)
 
       // Speakers: send array as JSON; photos sent as `speaker_photo_N`
@@ -1055,7 +1061,7 @@ function PageEditor({ pageId, token, onBack, onSaved, onError }) {
           <Field label="Description (short paragraph)">
             <textarea rows={2} value={form.why_families_data.description || ""} onChange={e => setF("why_families_data", { ...form.why_families_data, description: e.target.value })} className={`${inputCls} resize-y`} placeholder="Families across London, Dubai, Singapore, and Hong Kong have trusted us..." />
           </Field>
-          <ContentEditor value={form.why_families_data} onChange={v => setF("why_families_data", v)} label="Details" />
+          <ContentEditor value={form.why_families_data} onChange={v => setF("why_families_data", v)} label="Details" showMeta={false} />
         </div>
       </Section>
       </>)}
@@ -1078,6 +1084,22 @@ function PageEditor({ pageId, token, onBack, onSaved, onError }) {
           <Field label="Meeting ID"><input value={form.zoom_meeting_id} onChange={e => setF("zoom_meeting_id", e.target.value)} placeholder="123 456 7890" className={inputCls} /></Field>
           <Field label="Passcode"><input value={form.zoom_passcode} onChange={e => setF("zoom_passcode", e.target.value)} placeholder="abc123" className={inputCls} /></Field>
         </div>
+        <label className="flex items-center gap-3 mt-4 p-3 rounded-lg border border-gray-200 bg-gray-50 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={form.send_confirmation_email}
+            onChange={e => setF("send_confirmation_email", e.target.checked)}
+            className="w-4 h-4 accent-[#0E0E0E]"
+          />
+          <div>
+            <p className="text-[13px] font-medium text-gray-900">Send push notification email on registration</p>
+            <p className="text-[11px] text-gray-500 mt-0.5">
+              {form.send_confirmation_email
+                ? "On — registrants get an automatic confirmation email with these Zoom details right after they submit the form."
+                : "Off — no email is sent when someone registers on this page. Use this if the Zoom link isn't ready yet, or you'd rather notify people manually."}
+            </p>
+          </div>
+        </label>
       </Section>
 
       {/* REJECT */}

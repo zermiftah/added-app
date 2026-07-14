@@ -130,7 +130,6 @@ function NavLink({ link, isActive }) {
   return (
     <Link
       to={link.href}
-      onMouseEnter={handleEnter}
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
       style={{
@@ -290,9 +289,20 @@ export default function Navbar() {
         </button>
       </nav>
 
-      {/* Mobile menu */}
-      {menuOpen && (
-        <div className="lg:hidden bg-ink border-t border-white/10 px-6 py-6 flex flex-col gap-4">
+      {/* Mobile menu — always mounted (not conditionally rendered) so the
+          open/close is a smooth height+opacity transition instead of an
+          instant pop-in/pop-out. */}
+      <div
+        className="lg:hidden overflow-hidden"
+        style={{
+          maxHeight: menuOpen ? 640 : 0,
+          opacity: menuOpen ? 1 : 0,
+          transition: "max-height 0.38s cubic-bezier(0.16,1,0.3,1), opacity 0.28s ease",
+          background: "#0E0E0E",
+          borderTop: menuOpen ? "1px solid rgba(255,255,255,0.1)" : "1px solid transparent",
+        }}
+      >
+        <div className="px-6 py-6 flex flex-col gap-4">
           {/* Our Programs accordion on mobile */}
           <div>
             <button aria-label="Toggle programs menu" onClick={() => setMobileProgOpen(o => !o)}
@@ -303,15 +313,20 @@ export default function Navbar() {
                 <path d="M1 1l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </button>
-            {mobileProgOpen && (
-              <div style={{ marginTop: 10, paddingLeft: 12, borderLeft: "2px solid rgba(200,53,75,0.4)", display: "flex", flexDirection: "column", gap: 8 }}>
+            <div style={{
+              maxHeight: mobileProgOpen ? 260 : 0,
+              opacity: mobileProgOpen ? 1 : 0,
+              overflow: "hidden",
+              transition: "max-height 0.32s cubic-bezier(0.16,1,0.3,1), opacity 0.24s ease",
+            }}>
+              <div style={{ marginTop: 10, paddingLeft: 12, borderLeft: "2px solid rgba(200,53,75,0.4)", display: "flex", flexDirection: "column", gap: 8, paddingBottom: 2 }}>
                 {PROGRAMS.map((p, i) => (
                   <Link key={i} to={p.href} style={{ fontFamily: "'Inter',sans-serif", fontSize: 13, color: "rgba(255,255,255,0.6)", textDecoration: "none" }}>
                     {p.label}
                   </Link>
                 ))}
               </div>
-            )}
+            </div>
           </div>
 
           {NAV_LINKS.filter(l => !l.hasDropdown).map((link) => (
@@ -323,7 +338,7 @@ export default function Navbar() {
             Get in touch
           </Link>
         </div>
-      )}
+      </div>
     </header>
   )
 }

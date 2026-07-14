@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react"
-import { API_BASE_URL } from "lib/api"
 import { createRegisterForWebinar } from "./registerForWebinar"
 
 // Must match the import map in index.html exactly — the compiled custom
@@ -11,7 +10,14 @@ import { createRegisterForWebinar } from "./registerForWebinar"
 const REACT_CDN     = "https://esm.sh/react@18.3.1"
 const REACT_DOM_CDN = "https://esm.sh/react-dom@18.3.1/client"
 
-const UPLOADS_BASE = API_BASE_URL.replace(/\/addedapi$/, "") + "/addedapi/uploads/"
+// Use the CURRENT page's own origin (not a hardcoded API_BASE_URL domain) —
+// nginx serves the exact same content across www/non-www and both the old
+// and new domain (see server_name in the nginx config), but the browser
+// still treats www.addededucation.com and addededucation.com as different
+// origins. A dynamic import() to a different origin needs CORS headers
+// that don't exist here, so we must always fetch from wherever the
+// visitor actually is right now.
+const UPLOADS_BASE = `${window.location.origin}/addedapi/uploads/`
 
 /**
  * Renders a Custom Code landing page. The compiled component is mounted as

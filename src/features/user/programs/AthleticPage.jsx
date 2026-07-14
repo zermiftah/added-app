@@ -12,7 +12,7 @@ const C = {
 
 /* Existing photo assets already on this page — reused across sections */
 const IMG = {
-  hero:      "https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1782569637577_ChatGPT_Image_Jun_27__2026__09_13_47_PM.webp",
+  hero:      "https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1783815240063_4HqncUNowLxlzxBUMoNmav5cVVw.webp",
   athleteA:  "https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1782567174666_AUz2BLwkpTIHYJiFse3sOCC8Yk.webp",
   athleteB:  "https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1782567174841_fKILhnpyIz6Ucwp5qZd70qfgF4.webp",
   athleteC:  "https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1782567173852_jPODV665keZha2lLPnOaEimvU.webp",

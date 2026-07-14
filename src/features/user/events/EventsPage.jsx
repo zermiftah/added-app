@@ -413,7 +413,7 @@ const CSS = `
 .ev-hero-bg {
   position: absolute;
   inset: 0;
-  background-image: url('https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1782567334679_vRwqcjkjJJvZusEeq6lojyQAW3s.webp');
+  background-image: url('https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1783857011389_Sq0fVwapXpWCFsRg5tWq2lTG0I.webp');
   background-size: cover;
   background-position: center top;
   background-repeat: no-repeat;

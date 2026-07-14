@@ -513,7 +513,7 @@ export default function GetInTouchPage() {
         <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.55)", zIndex: 1 }} />
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%)", zIndex: 0 }} />
         <img
-          src="https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1782567182705_8GcnRiF6LGYAU0IkaeGqyUADA5I.webp"
+          src="https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1783999966315_ChatGPT_Image_Jul_14__2026__10_32_35_AM.webp"
           alt=""
           onError={e => e.currentTarget.style.display = "none"}
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", zIndex: 0 }}
@@ -553,7 +553,7 @@ export default function GetInTouchPage() {
           <div style={{ padding: "24px", boxSizing: "border-box" }}>
             <div style={{ width: "100%", height: "100%", borderRadius: 20, overflow: "hidden", background: C.creamWarm, minHeight: 400, position: "relative" }}>
               <img
-                src="https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1782567186708_form.webp"
+                src="https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1783856617677_Rp4KC0SAKsxApEOn8xf07dywSM.webp"
                 alt=""
                 onError={e => e.currentTarget.style.display = "none"}
                 style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block" }}

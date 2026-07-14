@@ -12,7 +12,7 @@ const C = {
   border: "rgba(255,255,255,0.08)",
 }
 
-const HERO_BG = "https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1782640932634_Ma3Zar3CyfhdZE701tEZRDCZwm8.webp"
+const HERO_BG = "https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1783786662459_Ma3Zar3CyfhdZE701tEZRDCZwm8.webp"
 
 const photoUrl = (photo) => {
   if (!photo) return null

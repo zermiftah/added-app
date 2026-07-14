@@ -87,7 +87,186 @@ function formatDt(dt) {
   return date.toLocaleString("en-GB", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "UTC" }) + " UTC"
 }
 
-export default function AdminRegistrants({ slug, title, onBack }) {
+/* ── Bulk (page-wide) recording link — one link shared by every
+   registrant of this page, with its own expiry and a notify-everyone
+   email flow (all registrants, or a custom pasted list). ── */
+function BulkRecordingPanel({ pageId, slug, registrantCount, token, showToast }) {
+  const [page, setPage] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [editing, setEditing] = useState(false)
+  const [url, setUrl] = useState("")
+  const [hours, setHours] = useState(48)
+  const [saving, setSaving] = useState(false)
+  const [reactivating, setReactivating] = useState(false)
+  const [notifyOpen, setNotifyOpen] = useState(false)
+  const [notifyMode, setNotifyMode] = useState("all")
+  const [customEmails, setCustomEmails] = useState("")
+  const [sending, setSending] = useState(false)
+
+  const load = useCallback(async () => {
+    if (!pageId) return
+    setLoading(true)
+    try {
+      const r = await fetchData(`webinar-pages/${pageId}`, null, "GET", token)
+      setPage(r.page || r)
+      setUrl(r.page?.bulk_recording_youtube_url || r.bulk_recording_youtube_url || "")
+    } catch (e) {
+      // non-fatal — panel just won't show existing state
+    } finally {
+      setLoading(false)
+    }
+  }, [pageId, token])
+
+  useEffect(() => { load() }, [load])
+
+  const watchUrl = page?.bulk_recording_token ? `${BASE_URL}/watch/${page.bulk_recording_token}` : null
+  const isExpired = page?.bulk_recording_expires_at && new Date(page.bulk_recording_expires_at) < new Date()
+
+  const handleSetLink = async () => {
+    if (!url.trim()) { showToast("Enter a YouTube URL first", "error"); return }
+    setSaving(true)
+    try {
+      await fetchData(`webinar-pages/${pageId}/bulk-recording`, { youtube_url: url.trim(), expires_in_hours: hours }, "PUT", token)
+      showToast("Bulk watch link set", "success")
+      setEditing(false)
+      load()
+    } catch (e) {
+      showToast(e.message || "Failed to set link", "error")
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleReactivate = async () => {
+    setReactivating(true)
+    try {
+      await fetchData(`webinar-pages/${pageId}/bulk-recording/reactivate`, { expires_in_hours: 48 }, "POST", token)
+      showToast("Reactivated for 48 hours", "success")
+      load()
+    } catch (e) {
+      showToast(e.message || "Failed to reactivate", "error")
+    } finally {
+      setReactivating(false)
+    }
+  }
+
+  const handleNotify = async () => {
+    const emails = notifyMode === "custom"
+      ? customEmails.split(/[\n,]/).map(s => s.trim()).filter(Boolean)
+      : undefined
+    if (notifyMode === "custom" && !emails.length) { showToast("Paste at least one email", "error"); return }
+    setSending(true)
+    try {
+      const r = await fetchData(`webinar-pages/${pageId}/bulk-recording/send`, { mode: notifyMode, emails }, "POST", token)
+      showToast(r.message || "Sending…", "success")
+      setNotifyOpen(false)
+      setCustomEmails("")
+    } catch (e) {
+      showToast(e.message || "Failed to send", "error")
+    } finally {
+      setSending(false)
+    }
+  }
+
+  const copyLink = () => {
+    if (!watchUrl) return
+    navigator.clipboard?.writeText(watchUrl)
+    showToast("Link copied", "success")
+  }
+
+  if (loading) return null
+
+  return (
+    <div className="bg-white rounded-xl border border-gray-200 p-4 mb-4">
+      <div className="flex items-center justify-between mb-1">
+        <p className="text-[13px] font-semibold text-gray-900">🔗 Bulk watch link</p>
+        {page?.bulk_recording_token && (
+          <button onClick={() => setEditing(e => !e)} className="text-[11px] text-gray-500 hover:text-gray-800">
+            {editing ? "Cancel" : "Change link"}
+          </button>
+        )}
+      </div>
+      <p className="text-[11.5px] text-gray-500 mb-3">
+        One video link shared by everyone who registered for this page — instead of setting a recording per person.
+      </p>
+
+      {(!page?.bulk_recording_token || editing) ? (
+        <div className="flex flex-wrap items-end gap-2">
+          <div className="flex-1 min-w-[220px]">
+            <label className="block text-[11px] text-gray-500 mb-1">YouTube URL</label>
+            <input value={url} onChange={e => setUrl(e.target.value)} placeholder="https://youtube.com/watch?v=..." className="w-full px-3 py-2 rounded-lg border border-gray-200 text-[12.5px] focus:border-gray-900 focus:outline-none" />
+          </div>
+          <div>
+            <label className="block text-[11px] text-gray-500 mb-1">Expires in (hours)</label>
+            <input type="number" min="1" value={hours} onChange={e => setHours(e.target.value)} className="w-24 px-3 py-2 rounded-lg border border-gray-200 text-[12.5px] focus:border-gray-900 focus:outline-none" />
+          </div>
+          <button onClick={handleSetLink} disabled={saving} className="px-4 py-2 rounded-lg bg-[#0E0E0E] text-white text-[12px] font-semibold disabled:opacity-50">
+            {saving ? "Saving…" : "Set link"}
+          </button>
+        </div>
+      ) : (
+        <div className="flex flex-wrap items-center gap-2">
+          <code className="text-[11.5px] bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-gray-700 truncate max-w-[320px]">{watchUrl}</code>
+          <button onClick={copyLink} className="px-3 py-1.5 rounded-full border border-gray-200 text-[11px] font-semibold text-gray-700 hover:border-gray-400">Copy</button>
+          <span className={`text-[11px] px-2.5 py-1 rounded-full font-semibold ${isExpired ? "bg-red-50 text-red-600" : "bg-emerald-50 text-emerald-700"}`}>
+            {isExpired ? "Expired" : `Expires ${new Date(page.bulk_recording_expires_at).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}`}
+          </span>
+          {isExpired && (
+            <button onClick={handleReactivate} disabled={reactivating} className="px-3 py-1.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 text-[11px] font-semibold hover:bg-amber-100 disabled:opacity-50">
+              {reactivating ? "…" : "Reactivate 48h"}
+            </button>
+          )}
+          <button onClick={() => setNotifyOpen(true)} className="ml-auto px-4 py-1.5 rounded-full bg-[#C8354B] text-white text-[11.5px] font-semibold hover:bg-[#9E2538] transition-colors">
+            📧 Notify registrants
+          </button>
+          {page?.bulk_recording_sent_at && (
+            <span className="text-[11px] text-gray-400 w-full">
+              Last sent to {page.bulk_recording_sent_count ?? "—"} recipient(s) on {new Date(page.bulk_recording_sent_at).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
+            </span>
+          )}
+        </div>
+      )}
+
+      {/* Notify modal */}
+      {notifyOpen && (
+        <div className="fixed inset-0 z-[90] bg-black/40 flex items-center justify-center p-4" onClick={() => setNotifyOpen(false)}>
+          <div className="bg-white rounded-xl p-5 w-full max-w-md" onClick={e => e.stopPropagation()}>
+            <p className="text-[14px] font-semibold text-gray-900 mb-1">Notify registrants</p>
+            <p className="text-[11.5px] text-gray-500 mb-4">Sends the watch link by email. Safe for large lists — sent in the background in small batches.</p>
+
+            <div className="flex gap-2 mb-3">
+              <button onClick={() => setNotifyMode("all")} className={`flex-1 px-3 py-2 rounded-lg text-[12px] font-semibold ${notifyMode === "all" ? "bg-[#0E0E0E] text-white" : "bg-gray-100 text-gray-600"}`}>
+                All registrants ({registrantCount})
+              </button>
+              <button onClick={() => setNotifyMode("custom")} className={`flex-1 px-3 py-2 rounded-lg text-[12px] font-semibold ${notifyMode === "custom" ? "bg-[#0E0E0E] text-white" : "bg-gray-100 text-gray-600"}`}>
+                Custom emails
+              </button>
+            </div>
+
+            {notifyMode === "custom" && (
+              <textarea
+                rows={5}
+                value={customEmails}
+                onChange={e => setCustomEmails(e.target.value)}
+                placeholder="one@email.com, two@email.com&#10;or one per line"
+                className="w-full px-3 py-2 rounded-lg border border-gray-200 text-[12.5px] focus:border-gray-900 focus:outline-none resize-y mb-3"
+              />
+            )}
+
+            <div className="flex justify-end gap-2">
+              <button onClick={() => setNotifyOpen(false)} className="px-4 py-2 rounded-lg border border-gray-200 text-[12px]">Cancel</button>
+              <button onClick={handleNotify} disabled={sending} className="px-4 py-2 rounded-lg bg-[#C8354B] text-white text-[12px] font-semibold disabled:opacity-50">
+                {sending ? "Sending…" : "Send"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default function AdminRegistrants({ pageId, slug, title, onBack }) {
   const token = useAdminStore(s => s.token)
   const [registrants, setRegistrants] = useState([])
   const [webinarPlace, setWebinarPlace] = useState(null)
@@ -177,6 +356,8 @@ export default function AdminRegistrants({ slug, title, onBack }) {
         </div>
         <span className="ml-auto text-[12px] text-gray-500">{registrants.length} registrant{registrants.length !== 1 ? "s" : ""}</span>
       </div>
+
+      <BulkRecordingPanel pageId={pageId} slug={slug} registrantCount={registrants.length} token={token} showToast={showToast} />
 
       {loading ? (
         <div className="text-[13px] text-gray-400 py-20 text-center">Loading…</div>

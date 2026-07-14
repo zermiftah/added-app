@@ -507,7 +507,7 @@ const CSS = `
 .rp-hero{
   background:#0E0E0E;padding-bottom:96px;position:relative;overflow:hidden;
 }
-.rp-hero-bg{position:absolute;inset:0;background-image:url('https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1782567170150_Stand_Out.webp');background-size:cover;background-position:center 30%;background-repeat:no-repeat;}
+.rp-hero-bg{position:absolute;inset:0;background-image:url('https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1783857418075_F0na79PwmneI2gmJh1P3jEHDmEI.webp');background-size:cover;background-position:center 30%;background-repeat:no-repeat;}
 .rp-hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(14,14,14,0.6) 0%,rgba(14,14,14,0.75) 50%,rgba(14,14,14,0.96) 100%);}
 
 /* ── FILTER INLINE (inside article section) ── */
@@ -598,6 +598,12 @@ const CSS = `
   display:flex;align-items:center;gap:20px;padding:18px 24px;
   border-bottom:1px solid #F0EFEA;transition:background .2s;
 }
+@media(max-width:480px){
+  .rp-trending-row{gap:12px;padding:14px 16px;}
+  .rp-trending-num{min-width:24px;font-size:20px;}
+  .rp-trending-thumb,.rp-trending-thumb-empty{width:48px;height:36px;}
+  .rp-trending-views{display:none;}
+}
 .rp-trending-row:last-child{border-bottom:none;}
 .rp-trending-row:hover{background:#F5F5F7;}
 .rp-trending-num{font-family:'Fraunces',serif;font-size:28px;font-weight:400;color:#F0EFEA;line-height:1;min-width:40px;text-align:center;}
@@ -680,6 +686,7 @@ const CSS = `
 .rp-nl-title{font-family:'Fraunces',serif;font-size:clamp(26px,3.5vw,38px);font-weight:400;color:#fff;line-height:1.2;margin-bottom:14px;}
 .rp-nl-sub{font-family:'DM Sans',sans-serif;font-size:15px;color:rgba(255,255,255,.5);line-height:1.7;}
 .rp-nl-row{display:flex;gap:8px;margin-top:20px;}
+@media(max-width:480px){.rp-nl-row{flex-direction:column;}}
 .rp-nl-input{flex:1;padding:14px 20px;border:1.5px solid rgba(255,255,255,.15);border-radius:12px;background:rgba(255,255,255,.06);color:#fff;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color .2s;}
 .rp-nl-input::placeholder{color:rgba(255,255,255,.35);}
 .rp-nl-input:focus{border-color:#C8354B;}

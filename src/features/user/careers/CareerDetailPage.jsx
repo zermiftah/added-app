@@ -269,4 +269,5 @@ const styles = `
 
 @media(max-width:900px){.cd-hero-inner{grid-template-columns:1fr;gap:40px;}.cd-hero-right{order:-1;}.cd-img-wrap,.cd-img-placeholder{aspect-ratio:16/9;}.cd-body-inner{grid-template-columns:1fr;}.cd-sidebar{position:static;}}
 @media(max-width:600px){.cd-hero{padding-bottom:56px;}.cd-hero-inner{padding-top:60px;}.cd-title{font-size:clamp(28px,8vw,44px);}.cd-body{padding-top:56px;padding-bottom:72px;}.cd-cta{padding-top:72px;padding-bottom:72px;}}
+@media(max-width:400px){.cd-hero-inner{padding-left:18px;padding-right:18px;}.cd-body-inner{padding-left:18px;padding-right:18px;}.cd-tags{gap:6px;}}
 `

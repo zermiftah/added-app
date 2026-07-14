@@ -466,7 +466,7 @@ export default function ResearchPage() {
         <div style={{ position: "absolute", inset: 0, zIndex: 0, background: "linear-gradient(135deg, #1a1a1a 0%, #2d1a1e 100%)" }} />
         {/* image — zIndex: 0 (sama dengan fallback, render belakangan jadi di atas) */}
         <img
-          src="https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1782567170562_Research_Hero.webp"
+          src="https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1783857115641_zTgSiutkPyNYcwILaMmWVsMRTU.webp"
           alt=""
           onError={e => e.currentTarget.style.display = "none"}
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0 }}
@@ -528,7 +528,7 @@ export default function ResearchPage() {
           {/* Left: image */}
           <div style={{ borderRadius: 16, overflow: "hidden", aspectRatio: "4/3", background: "#1a1a1a" }}>
             <img
-              src="https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1782567170150_Stand_Out.webp"
+              src="https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1783857418075_F0na79PwmneI2gmJh1P3jEHDmEI.webp"
               alt="Library"
               style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
               onError={e => { e.currentTarget.parentElement.style.background = "linear-gradient(135deg,#1a1a1a,#2d1a1e)" }}
@@ -564,7 +564,7 @@ export default function ResearchPage() {
           <div style={{ position: "relative" }}>
             <div style={{ borderRadius: 14, overflow: "hidden", aspectRatio: "3/4", background: C.creamWarm }}>
               <img
-                src="https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1782567169027_aqQAEBeYi3Kvp6OTolc2dhkyME.webp"
+                src="https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1783857383802_aqQAEBeYi3Kvp6OTolc2dhkyME.webp"
                 alt=""
                 style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
                 onError={e => e.currentTarget.parentElement.style.background = C.creamWarm}

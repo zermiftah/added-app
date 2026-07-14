@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { key: "assets",     label: "Media Library",     icon: "🖼", group: "Media" },
   { key: "team",       label: "Team",              icon: "👤", group: "Media" },
   { key: "webinars",   label: "Landing Pages",     icon: "🎯", group: "Media" },
+  { key: "diagnostic", label: "Diagnostic Test",   icon: "🧭", group: "Media" },
 ]
 
 export default function AdminLayout({ children }) {

@@ -8,6 +8,7 @@ import AdminAuthors from "./authors/AdminAuthors"
 import AdminAssets from "./assets/AdminAssets"
 import AdminTeam            from "./team/AdminTeam"
 import AdminWebinarPages    from "./webinarPages/AdminWebinarPages"
+import AdminDiagnosticResults from "./diagnostic/AdminDiagnosticResults"
 
 export default function AddedAdmin() {
   const token     = useAdminStore(s => s.token)
@@ -24,6 +25,7 @@ export default function AddedAdmin() {
       {activeNav === "assets"      && <AdminAssets />}
       {activeNav === "team"        && <AdminTeam />}
       {activeNav === "webinars"    && <AdminWebinarPages />}
+      {activeNav === "diagnostic"  && <AdminDiagnosticResults />}
     </AdminLayout>
   )
 }
