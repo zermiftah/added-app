@@ -49,11 +49,11 @@ const ARCHETYPES = {
 }
 
 const SPIKE_ITEMS = [
-  { a: "builder", text: "Take something apart just to see how it really works" },
+  { a: "builder", text: "I enjoy opening up gadgets or toys just to see what's inside." },
   { a: "researcher", text: "Fall down a rabbit hole reading about one topic for hours" },
   { a: "creator", text: "Write a story, film, or track that no one asked you for" },
-  { a: "changemaker", text: "Run a group project so everyone actually pulls their weight" },
-  { a: "founder", text: "Pitch an idea to someone who could shut it down" },
+  { a: "changemaker", text: "When I run a group project, I make sure everyone pulls their weight." },
+  { a: "founder", text: "Pitch an idea to someone who is hard to convince" },
   { a: "specialist", text: "Drill the same skill daily until it's second nature" },
   { a: "builder", text: "Build or code something from scratch, even if it's messy" },
   { a: "researcher", text: "Design an experiment just to test a hunch" },
@@ -286,7 +286,7 @@ export default function DiagnosticTestPage() {
                   Every application tells a story. <em style={{ fontStyle: "italic", color: C.maroon }}>What does yours say?</em>
                 </h1>
                 <p style={{ fontSize: 15.5, lineHeight: 1.65, color: C.stone, margin: "0 0 26px" }}>
-                  Sixteen fast taps decode the <b style={{ color: C.ink, fontWeight: 600 }}>spike</b> hidden in your profile - the one signal top-20 admissions officers actually read for. You'll walk away knowing your type and the single move that would sharpen it.
+                  Sixteen fast taps decode the <b style={{ color: C.ink, fontWeight: 600 }}>spike</b> hidden in your profile - the one signal top-20 admissions officers actually read for. You'll walk away knowing your type and the real strategy that will help you get Ivy & Oxbridge ready.
                 </p>
                 <button onClick={start} style={{ display: "inline-flex", alignItems: "center", gap: 10, background: C.maroon, color: "#fff", border: "none", borderRadius: 10, padding: "15px 28px", fontFamily: sansFont, fontSize: 15, fontWeight: 600, letterSpacing: "0.01em", cursor: "pointer", boxShadow: "0 2px 8px rgba(104,24,24,0.25)" }}
                   onMouseEnter={(e) => e.currentTarget.style.background = C.maroon600}
@@ -371,12 +371,15 @@ export default function DiagnosticTestPage() {
                 <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
                   <button onClick={turnIntoPlan}
                     style={{ display: "inline-flex", alignItems: "center", gap: 9, background: C.maroon, color: "#fff", border: "none", borderRadius: 10, padding: "14px 24px", fontSize: 15, fontWeight: 600, cursor: "pointer", fontFamily: sansFont, boxShadow: "0 2px 8px rgba(104,24,24,0.25)" }}>
-                    Turn this into a plan →
+                    Book a Strategy Call →
                   </button>
                   <button onClick={retake} style={{ display: "inline-flex", alignItems: "center", background: "transparent", color: C.maroon, border: `1px solid ${C.maroon}`, borderRadius: 10, padding: "14px 22px", fontFamily: sansFont, fontSize: 15, fontWeight: 600, cursor: "pointer" }}>
                     Retake
                   </button>
                 </div>
+                <p style={{ fontFamily: sansFont, fontSize: 12.5, color: C.stone, marginTop: 12 }}>
+                  Request your Admissions Expert to help you book a call
+                </p>
               </div>
             )}
 

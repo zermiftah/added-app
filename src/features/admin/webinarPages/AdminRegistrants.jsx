@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useMemo } from "react"
 import { useAdminStore } from "stores/adminStore"
 import { fetchData, API_BASE_URL } from "lib/api"
 import { formatInPlaceTimezone, getTimezoneForPlace, getTzAbbr } from "lib/countryTimezones"
@@ -316,10 +316,58 @@ export default function AdminRegistrants({ pageId, slug, title, onBack }) {
   const [recModal, setRecModal]       = useState({ open: false, reg: null })
   const [sending, setSending]         = useState({})
   const [reactivating, setReactivating] = useState({})
+  const [selected, setSelected] = useState(() => new Set())
+  const [bulkSending, setBulkSending] = useState(false)
 
   const showToast = (msg, kind = "info") => {
     setToast({ msg, kind })
     setTimeout(() => setToast({ msg: "", kind: "info" }), 3000)
+  }
+
+  const isRegExpired = (dt) => {
+    if (!dt) return true
+    const iso = String(dt).trim().replace(" ", "T")
+    return new Date(iso.endsWith("Z") ? iso : iso + "Z") < new Date()
+  }
+
+  const selectableIds = useMemo(
+    () => registrants.filter(r => r.recording_token && !isRegExpired(r.recording_expires_at)).map(r => r.id),
+    [registrants]
+  )
+  const allSelected = selectableIds.length > 0 && selectableIds.every(id => selected.has(id))
+  const toggleAll = () => setSelected(allSelected ? new Set() : new Set(selectableIds))
+  const toggleOne = (id) => setSelected(prev => {
+    const next = new Set(prev)
+    next.has(id) ? next.delete(id) : next.add(id)
+    return next
+  })
+
+  const copySelectedLinks = () => {
+    const lines = registrants
+      .filter(r => selected.has(r.id) && r.recording_token)
+      .map(r => {
+        const name = [r.firstname, r.lastname].filter(Boolean).join(" ") || r.email
+        return `${name} - ${BASE_URL}/watch/${r.recording_token}`
+      })
+    if (!lines.length) { showToast("Nothing to copy", "error"); return }
+    navigator.clipboard?.writeText(lines.join("\n"))
+    showToast(`Copied ${lines.length} link(s)`, "success")
+  }
+
+  const sendSelected = async () => {
+    if (!selected.size) return
+    setBulkSending(true)
+    try {
+      const r = await fetchData("webinar-registrants/bulk-send", { ids: Array.from(selected) }, "POST", token)
+      showToast(r.message || "Sending…", "success")
+      const now = new Date().toISOString()
+      setRegistrants(prev => prev.map(x => selected.has(x.id) ? { ...x, recording_sent_at: now } : x))
+      setSelected(new Set())
+    } catch (e) {
+      showToast(e.message || "Failed to send", "error")
+    } finally {
+      setBulkSending(false)
+    }
   }
 
   const load = useCallback(async () => {
@@ -400,6 +448,26 @@ export default function AdminRegistrants({ pageId, slug, title, onBack }) {
 
       <BulkRecordingPanel pageId={pageId} slug={slug} registrantCount={registrants.length} token={token} showToast={showToast} onRegistrantsChanged={load} />
 
+      {selected.size > 0 && (
+        <div className="sticky top-0 z-40 bg-gray-900 text-white px-4 py-2.5 rounded-lg flex items-center gap-3 flex-wrap mb-3 shadow-lg">
+          <span className="text-[12.5px] font-semibold">{selected.size} selected</span>
+          <button onClick={copySelectedLinks} className="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-[12px] font-semibold transition-colors">
+            📋 Copy {selected.size} link{selected.size !== 1 ? "s" : ""}
+          </button>
+          <button
+            onClick={sendSelected}
+            disabled={bulkSending}
+            className="px-3.5 py-1.5 rounded-full bg-[#C8354B] hover:bg-[#9E2538] text-[12px] font-semibold transition-colors disabled:opacity-50"
+          >
+            {bulkSending ? "Sending…" : `✉️ Send Link to ${selected.size}`}
+          </button>
+          <button onClick={() => setSelected(new Set())} className="ml-auto text-[12px] text-white/60 hover:text-white underline">
+            Clear selection
+          </button>
+        </div>
+      )}
+
+
       {loading ? (
         <div className="text-[13px] text-gray-400 py-20 text-center">Loading…</div>
       ) : !registrants.length ? (
@@ -411,6 +479,9 @@ export default function AdminRegistrants({ pageId, slug, title, onBack }) {
           <table className="w-full text-[12px]">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
+                <th className="px-3 py-2.5 whitespace-nowrap">
+                  <input type="checkbox" checked={allSelected} onChange={toggleAll} className="w-4 h-4 accent-[#0E0E0E] cursor-pointer" title="Select all with an active link" />
+                </th>
                 <th className="text-left px-3 py-2.5 font-medium text-gray-600 whitespace-nowrap">Name</th>
                 <th className="text-left px-3 py-2.5 font-medium text-gray-600 whitespace-nowrap">Email</th>
                 <th className="text-left px-3 py-2.5 font-medium text-gray-600 whitespace-nowrap">Phone</th>
@@ -431,7 +502,17 @@ export default function AdminRegistrants({ pageId, slug, title, onBack }) {
                 const watchUrl = hasRec ? `${BASE_URL}/watch/${r.recording_token}` : null
 
                 return (
-                  <tr key={r.id} className="border-t border-gray-100 hover:bg-gray-50">
+                  <tr key={r.id} className={`border-t border-gray-100 hover:bg-gray-50 ${selected.has(r.id) ? "bg-gray-50" : ""}`}>
+                    <td className="px-3 py-2.5">
+                      <input
+                        type="checkbox"
+                        checked={selected.has(r.id)}
+                        disabled={!hasRec || expired}
+                        onChange={() => toggleOne(r.id)}
+                        className="w-4 h-4 accent-[#0E0E0E] cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+                        title={!hasRec ? "No watch link set" : expired ? "Expired" : "Select"}
+                      />
+                    </td>
                     <td className="px-3 py-2.5 font-medium text-gray-900 whitespace-nowrap">
                       {[r.firstname, r.lastname].filter(Boolean).join(" ") || "—"}
                     </td>

@@ -1,8 +1,6 @@
-import { useState, useEffect, useCallback } from "react"
-import { useAdminStore } from "stores/adminStore"
+import { useState, useEffect, useCallback, useMemo } from "react"
 import { fetchData } from "lib/api"
-import AdminLogin from "features/admin/auth/AdminLogin"
-import { formatInPlaceTimezone, getTimezoneForPlace, getTzAbbr } from "lib/countryTimezones"
+import { formatInPlaceTimezone } from "lib/countryTimezones"
 
 const BASE_URL = "https://addededucation.com"
 
@@ -27,18 +25,19 @@ function fmtPageDate(dt) {
   return new Date(dt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })
 }
 
+// No login on this page by design (sales team access) — every call below
+// hits an intentionally public endpoint, not an admin-gated one. The
+// pages filter uses a minimal public endpoint (slug/title/date only), not
+// the full admin page list, so nothing sensitive (HubSpot IDs, custom
+// code, etc.) leaks here.
 export default function WebinarRegistrantsPage() {
-  const token = useAdminStore(s => s.token)
-  if (!token) return <AdminLogin />
-  return <WebinarRegistrantsView token={token} />
-}
-
-function WebinarRegistrantsView({ token }) {
   const [pages, setPages] = useState([])
   const [slugFilter, setSlugFilter] = useState("")
   const [registrants, setRegistrants] = useState([])
   const [loading, setLoading] = useState(true)
   const [sending, setSending] = useState({})
+  const [bulkSending, setBulkSending] = useState(false)
+  const [selected, setSelected] = useState(() => new Set())
   const [toast, setToast] = useState({ msg: "", kind: "info" })
 
   const showToast = (msg, kind = "info") => {
@@ -48,25 +47,26 @@ function WebinarRegistrantsView({ token }) {
 
   const loadPages = useCallback(async () => {
     try {
-      const r = await fetchData("webinar-pages", null, "GET", token)
-      setPages((r.pages || []).filter(p => p.status === "published"))
+      const r = await fetchData("webinar-pages/public/for-registrants-filter", null, "GET")
+      setPages(r.pages || [])
     } catch {
       // non-fatal — filter dropdown just stays empty
     }
-  }, [token])
+  }, [])
 
   const loadRegistrants = useCallback(async () => {
     setLoading(true)
     try {
       const q = slugFilter ? `?slug=${encodeURIComponent(slugFilter)}` : ""
-      const r = await fetchData(`webinar-registrants${q}`, null, "GET", token)
+      const r = await fetchData(`webinar-registrants${q}`, null, "GET")
       setRegistrants(r.registrants || [])
+      setSelected(new Set())
     } catch (e) {
       showToast(e.message || "Failed to load registrants", "error")
     } finally {
       setLoading(false)
     }
-  }, [token, slugFilter])
+  }, [slugFilter])
 
   useEffect(() => { loadPages() }, [loadPages])
   useEffect(() => { loadRegistrants() }, [loadRegistrants])
@@ -74,23 +74,13 @@ function WebinarRegistrantsView({ token }) {
   const handleSend = async (reg) => {
     setSending(s => ({ ...s, [reg.id]: true }))
     try {
-      const r = await fetchData(`webinar-registrants/${reg.id}/send`, {}, "POST", token)
+      const r = await fetchData(`webinar-registrants/${reg.id}/send`, {}, "POST")
       showToast(r.message || `Link sent to ${reg.email}`, "success")
       setRegistrants(prev => prev.map(x => x.id === reg.id ? { ...x, recording_sent_at: new Date().toISOString() } : x))
     } catch (e) {
       showToast(e.message || "Failed to send", "error")
     } finally {
       setSending(s => ({ ...s, [reg.id]: false }))
-    }
-  }
-
-  const handleExpiryChange = async (reg, expiresIn) => {
-    try {
-      const r = await fetchData(`webinar-registrants/${reg.id}/reactivate`, { expires_in_hours: expiresIn }, "POST", token)
-      showToast(expiresIn === "never" ? "Set to never expire" : `Set to expire in ${expiresIn} hours`, "success")
-      setRegistrants(prev => prev.map(x => x.id === reg.id ? { ...x, recording_expires_at: r.recording_expires_at } : x))
-    } catch (e) {
-      showToast(e.message || "Failed to update expiry", "error")
     }
   }
 
@@ -107,6 +97,49 @@ function WebinarRegistrantsView({ token }) {
   // The bulk (page-wide) link only makes sense when one specific landing
   // page is selected — it's a property of the page, not of "all pages".
   const selectedPage = slugFilter ? pages.find(p => p.slug === slugFilter) : null
+
+  // ── Checkbox selection ──
+  const selectableIds = useMemo(
+    () => registrants.filter(r => r.recording_token && !isExpired(r.recording_expires_at)).map(r => r.id),
+    [registrants]
+  )
+  const allSelected = selectableIds.length > 0 && selectableIds.every(id => selected.has(id))
+  const toggleAll = () => setSelected(allSelected ? new Set() : new Set(selectableIds))
+  const toggleOne = (id) => setSelected(prev => {
+    const next = new Set(prev)
+    next.has(id) ? next.delete(id) : next.add(id)
+    return next
+  })
+
+  const selectedRegistrants = registrants.filter(r => selected.has(r.id))
+
+  const copySelectedLinks = () => {
+    const lines = selectedRegistrants
+      .filter(r => r.recording_token)
+      .map(r => {
+        const name = [r.firstname, r.lastname].filter(Boolean).join(" ") || r.email
+        return `${name} - ${BASE_URL}/watch/${r.recording_token}`
+      })
+    if (!lines.length) { showToast("Nothing to copy", "error"); return }
+    navigator.clipboard?.writeText(lines.join("\n"))
+    showToast(`Copied ${lines.length} link(s)`, "success")
+  }
+
+  const sendSelected = async () => {
+    if (!selected.size) return
+    setBulkSending(true)
+    try {
+      const r = await fetchData("webinar-registrants/bulk-send", { ids: Array.from(selected) }, "POST")
+      showToast(r.message || "Sending…", "success")
+      const now = new Date().toISOString()
+      setRegistrants(prev => prev.map(x => selected.has(x.id) ? { ...x, recording_sent_at: now } : x))
+      setSelected(new Set())
+    } catch (e) {
+      showToast(e.message || "Failed to send", "error")
+    } finally {
+      setBulkSending(false)
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -135,7 +168,7 @@ function WebinarRegistrantsView({ token }) {
           >
             <option value="">All landing pages ({registrants.length} shown)</option>
             {pages.map(p => (
-              <option key={p.id} value={p.slug}>
+              <option key={p.slug} value={p.slug}>
                 {p.slug}{p.date_start ? ` — ${fmtPageDate(p.date_start)}` : ""}
               </option>
             ))}
@@ -165,6 +198,26 @@ function WebinarRegistrantsView({ token }) {
         )}
       </div>
 
+      {/* Bulk action bar — only appears once something is checked */}
+      {selected.size > 0 && (
+        <div className="sticky top-0 z-40 bg-gray-900 text-white px-6 md:px-10 py-3 flex items-center gap-3 flex-wrap shadow-lg">
+          <span className="text-[12.5px] font-semibold">{selected.size} selected</span>
+          <button onClick={copySelectedLinks} className="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-[12px] font-semibold transition-colors">
+            📋 Copy {selected.size} link{selected.size !== 1 ? "s" : ""}
+          </button>
+          <button
+            onClick={sendSelected}
+            disabled={bulkSending}
+            className="px-3.5 py-1.5 rounded-full bg-[#C8354B] hover:bg-[#9E2538] text-[12px] font-semibold transition-colors disabled:opacity-50"
+          >
+            {bulkSending ? "Sending…" : `✉️ Send Link to ${selected.size}`}
+          </button>
+          <button onClick={() => setSelected(new Set())} className="ml-auto text-[12px] text-white/60 hover:text-white underline">
+            Clear selection
+          </button>
+        </div>
+      )}
+
       {/* Table */}
       <div className="w-full p-6">
         {loading ? (
@@ -178,6 +231,9 @@ function WebinarRegistrantsView({ token }) {
             <table className="w-full text-[12px]">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
+                  <th className="px-3 py-2.5 whitespace-nowrap">
+                    <input type="checkbox" checked={allSelected} onChange={toggleAll} className="w-4 h-4 accent-[#0E0E0E] cursor-pointer" title="Select all with an active link" />
+                  </th>
                   <th className="text-left px-3 py-2.5 font-medium text-gray-600 whitespace-nowrap">Landing Page</th>
                   <th className="text-left px-3 py-2.5 font-medium text-gray-600 whitespace-nowrap">Name</th>
                   <th className="text-left px-3 py-2.5 font-medium text-gray-600 whitespace-nowrap">Email</th>
@@ -195,11 +251,20 @@ function WebinarRegistrantsView({ token }) {
                   const hasRec  = !!r.recording_token
                   const expired = hasRec && isExpired(r.recording_expires_at)
                   const never   = hasRec && isNeverExpires(r.recording_expires_at)
-                  const tz  = getTimezoneForPlace(r.webinar_place)
-                  const abbr = getTzAbbr(tz)
+                  const canSelect = hasRec && !expired
 
                   return (
-                    <tr key={r.id} className="border-t border-gray-100 hover:bg-gray-50">
+                    <tr key={r.id} className={`border-t border-gray-100 hover:bg-gray-50 ${selected.has(r.id) ? "bg-gray-50" : ""}`}>
+                      <td className="px-3 py-2.5">
+                        <input
+                          type="checkbox"
+                          checked={selected.has(r.id)}
+                          disabled={!canSelect}
+                          onChange={() => toggleOne(r.id)}
+                          className="w-4 h-4 accent-[#0E0E0E] cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+                          title={!hasRec ? "No watch link set" : expired ? "Expired" : "Select"}
+                        />
+                      </td>
                       <td className="px-3 py-2.5 text-gray-700 whitespace-nowrap">
                         <div className="font-medium text-gray-900">{r.webinar_slug}</div>
                         {r.webinar_title && <div className="text-[10.5px] text-gray-400 truncate max-w-[180px]">{r.webinar_title}</div>}
@@ -222,19 +287,10 @@ function WebinarRegistrantsView({ token }) {
                         ) : <span className="text-gray-300">Not set</span>}
                       </td>
                       <td className="px-3 py-2.5 whitespace-nowrap">
-                        {hasRec ? (
-                          <select
-                            value={never ? "never" : expired ? "" : "custom"}
-                            onChange={e => handleExpiryChange(r, e.target.value === "never" ? "never" : Number(e.target.value))}
-                            className={`px-2 py-1 rounded-lg border text-[11px] font-semibold focus:outline-none ${expired ? "border-red-200 text-red-600 bg-red-50" : "border-green-200 text-green-700 bg-green-50"}`}
-                          >
-                            {expired && <option value="" disabled>Expired</option>}
-                            {!expired && !never && <option value="custom" disabled>{fmtDate(r.recording_expires_at)}</option>}
-                            <option value={12}>12 hours</option>
-                            <option value={48}>48 hours</option>
-                            <option value="never">Not Expire</option>
-                          </select>
-                        ) : <span className="text-gray-300">-</span>}
+                        {!hasRec ? <span className="text-gray-300">-</span>
+                          : expired ? <span className="text-red-500 font-semibold">Expired</span>
+                          : never ? <span className="text-green-600 font-semibold">Never expires</span>
+                          : <span className="text-green-600">{fmtDate(r.recording_expires_at)}</span>}
                       </td>
                       <td className="px-3 py-2.5 whitespace-nowrap">
                         <button
