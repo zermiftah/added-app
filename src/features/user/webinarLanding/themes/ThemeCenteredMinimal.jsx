@@ -2,7 +2,7 @@ import { useRef } from "react"
 import WebinarForm from "../WebinarForm"
 import {
   LandingHeader, LandingFooter, Reveal, QuoteSection, WhyFamiliesSection,
-  getResponsiveSrc, Eyebrow, H2, Sub, ContentBlock, SpeakerCard, formatDateRange, formatWebinarTime,
+  getResponsiveSrc, Eyebrow, H2, Sub, ContentBlock, SpeakerCard, formatDateRange, formatWebinarTime, usePageTracking,
   C, sans, serif, mono,
 } from "../themeShared"
 
@@ -21,6 +21,7 @@ const NAV_SECTIONS = [
  * a background. Best for founders/speakers who want a "quiet luxury" feel.
  */
 export default function ThemeCenteredMinimal({ page }) {
+  usePageTracking(page)
   const formRef = useRef(null)
   const heroImg = getResponsiveSrc(page.hero_image)
 

@@ -1,4 +1,17 @@
 import { useEffect, useRef, useState } from "react"
+import { initPageTracking, deriveLP } from "lib/tracking"
+
+// GA4 + Meta Pixel tracking — call once per theme's top-level component,
+// e.g. `usePageTracking(page)` right inside the function body. LP is
+// derived from the page's own Place field, so every page (existing and
+// new) is tracked correctly with zero manual setup per page.
+export function usePageTracking(page) {
+  useEffect(() => {
+    const lp = deriveLP(page?.webinar_place)
+    return initPageTracking(lp)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page?.webinar_place])
+}
 
 const LOGO_URL = "https://addededucation.com/addedapi/uploads/addededucation-assets/asset_1782570954773_Horizontal___Maroon.webp"
 const LOGO_WHITE_FILTER = "brightness(0) invert(1)"

@@ -1,6 +1,6 @@
 import { useRef } from "react"
 import WebinarForm from "../WebinarForm"
-import { LandingHeader, LandingFooter, Reveal, QuoteSection, WhyFamiliesSection, getResponsiveSrc, formatWebinarTime, C, sans, serif, mono } from "../themeShared"
+import { LandingHeader, LandingFooter, Reveal, QuoteSection, WhyFamiliesSection, getResponsiveSrc, formatWebinarTime, usePageTracking, C, sans, serif, mono } from "../themeShared"
 
 const NAV_SECTIONS = [
   { label: "Webinar", id: "webinar" },
@@ -25,6 +25,7 @@ function formatDateRange(page) {
 }
 
 export default function ThemeEditorialSplit({ page }) {
+  usePageTracking(page)
   const formRef = useRef(null)
   const heroImg = getResponsiveSrc(page.hero_image)
 

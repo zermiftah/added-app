@@ -2,7 +2,7 @@ import { useRef } from "react"
 import WebinarForm from "../WebinarForm"
 import {
   LandingHeader, LandingFooter, Reveal, QuoteSection, WhyFamiliesSection,
-  getResponsiveSrc, Eyebrow, H2, Sub, ContentBlock, SpeakerCard, formatDateRange, formatWebinarTime,
+  getResponsiveSrc, Eyebrow, H2, Sub, ContentBlock, SpeakerCard, formatDateRange, formatWebinarTime, usePageTracking,
   C, sans, serif, mono,
 } from "../themeShared"
 
@@ -21,6 +21,7 @@ const NAV_SECTIONS = [
  * On mobile the image collapses to a 42vh top banner, content stacks below.
  */
 export default function ThemeSplitPortrait({ page }) {
+  usePageTracking(page)
   const formRef = useRef(null)
   const heroImg = getResponsiveSrc(page.hero_image)
 

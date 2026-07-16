@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react"
+import { trackFinallyLeads, deriveLP } from "lib/tracking"
 import {
   HS_FIELD_GRADE, HS_FIELD_CURRICULUM,
   CURRICULUM_VALUES_EN, GRADE_OPTIONS, COUNTRIES, DEFAULT_COUNTRY_ISO,
@@ -147,6 +148,7 @@ export default function WebinarForm({
         }),
       }).catch(() => {})
 
+      trackFinallyLeads(deriveLP(page?.webinar_place))
       setDone(true)
     } catch (err) {
       setErrors(e => ({ ...e, _form: err.message || "Submission failed. Please try again." }))

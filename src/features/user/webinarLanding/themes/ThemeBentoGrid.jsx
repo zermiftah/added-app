@@ -2,7 +2,7 @@ import { useRef } from "react"
 import WebinarForm from "../WebinarForm"
 import {
   LandingHeader, LandingFooter, Reveal, WhyFamiliesSection,
-  getResponsiveSrc, Eyebrow, H2, Sub, SpeakerCard, formatDateRange, formatWebinarTime,
+  getResponsiveSrc, Eyebrow, H2, Sub, SpeakerCard, formatDateRange, formatWebinarTime, usePageTracking,
   C, sans, serif, mono,
 } from "../themeShared"
 
@@ -27,6 +27,7 @@ const cardBase = {
  * and again in the Why/Learn sections as numbered card grids.
  */
 export default function ThemeBentoGrid({ page }) {
+  usePageTracking(page)
   const formRef = useRef(null)
   const heroImg = getResponsiveSrc(page.hero_image)
   const scrollToForm = () => formRef.current?.scrollIntoView({ behavior: "smooth", block: "center" })

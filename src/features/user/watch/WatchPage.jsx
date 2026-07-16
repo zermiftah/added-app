@@ -21,6 +21,7 @@ function formatExpiry(dt) {
 // YouTube IFrame API Player — full control, no "Watch on YouTube" button visible during play
 function YouTubePlayer({ videoId }) {
   const containerRef = useRef(null)
+  const wrapRef      = useRef(null)
   const playerRef    = useRef(null)
   const [ready, setReady]     = useState(false)
   const [playing, setPlaying] = useState(false)
@@ -29,7 +30,10 @@ function YouTubePlayer({ videoId }) {
   const [progress, setProgress] = useState(0)
   const [duration, setDuration] = useState(0)
   const [currentTime, setCurrentTime] = useState(0)
+  const [isFullscreen, setIsFullscreen] = useState(false)
+  const [showControls, setShowControls] = useState(true)
   const intervalRef = useRef(null)
+  const idleTimerRef = useRef(null)
 
   useEffect(() => {
     // Load YouTube IFrame API
@@ -97,6 +101,39 @@ function YouTubePlayer({ videoId }) {
     }
   }, [videoId])
 
+  // Auto-hide the controls bar after a couple seconds of no mouse activity —
+  // only while actually playing (paused/idle always keeps controls visible,
+  // matching standard video-player UX). A single timeout ref keeps this
+  // lightweight — no extra re-renders beyond the show/hide toggle itself.
+  useEffect(() => {
+    if (!playing) { setShowControls(true); return }
+    const resetIdleTimer = () => {
+      setShowControls(true)
+      clearTimeout(idleTimerRef.current)
+      idleTimerRef.current = setTimeout(() => setShowControls(false), 2500)
+    }
+    resetIdleTimer()
+    const el = wrapRef.current
+    el?.addEventListener("mousemove", resetIdleTimer)
+    el?.addEventListener("mouseleave", () => setShowControls(false))
+    return () => {
+      clearTimeout(idleTimerRef.current)
+      el?.removeEventListener("mousemove", resetIdleTimer)
+    }
+  }, [playing])
+
+  // Track native fullscreen state so we can flip the CSS layout (see
+  // .yt-player-wrap:fullscreen rules below) and swap the icon.
+  useEffect(() => {
+    const onChange = () => setIsFullscreen(!!document.fullscreenElement)
+    document.addEventListener("fullscreenchange", onChange)
+    document.addEventListener("webkitfullscreenchange", onChange)
+    return () => {
+      document.removeEventListener("fullscreenchange", onChange)
+      document.removeEventListener("webkitfullscreenchange", onChange)
+    }
+  }, [])
+
   const togglePlay = () => {
     if (!playerRef.current) return
     playing ? playerRef.current.pauseVideo() : playerRef.current.playVideo()
@@ -124,10 +161,15 @@ function YouTubePlayer({ videoId }) {
   }
 
   const handleFullscreen = () => {
-    const iframe = containerRef.current?.querySelector("iframe") || containerRef.current
-    const el = iframe?.closest?.(".yt-player-wrap") || iframe
-    if (el?.requestFullscreen) el.requestFullscreen()
-    else if (el?.webkitRequestFullscreen) el.webkitRequestFullscreen()
+    const el = wrapRef.current
+    if (!el) return
+    if (document.fullscreenElement || document.webkitFullscreenElement) {
+      if (document.exitFullscreen) document.exitFullscreen()
+      else if (document.webkitExitFullscreen) document.webkitExitFullscreen()
+    } else {
+      if (el.requestFullscreen) el.requestFullscreen()
+      else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen()
+    }
   }
 
   const fmt = (s) => {
@@ -137,15 +179,37 @@ function YouTubePlayer({ videoId }) {
   }
 
   return (
-    <div className="yt-player-wrap" style={{ position: "relative", width: "100%", borderRadius: 12, overflow: "hidden", background: "#000", boxShadow: "0 24px 80px rgba(0,0,0,0.7)" }}>
+    <div ref={wrapRef} className="yt-player-wrap" style={{ position: "relative", width: "100%", borderRadius: 12, overflow: "hidden", background: "#000", boxShadow: "0 24px 80px rgba(0,0,0,0.7)", cursor: !showControls && playing ? "none" : "default" }}>
       <style>{`
         .yt-player-wrap .range-input { -webkit-appearance: none; appearance: none; height: 4px; border-radius: 4px; outline: none; cursor: pointer; }
         .yt-player-wrap .range-input::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 14px; height: 14px; border-radius: 50%; background: #fff; cursor: pointer; }
         .yt-player-wrap .range-input::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: #fff; cursor: pointer; border: none; }
+        /* Fullscreen: center the 16:9 box and let it grow as large as the
+           screen allows on either axis, instead of the old padding-top
+           trick (which stayed locked to the pre-fullscreen width). */
+        .yt-player-wrap:fullscreen,
+        .yt-player-wrap:-webkit-full-screen {
+          display: flex; align-items: center; justify-content: center;
+          width: 100vw; height: 100vh; border-radius: 0; background: #000;
+        }
+        .yt-player-wrap:fullscreen .yt-aspect-box,
+        .yt-player-wrap:-webkit-full-screen .yt-aspect-box {
+          width: 100vw; height: 100vh;
+        }
+        @media (min-aspect-ratio: 16/9) {
+          .yt-player-wrap:fullscreen .yt-aspect-box,
+          .yt-player-wrap:-webkit-full-screen .yt-aspect-box { width: auto; }
+        }
+        @media (max-aspect-ratio: 16/9) {
+          .yt-player-wrap:fullscreen .yt-aspect-box,
+          .yt-player-wrap:-webkit-full-screen .yt-aspect-box { height: auto; }
+        }
       `}</style>
 
-      {/* YouTube iframe — hidden controls via playerVars */}
-      <div style={{ position: "relative", paddingTop: "56.25%" }}>
+      {/* YouTube iframe — hidden controls via playerVars.
+          Modern `aspect-ratio` (not the old padding-top % hack) so this
+          box resizes correctly at any container size, including fullscreen. */}
+      <div className="yt-aspect-box" style={{ position: "relative", width: "100%", aspectRatio: "16 / 9" }}>
         {/* Transparent overlay — blocks right-click, blocks "Watch on YouTube" click zone at bottom-right */}
         <div
           onContextMenu={e => e.preventDefault()}
@@ -171,7 +235,9 @@ function YouTubePlayer({ videoId }) {
         background: "linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%)",
         padding: "24px 16px 14px",
         display: "flex", flexDirection: "column", gap: 8,
-        opacity: ready ? 1 : 0, transition: "opacity 0.3s",
+        opacity: ready && showControls ? 1 : 0,
+        pointerEvents: ready && showControls ? "auto" : "none",
+        transition: "opacity 0.3s",
       }}>
         {/* Progress bar */}
         <input
@@ -218,8 +284,12 @@ function YouTubePlayer({ videoId }) {
           />
 
           {/* Fullscreen */}
-          <button onClick={handleFullscreen} aria-label="Fullscreen" style={{ background: "none", border: "none", cursor: "pointer", color: "#fff", padding: 0, display: "flex", alignItems: "center", flexShrink: 0 }}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+          <button onClick={handleFullscreen} aria-label={isFullscreen ? "Exit fullscreen" : "Fullscreen"} style={{ background: "none", border: "none", cursor: "pointer", color: "#fff", padding: 0, display: "flex", alignItems: "center", flexShrink: 0 }}>
+            {isFullscreen ? (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round"><path d="M9 3v4a1 1 0 0 1-1 1H4M15 3v4a1 1 0 0 0 1 1h4M9 21v-4a1 1 0 0 0-1-1H4M15 21v-4a1 1 0 0 1 1-1h4"/></svg>
+            ) : (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+            )}
           </button>
         </div>
       </div>

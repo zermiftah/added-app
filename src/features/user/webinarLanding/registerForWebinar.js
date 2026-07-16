@@ -1,4 +1,5 @@
 import { API_BASE_URL } from "lib/api"
+import { trackFinallyLeads, deriveLP } from "lib/tracking"
 
 /**
  * registerForWebinar — the one function custom-code landing pages need for
@@ -44,6 +45,7 @@ export function createRegisterForWebinar(page) {
         }).catch(() => {})
       }
 
+      trackFinallyLeads(deriveLP(page.webinar_place))
       return { ok: true }
     } catch (err) {
       return { ok: false, error: err.message || "Network error — please check your connection and try again." }

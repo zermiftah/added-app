@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { createRegisterForWebinar } from "./registerForWebinar"
+import { initPageTracking, deriveLP } from "lib/tracking"
 
 // Must match the import map in index.html exactly — the compiled custom
 // bundle's own `import ... from "react"` resolves through THAT map, and we
@@ -29,6 +30,15 @@ const UPLOADS_BASE = `${window.location.origin}/addedapi/uploads/`
 export default function CustomPageRenderer({ page }) {
   const containerRef = useRef(null)
   const [error, setError] = useState(null)
+
+  // GA4 + Meta Pixel tracking — injected here at the host level so every
+  // Custom Code page gets it automatically (including pages already
+  // created before this existed), with zero changes to their stored
+  // custom_source. LP is derived from the page's own Place field.
+  useEffect(() => {
+    return initPageTracking(deriveLP(page?.webinar_place))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page?.webinar_place])
 
   useEffect(() => {
     let cancelled = false
