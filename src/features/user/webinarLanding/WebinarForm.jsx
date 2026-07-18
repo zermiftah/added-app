@@ -3,6 +3,7 @@ import { trackFinallyLeads, deriveLP } from "lib/tracking"
 import {
   HS_FIELD_GRADE, HS_FIELD_CURRICULUM,
   CURRICULUM_VALUES_EN, GRADE_OPTIONS, COUNTRIES, DEFAULT_COUNTRY_ISO,
+  deriveDefaultCountryIso,
   isValidEmail, digitsOnly, isCurriculumRejected, isGradeRejected,
 } from "./sharedData"
 
@@ -10,18 +11,23 @@ import {
  * WebinarForm — themeable, drop-in form for any of the 3 landing templates.
  *
  * Props:
- *   page              — { hubspot_portal_id, hubspot_form_id, hubspot_region, reject_rules }
+ *   page              — { hubspot_portal_id, hubspot_form_id, hubspot_region, reject_rules, webinar_place }
  *   tokens            — { bg, surface, border, text, textMuted, accent, accentDeep, inputBg, inputBorder, error }
  *   variant           — "dark" | "light"   (just hints palette defaults if tokens missing)
- *   defaultCountryIso — string  (per-theme default)
+ *   defaultCountryIso — string, optional override. When omitted, this is
+ *                       derived automatically from page.webinar_place (e.g.
+ *                       Place = "Indonesia" -> phone field defaults to +62),
+ *                       so no theme needs to compute or pass this itself.
  *   labels            — optional override texts (rare; we default to English)
  */
 export default function WebinarForm({
   page,
   tokens = {},
   variant = "dark",
-  defaultCountryIso = DEFAULT_COUNTRY_ISO,
+  defaultCountryIso,
+  sessionLabel = "webinar",
 }) {
+  const resolvedDefaultCountryIso = defaultCountryIso || deriveDefaultCountryIso(page?.webinar_place)
   // Palette tokens with safe defaults per variant
   const T = useMemo(() => {
     const dark = {
@@ -56,8 +62,9 @@ export default function WebinarForm({
     firstname: "",
     lastname: "",
     email: "",
-    countryIso: defaultCountryIso,
+    countryIso: resolvedDefaultCountryIso,
     phone: "",
+    school: "",
     curriculumIndex: "",
     grade: "",
   })
@@ -77,6 +84,7 @@ export default function WebinarForm({
     if (!form.lastname.trim())  e.lastname  = "Last name is required"
     if (!isValidEmail(form.email)) e.email = "Valid email is required"
     if (!digitsOnly(form.phone)) e.phone = "Phone number is required"
+    if (!form.school.trim()) e.school = "School name is required"
     if (form.curriculumIndex === "") e.curriculumIndex = "Select a curriculum"
     if (!form.grade) e.grade = "Select your grade"
     setErrors(e)
@@ -114,7 +122,8 @@ export default function WebinarForm({
           { name: "lastname",  value: form.lastname.trim() },
           { name: "email",     value: form.email.trim() },
           { name: "phone",     value: fullPhone },
-          { name: "country",   value: country.name || "" },
+          { name: "school",    value: form.school.trim() },
+          { name: "countryofresidence", value: country.name || "" },
           { name: HS_FIELD_CURRICULUM, value: curriculumValue },
           { name: HS_FIELD_GRADE,      value: form.grade },
         ],
@@ -128,7 +137,14 @@ export default function WebinarForm({
       })
       if (!res.ok) {
         const j = await res.json().catch(() => ({}))
-        throw new Error(j.message || `Submit failed (${res.status})`)
+        // Log the real (often technical) HubSpot error for whoever's
+        // debugging via the browser console/network tab, but never show
+        // raw API error text to a real visitor — e.g. "Form with guid
+        // '...' can't be found" reads like a broken site, not a
+        // temporary hiccup, and gives no useful next step to a parent
+        // filling out this form.
+        console.error("[HubSpot submit]", j.message || `HTTP ${res.status}`)
+        throw new Error("We couldn't submit your registration just now — please try again in a moment, or email hello@addededucation.com and we'll get you sorted directly.")
       }
 
       // Fire confirmation email via our backend (non-blocking — don't fail if this errors)
@@ -143,6 +159,7 @@ export default function WebinarForm({
           email:      form.email.trim(),
           phone:      `${country.dial}${digitsOnly(form.phone)}`,
           country:    country.name || "",
+          school:     form.school.trim(),
           curriculum: curriculumValue,
           grade:      form.grade,
         }),
@@ -183,7 +200,7 @@ export default function WebinarForm({
       <div style={{ padding: 28, textAlign: "center", background: T.surface, border: `1px solid ${T.border}`, borderRadius: 14 }}>
         <h3 style={{ fontFamily: "'Fraunces',serif", fontSize: 26, color: T.text, marginBottom: 10 }}>This session isn't the right fit.</h3>
         <p style={{ fontFamily: "'Inter',sans-serif", color: T.textMuted, fontSize: 14, lineHeight: 1.55 }}>
-          Based on your current grade or curriculum, this particular webinar may not be the best match. Please reach out to our team at <strong style={{ color: T.text }}>hello@addededucation.com</strong> and we'll guide you to the right resources.
+          Based on your current grade or curriculum, this particular {sessionLabel} may not be the best match. Please reach out to our team at <strong style={{ color: T.text }}>hello@addededucation.com</strong> and we'll guide you to the right resources.
         </p>
       </div>
     )
@@ -242,6 +259,13 @@ export default function WebinarForm({
           />
         </div>
         {errMsg(errors.phone)}
+      </div>
+
+      {/* School name */}
+      <div style={{ marginBottom: 14 }}>
+        <label htmlFor="wf-school" style={labelStyle}>School name *</label>
+        <input id="wf-school" value={form.school} onChange={e => set("school", e.target.value)} placeholder="e.g. Raffles Institution" style={inputStyle} autoComplete="organization" />
+        {errMsg(errors.school)}
       </div>
 
       {/* Curriculum */}

@@ -1,6 +1,6 @@
 import { useRef } from "react"
 import WebinarForm from "../WebinarForm"
-import { LandingHeader, LandingFooter, Reveal, QuoteSection, WhyFamiliesSection, getResponsiveSrc, formatWebinarTime, usePageTracking, C, sans, serif, mono } from "../themeShared"
+import { LandingHeader, LandingFooter, Reveal, QuoteSection, WhyFamiliesSection, getResponsiveSrc, formatWebinarTime, usePageTracking, deriveLP, C, sans, serif, mono } from "../themeShared"
 
 const NAV_SECTIONS = [
   { label: "Webinar", id: "webinar" },
@@ -26,6 +26,7 @@ function formatDateRange(page) {
 
 export default function ThemeHeroFormSide({ page }) {
   usePageTracking(page)
+  const lp = deriveLP(page?.webinar_place)
   const formRef = useRef(null)
   const heroImg = getResponsiveSrc(page.hero_image)
 
@@ -39,7 +40,7 @@ export default function ThemeHeroFormSide({ page }) {
         * { box-sizing: border-box; }
       `}</style>
 
-      <LandingHeader variant="dark" sections={NAV_SECTIONS} formId="register" />
+      <LandingHeader variant="dark" sections={NAV_SECTIONS} formId="register" lp={lp} />
 
       {/* ── HERO ── */}
       <section id="webinar" style={{ position: "relative", width: "100%", minHeight: "100vh", overflow: "hidden", display: "flex", alignItems: "center" }}>

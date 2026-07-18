@@ -238,6 +238,7 @@ export default function WebinarRegistrantsPage() {
                   <th className="text-left px-3 py-2.5 font-medium text-gray-600 whitespace-nowrap">Name</th>
                   <th className="text-left px-3 py-2.5 font-medium text-gray-600 whitespace-nowrap">Email</th>
                   <th className="text-left px-3 py-2.5 font-medium text-gray-600 whitespace-nowrap">Phone</th>
+                  <th className="text-left px-3 py-2.5 font-medium text-gray-600 whitespace-nowrap">School</th>
                   <th className="text-left px-3 py-2.5 font-medium text-gray-600 whitespace-nowrap">Curriculum</th>
                   <th className="text-left px-3 py-2.5 font-medium text-gray-600 whitespace-nowrap">Grade</th>
                   <th className="text-left px-3 py-2.5 font-medium text-gray-600 whitespace-nowrap">Registered</th>
@@ -274,6 +275,7 @@ export default function WebinarRegistrantsPage() {
                       </td>
                       <td className="px-3 py-2.5 text-gray-700">{r.email}</td>
                       <td className="px-3 py-2.5 text-gray-600 whitespace-nowrap">{r.phone || "-"}</td>
+                      <td className="px-3 py-2.5 text-gray-600 whitespace-nowrap">{r.school || "-"}</td>
                       <td className="px-3 py-2.5 text-gray-600 whitespace-nowrap">{r.curriculum || "-"}</td>
                       <td className="px-3 py-2.5 text-gray-600 whitespace-nowrap">{r.grade || "-"}</td>
                       <td className="px-3 py-2.5 text-gray-500 whitespace-nowrap">

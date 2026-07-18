@@ -112,7 +112,7 @@ function formatDt(dt) {
 /* ── Bulk (page-wide) recording link — one link shared by every
    registrant of this page, with its own expiry and a notify-everyone
    email flow (all registrants, or a custom pasted list). ── */
-function BulkRecordingPanel({ pageId, slug, registrantCount, token, showToast, onRegistrantsChanged }) {
+function BulkRecordingPanel({ pageId, slug, registrants = [], registrantCount, token, showToast, onRegistrantsChanged }) {
   const [page, setPage] = useState(null)
   const [loading, setLoading] = useState(true)
   const [editing, setEditing] = useState(false)
@@ -124,6 +124,9 @@ function BulkRecordingPanel({ pageId, slug, registrantCount, token, showToast, o
   const [notifyMode, setNotifyMode] = useState("all")
   const [customEmails, setCustomEmails] = useState("")
   const [sending, setSending] = useState(false)
+  const [syncing, setSyncing] = useState(false)
+
+  const missingCount = registrants.filter(r => !r.recording_token).length
 
   const load = useCallback(async () => {
     if (!pageId) return
@@ -171,6 +174,22 @@ function BulkRecordingPanel({ pageId, slug, registrantCount, token, showToast, o
       showToast(e.message || "Failed to reactivate", "error")
     } finally {
       setReactivating(false)
+    }
+  }
+
+  // Generates individual watch links for any registrant still missing one
+  // (e.g. joined after the bulk link was already set). New registrations
+  // are auto-synced going forward — this button just cleans up the gap.
+  const handleSyncMissing = async () => {
+    setSyncing(true)
+    try {
+      const r = await fetchData(`webinar-pages/${pageId}/bulk-recording/sync-missing`, {}, "POST", token)
+      showToast(r.message || `Synced ${r.synced} link(s)`, "success")
+      onRegistrantsChanged?.()
+    } catch (e) {
+      showToast(e.message || "Failed to sync", "error")
+    } finally {
+      setSyncing(false)
     }
   }
 
@@ -256,6 +275,11 @@ function BulkRecordingPanel({ pageId, slug, registrantCount, token, showToast, o
                 </button>
               ))}
             </div>
+          )}
+          {missingCount > 0 && (
+            <button onClick={handleSyncMissing} disabled={syncing} className="px-3.5 py-1.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200 text-[11.5px] font-semibold hover:bg-blue-100 disabled:opacity-50" title="Give everyone who registered after this link was set their own watch link">
+              {syncing ? "Syncing…" : `🔄 Sync missing links (${missingCount})`}
+            </button>
           )}
           <button onClick={() => setNotifyOpen(true)} className="ml-auto px-4 py-1.5 rounded-full bg-[#C8354B] text-white text-[11.5px] font-semibold hover:bg-[#9E2538] transition-colors">
             📧 Notify registrants
@@ -446,7 +470,7 @@ export default function AdminRegistrants({ pageId, slug, title, onBack }) {
         <span className="ml-auto text-[12px] text-gray-500">{registrants.length} registrant{registrants.length !== 1 ? "s" : ""}</span>
       </div>
 
-      <BulkRecordingPanel pageId={pageId} slug={slug} registrantCount={registrants.length} token={token} showToast={showToast} onRegistrantsChanged={load} />
+      <BulkRecordingPanel pageId={pageId} slug={slug} registrants={registrants} registrantCount={registrants.length} token={token} showToast={showToast} onRegistrantsChanged={load} />
 
       {selected.size > 0 && (
         <div className="sticky top-0 z-40 bg-gray-900 text-white px-4 py-2.5 rounded-lg flex items-center gap-3 flex-wrap mb-3 shadow-lg">
@@ -485,6 +509,7 @@ export default function AdminRegistrants({ pageId, slug, title, onBack }) {
                 <th className="text-left px-3 py-2.5 font-medium text-gray-600 whitespace-nowrap">Name</th>
                 <th className="text-left px-3 py-2.5 font-medium text-gray-600 whitespace-nowrap">Email</th>
                 <th className="text-left px-3 py-2.5 font-medium text-gray-600 whitespace-nowrap">Phone</th>
+                <th className="text-left px-3 py-2.5 font-medium text-gray-600 whitespace-nowrap">School</th>
                 <th className="text-left px-3 py-2.5 font-medium text-gray-600 whitespace-nowrap">Curriculum</th>
                 <th className="text-left px-3 py-2.5 font-medium text-gray-600 whitespace-nowrap">Grade</th>
                 <th className="text-left px-3 py-2.5 font-medium text-gray-600 whitespace-nowrap">
@@ -518,6 +543,7 @@ export default function AdminRegistrants({ pageId, slug, title, onBack }) {
                     </td>
                     <td className="px-3 py-2.5 text-gray-700">{r.email}</td>
                     <td className="px-3 py-2.5 text-gray-600 whitespace-nowrap">{r.phone || "—"}</td>
+                    <td className="px-3 py-2.5 text-gray-600 whitespace-nowrap">{r.school || "—"}</td>
                     <td className="px-3 py-2.5 text-gray-600 whitespace-nowrap">{r.curriculum || "—"}</td>
                     <td className="px-3 py-2.5 text-gray-600 whitespace-nowrap">{r.grade || "—"}</td>
                     <td className="px-3 py-2.5 text-gray-500 whitespace-nowrap">{formatInPlaceTimezone(r.created_at, webinarPlace)}</td>

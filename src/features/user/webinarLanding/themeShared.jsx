@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react"
-import { initPageTracking, deriveLP } from "lib/tracking"
+import { initPageTracking, deriveLP, trackCTAClick } from "lib/tracking"
+export { deriveLP }
 
 // GA4 + Meta Pixel tracking — call once per theme's top-level component,
 // e.g. `usePageTracking(page)` right inside the function body. LP is
@@ -33,7 +34,7 @@ const mono  = "'JetBrains Mono', monospace"
 //          "light" (transparent → blur light on scroll)
 // sections: [{ label, id }] — clicked → scrollIntoView
 // ─────────────────────────────────────────────────────────────
-export function LandingHeader({ variant = "light", sections = [], formId = "register" }) {
+export function LandingHeader({ variant = "light", sections = [], formId = "register", lp = "unknown" }) {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const isDark = variant === "dark"
@@ -46,6 +47,7 @@ export function LandingHeader({ variant = "light", sections = [], formId = "regi
   }, [])
 
   const go = (id) => {
+    trackCTAClick(lp, id)
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" })
     setMenuOpen(false)
   }

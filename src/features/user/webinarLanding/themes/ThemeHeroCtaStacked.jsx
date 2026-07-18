@@ -1,6 +1,6 @@
 import { useRef } from "react"
 import WebinarForm from "../WebinarForm"
-import { LandingHeader, LandingFooter, Reveal, QuoteSection, WhyFamiliesSection, getResponsiveSrc, formatWebinarTime, usePageTracking, C, sans, serif, mono } from "../themeShared"
+import { LandingHeader, LandingFooter, Reveal, QuoteSection, WhyFamiliesSection, getResponsiveSrc, formatWebinarTime, usePageTracking, deriveLP, C, sans, serif, mono } from "../themeShared"
 
 const NAV_SECTIONS = [
   { label: "Webinar", id: "webinar" },
@@ -26,6 +26,7 @@ function formatDateRange(page) {
 
 export default function ThemeHeroCtaStacked({ page }) {
   usePageTracking(page)
+  const lp = deriveLP(page?.webinar_place)
   const formRef = useRef(null)
   const heroImg = getResponsiveSrc(page.hero_image)
   const go = (id) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" })
@@ -37,7 +38,7 @@ export default function ThemeHeroCtaStacked({ page }) {
         * { box-sizing: border-box; }
       `}</style>
 
-      <LandingHeader variant="light" sections={NAV_SECTIONS} formId="register" />
+      <LandingHeader variant="light" sections={NAV_SECTIONS} formId="register" lp={lp} />
 
       {/* ── HERO — full dark section ── */}
       <section id="webinar" style={{ position: "relative", background: C.ink, color: "#fff", padding: "130px clamp(20px,5vw,56px) 100px", overflow: "hidden", minHeight: heroImg.src ? "80vh" : "auto", display: "flex", alignItems: "center" }}>

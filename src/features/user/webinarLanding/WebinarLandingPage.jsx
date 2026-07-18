@@ -7,6 +7,7 @@ import ThemeEditorialSplit from "./themes/ThemeEditorialSplit"
 import ThemeSplitPortrait  from "./themes/ThemeSplitPortrait"
 import ThemeCenteredMinimal from "./themes/ThemeCenteredMinimal"
 import ThemeBentoGrid      from "./themes/ThemeBentoGrid"
+import ThemeInPersonSession from "./themes/ThemeInPersonSession"
 import CustomPageRenderer  from "./CustomPageRenderer"
 
 const THEMES = {
@@ -16,6 +17,7 @@ const THEMES = {
   "split-portrait":   ThemeSplitPortrait,
   "centered-minimal": ThemeCenteredMinimal,
   "bento-grid":       ThemeBentoGrid,
+  "in-person-session": ThemeInPersonSession,
 }
 
 export default function WebinarLandingPage() {

@@ -2,7 +2,7 @@ import { useRef } from "react"
 import WebinarForm from "../WebinarForm"
 import {
   LandingHeader, LandingFooter, Reveal, QuoteSection, WhyFamiliesSection,
-  getResponsiveSrc, Eyebrow, H2, Sub, ContentBlock, SpeakerCard, formatDateRange, formatWebinarTime, usePageTracking,
+  getResponsiveSrc, Eyebrow, H2, Sub, ContentBlock, SpeakerCard, formatDateRange, formatWebinarTime, usePageTracking, deriveLP,
   C, sans, serif, mono,
 } from "../themeShared"
 
@@ -22,6 +22,7 @@ const NAV_SECTIONS = [
  */
 export default function ThemeCenteredMinimal({ page }) {
   usePageTracking(page)
+  const lp = deriveLP(page?.webinar_place)
   const formRef = useRef(null)
   const heroImg = getResponsiveSrc(page.hero_image)
 
@@ -34,7 +35,7 @@ export default function ThemeCenteredMinimal({ page }) {
         @keyframes cm-glow { 0%,100% { opacity: .5; transform: translate(-50%,-50%) scale(1); } 50% { opacity: .75; transform: translate(-50%,-50%) scale(1.1); } }
       `}</style>
 
-      <LandingHeader variant="dark" sections={NAV_SECTIONS} formId="register" />
+      <LandingHeader variant="dark" sections={NAV_SECTIONS} formId="register" lp={lp} />
 
       {/* ── HERO — pure typography, centered ── */}
       <section id="webinar" style={{ position: "relative", padding: "clamp(150px,18vw,210px) clamp(20px,5vw,56px) 90px", overflow: "hidden" }}>

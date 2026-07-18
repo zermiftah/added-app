@@ -2,7 +2,7 @@ import { useRef } from "react"
 import WebinarForm from "../WebinarForm"
 import {
   LandingHeader, LandingFooter, Reveal, QuoteSection, WhyFamiliesSection,
-  getResponsiveSrc, Eyebrow, H2, Sub, ContentBlock, SpeakerCard, formatDateRange, formatWebinarTime, usePageTracking,
+  getResponsiveSrc, Eyebrow, H2, Sub, ContentBlock, SpeakerCard, formatDateRange, formatWebinarTime, usePageTracking, deriveLP,
   C, sans, serif, mono,
 } from "../themeShared"
 
@@ -22,6 +22,7 @@ const NAV_SECTIONS = [
  */
 export default function ThemeSplitPortrait({ page }) {
   usePageTracking(page)
+  const lp = deriveLP(page?.webinar_place)
   const formRef = useRef(null)
   const heroImg = getResponsiveSrc(page.hero_image)
 
@@ -42,7 +43,7 @@ export default function ThemeSplitPortrait({ page }) {
         }
       `}</style>
 
-      <LandingHeader variant="dark" sections={NAV_SECTIONS} formId="register" />
+      <LandingHeader variant="dark" sections={NAV_SECTIONS} formId="register" lp={lp} />
 
       <div className="sp-shell">
         {/* ── Left: portrait image panel ── */}

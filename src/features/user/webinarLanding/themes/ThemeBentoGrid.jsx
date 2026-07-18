@@ -2,7 +2,7 @@ import { useRef } from "react"
 import WebinarForm from "../WebinarForm"
 import {
   LandingHeader, LandingFooter, Reveal, WhyFamiliesSection,
-  getResponsiveSrc, Eyebrow, H2, Sub, SpeakerCard, formatDateRange, formatWebinarTime, usePageTracking,
+  getResponsiveSrc, Eyebrow, H2, Sub, SpeakerCard, formatDateRange, formatWebinarTime, usePageTracking, deriveLP,
   C, sans, serif, mono,
 } from "../themeShared"
 
@@ -28,6 +28,7 @@ const cardBase = {
  */
 export default function ThemeBentoGrid({ page }) {
   usePageTracking(page)
+  const lp = deriveLP(page?.webinar_place)
   const formRef = useRef(null)
   const heroImg = getResponsiveSrc(page.hero_image)
   const scrollToForm = () => formRef.current?.scrollIntoView({ behavior: "smooth", block: "center" })
@@ -45,7 +46,7 @@ export default function ThemeBentoGrid({ page }) {
         }
       `}</style>
 
-      <LandingHeader variant="dark" sections={NAV_SECTIONS} formId="register" />
+      <LandingHeader variant="dark" sections={NAV_SECTIONS} formId="register" lp={lp} />
 
       {/* ── HERO — headline + full-size form, side by side ── */}
       <section id="webinar" style={{ position: "relative", padding: "clamp(120px,13vw,160px) clamp(20px,5vw,56px) 72px", overflow: "hidden" }}>

@@ -224,3 +224,15 @@ export const COUNTRIES = [
     { iso: "ZM", name: "Zambia", dial: "+260" },
     { iso: "ZW", name: "Zimbabwe", dial: "+263" },
 ]
+
+// Maps a landing page's "Place" (e.g. "Indonesia", "Hong Kong") to the
+// matching phone-country ISO code, so the phone field defaults to that
+// country's dial code instead of always defaulting to GB. Falls back to
+// DEFAULT_COUNTRY_ISO for "Online"/empty/unrecognized places.
+export function deriveDefaultCountryIso(place) {
+  if (!place || place.trim().toLowerCase() === "online") return DEFAULT_COUNTRY_ISO
+  const needle = place.trim().toLowerCase()
+  const match = COUNTRIES.find(c => c.name.toLowerCase() === needle)
+    || COUNTRIES.find(c => c.name.toLowerCase().includes(needle) || needle.includes(c.name.toLowerCase()))
+  return match ? match.iso : DEFAULT_COUNTRY_ISO
+}

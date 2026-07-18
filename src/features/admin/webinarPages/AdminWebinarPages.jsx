@@ -35,6 +35,7 @@ const THEMES = [
   { value: "split-portrait",   label: "Split portrait",           hint: "Fixed full-height image/content split, hard-edged and editorial" },
   { value: "centered-minimal", label: "Centered minimal",         hint: "Typography-led, no side image — quiet luxury, single centered column" },
   { value: "bento-grid",       label: "Bento grid",               hint: "Modern mosaic of cards — photo, stat, quote, and form side by side" },
+  { value: "in-person-session", label: "In-Person Session",       hint: "Premium editorial, cream/venue-forward — for physical events, no webinar/online language" },
 ]
 
 const photoUrl = (photo) => {

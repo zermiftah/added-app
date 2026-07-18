@@ -164,7 +164,7 @@ const CURRICULUM_OPTIONS = ["A-Levels", "IB (International Baccalaureate)", "IGC
    registerForWebinar's HubSpot leg — no internal API/DB involved here,
    this is a pure lead-capture form. */
 export function HubspotLeadForm({ portalId = "4257853", formId, region = "na2", dark = true, defaultIso = "HK" }) {
-  const [form, setForm] = useState({ firstname: "", lastname: "", email: "", countryIso: defaultIso, phone: "", countryofresidance: "", curriculum: "" })
+  const [form, setForm] = useState({ firstname: "", lastname: "", email: "", countryIso: defaultIso, phone: "", school: "", countryofresidence: "", curriculum: "" })
   const [state, setState] = useState({ submitting: false, done: false, error: "" })
   const [phoneOpen, setPhoneOpen] = useState(false)
   const [countrySearch, setCountrySearch] = useState("")
@@ -203,7 +203,8 @@ export function HubspotLeadForm({ portalId = "4257853", formId, region = "na2", 
     e.preventDefault()
     if (!formId) { setState((s) => ({ ...s, error: "Form is not configured yet." })); return }
     if (!form.firstname || !form.email) { setState((s) => ({ ...s, error: "First name and email are required." })); return }
-    if (!form.countryofresidance) { setState((s) => ({ ...s, error: "Please select your country of residence." })); return }
+    if (!form.countryofresidence) { setState((s) => ({ ...s, error: "Please select your country of residence." })); return }
+    if (!form.school.trim()) { setState((s) => ({ ...s, error: "Please enter your school name." })); return }
     if (!form.curriculum) { setState((s) => ({ ...s, error: "Please select your child's curriculum." })); return }
     setState({ submitting: true, done: false, error: "" })
     try {
@@ -218,7 +219,8 @@ export function HubspotLeadForm({ portalId = "4257853", formId, region = "na2", 
             { name: "lastname", value: form.lastname },
             { name: "email", value: form.email.trim() },
             { name: "phone", value: fullPhone },
-            { name: "countryofresidance", value: form.countryofresidance },
+            { name: "countryofresidence", value: form.countryofresidence },
+            { name: "school", value: form.school.trim() },
             { name: HS_FIELD_CURRICULUM, value: form.curriculum },
           ].filter((f) => f.value),
           context: { pageUri: window.location.href, pageName: document.title },
@@ -300,6 +302,11 @@ export function HubspotLeadForm({ portalId = "4257853", formId, region = "na2", 
         </div>
       </div>
 
+      <div>
+        <label className={labelCls}>School name *</label>
+        <input placeholder="e.g. Raffles Institution" value={form.school} onChange={set("school")} className={fieldCls} />
+      </div>
+
       {/* Country of residence — custom dropdown (native <select> popups can't
           be styled — they render as an unstyleable white OS/browser sheet,
           especially on mobile). Same searchable pattern as the phone code
@@ -309,8 +316,8 @@ export function HubspotLeadForm({ portalId = "4257853", formId, region = "na2", 
         <button type="button" onClick={() => setResidenceOpen((v) => !v)}
           className={fieldCls}
           style={{ display: "flex", alignItems: "center", justifyContent: "space-between", cursor: "pointer", textAlign: "left" }}>
-          <span style={{ color: form.countryofresidance ? "inherit" : (dark ? "rgba(255,255,255,0.35)" : C.stoneLight) }}>
-            {form.countryofresidance || "Select country"}
+          <span style={{ color: form.countryofresidence ? "inherit" : (dark ? "rgba(255,255,255,0.35)" : C.stoneLight) }}>
+            {form.countryofresidence || "Select country"}
           </span>
           <span style={{ color: dark ? "rgba(255,255,255,0.4)" : C.stoneLight, fontSize: 10, marginLeft: 8 }}>▾</span>
         </button>
@@ -327,9 +334,9 @@ export function HubspotLeadForm({ portalId = "4257853", formId, region = "na2", 
             </div>
             {filteredResidenceCountries.map((c) => (
               <button key={c.iso} type="button"
-                onClick={() => { setForm((f) => ({ ...f, countryofresidance: c.name })); setResidenceOpen(false); setResidenceSearch("") }}
+                onClick={() => { setForm((f) => ({ ...f, countryofresidence: c.name })); setResidenceOpen(false); setResidenceSearch("") }}
                 style={{
-                  width: "100%", background: form.countryofresidance === c.name ? "rgba(200,53,75,0.13)" : "none", border: "none", cursor: "pointer",
+                  width: "100%", background: form.countryofresidence === c.name ? "rgba(200,53,75,0.13)" : "none", border: "none", cursor: "pointer",
                   padding: "9px 14px", display: "block", textAlign: "left",
                   color: dark ? "#fff" : C.ink, fontFamily: sansFont, fontSize: 13,
                 }}>
